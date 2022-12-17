@@ -39,3 +39,4 @@ gradle
 gradlew
 gradlew.bat
 *.log
+/src/main/java/Tests.java
