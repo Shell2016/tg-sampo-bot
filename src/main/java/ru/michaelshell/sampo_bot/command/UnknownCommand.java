@@ -1,20 +1,20 @@
 package ru.michaelshell.sampo_bot.command;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.service.SendMessageService;
+import ru.michaelshell.sampo_bot.service.SendService;
 
 public class UnknownCommand implements Command {
 
     private static final String UNKNOWN_COMMAND_MESSAGE = "Unknown command";
 
-    private final SendMessageService sendMessageService;
+    private final SendService sendService;
 
-    public UnknownCommand(SendMessageService sendMessageService) {
-        this.sendMessageService = sendMessageService;
+    public UnknownCommand(SendService sendService) {
+        this.sendService = sendService;
     }
 
     @Override
     public void execute(Update update) {
-        sendMessageService.sendMessage(update.getMessage().getFrom().getId(), UNKNOWN_COMMAND_MESSAGE);
+        sendService.sendMessage(update.getMessage().getFrom().getId(), UNKNOWN_COMMAND_MESSAGE);
     }
 }

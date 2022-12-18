@@ -6,10 +6,9 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.michaelshell.sampo_bot.command.Command;
 import ru.michaelshell.sampo_bot.command.CommandContainer;
 import ru.michaelshell.sampo_bot.config.TelegramBotProperties;
-import ru.michaelshell.sampo_bot.service.SendMessageServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 
 @Slf4j
 @Component
@@ -26,7 +25,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     public TelegramBot(TelegramBotProperties telegramBotProperties) {
         this.telegramBotProperties = telegramBotProperties;
-        this.commands = new CommandContainer(new SendMessageServiceImpl(this));
+        this.commands = new CommandContainer(new SendServiceImpl(this));
     }
 
 

@@ -1,7 +1,7 @@
 package ru.michaelshell.sampo_bot.command;
 
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.service.SendMessageService;
+import ru.michaelshell.sampo_bot.service.SendService;
 
 public class HelpCommand implements Command {
 
@@ -13,14 +13,14 @@ public class HelpCommand implements Command {
             /settings - settings
             """;
 
-    private final SendMessageService sendMessageService;
+    private final SendService sendService;
 
-    public HelpCommand(SendMessageService sendMessageService) {
-        this.sendMessageService = sendMessageService;
+    public HelpCommand(SendService sendService) {
+        this.sendService = sendService;
     }
 
     @Override
     public void execute(Update update) {
-        sendMessageService.sendMessage(update.getMessage().getFrom().getId(), HELP_MESSAGE);
+        sendService.sendMessage(update.getMessage().getFrom().getId(), HELP_MESSAGE);
     }
 }
