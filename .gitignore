@@ -35,9 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
-gradle
-gradlew
-gradlew.bat
 *.log
 /src/main/java/Tests.java
 /bot.log.*
