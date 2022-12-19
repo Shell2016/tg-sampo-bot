@@ -8,3 +8,21 @@ logging:
     root: info
   file:
     name: bot.log
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: pass
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+
+
+
+
+
