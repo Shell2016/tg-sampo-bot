@@ -43,7 +43,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
+
             String message = update.getMessage().getText().trim();
+
+            switch (message) {
+                case "/start" ->
+            }
+
             if (message.startsWith("/")) {
                 String commandIdentifier = message.split(" ")[0].toLowerCase();
                 commands.getCommand(commandIdentifier).execute(update);

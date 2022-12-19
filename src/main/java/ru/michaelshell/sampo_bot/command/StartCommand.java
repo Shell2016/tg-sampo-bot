@@ -1,7 +1,10 @@
 package ru.michaelshell.sampo_bot.command;
 
+import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.service.SendService;
+
+
 
 public class StartCommand implements Command {
 
