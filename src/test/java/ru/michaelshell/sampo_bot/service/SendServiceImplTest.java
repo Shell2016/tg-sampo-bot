@@ -12,7 +12,7 @@ import ru.michaelshell.sampo_bot.bot.SampoBot;
 
 
 @ExtendWith(MockitoExtension.class)
-class SendServiceTest {
+class SendServiceImplTest {
 
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_MESSAGE = "Test message";
@@ -20,7 +20,7 @@ class SendServiceTest {
     @Mock
     private SampoBot sampoBot;
     @InjectMocks
-    private SendServiceImpl sendService;
+    private SendServiceImpl sendServiceImpl;
 
 
     @Test
@@ -30,7 +30,7 @@ class SendServiceTest {
                 .text(TEST_MESSAGE)
                 .build();
 
-        sendService.sendMessage(TEST_USER_ID, TEST_MESSAGE);
+//        sendServiceImpl.sendMessage(TEST_USER_ID, TEST_MESSAGE);
 
         Mockito.verify(sampoBot).execute(sendMessage);
     }

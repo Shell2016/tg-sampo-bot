@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.michaelshell.sampo_bot.service.SendService;
+import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 
 import java.util.Arrays;
 
@@ -14,8 +14,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class CommandContainerTest {
 
     @Mock
-    private SendService sendService;
-    private final CommandContainer commandContainer = new CommandContainer(sendService);
+    private SendServiceImpl sendServiceImpl;
+    private final CommandContainer commandContainer = new CommandContainer(sendServiceImpl);
 
     @Test
     void shouldHaveAllSupportedCommands() {

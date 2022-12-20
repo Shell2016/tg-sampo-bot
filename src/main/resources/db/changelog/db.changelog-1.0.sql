@@ -5,9 +5,8 @@ CREATE TABLE IF NOT EXISTS users
 (
     id BIGINT PRIMARY KEY ,
     user_name VARCHAR(64) NOT NULL UNIQUE ,
-    first_name VARCHAR(64),
+    first_name VARCHAR(64) NOT NULL ,
     last_name VARCHAR(64),
-    name VARCHAR(64),
     role VARCHAR(32),
     status VARCHAR(32),
     registered_at TIMESTAMP NOT NULL

@@ -1,19 +1,18 @@
 package ru.michaelshell.sampo_bot.bot;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.SimpleSession;
-import org.apache.shiro.subject.Subject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.session.TelegramLongPollingSessionBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
+import ru.michaelshell.sampo_bot.handler.UpdateHandlerImpl;
+import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.UserService;
 
-import java.util.Collection;
 import java.util.Optional;
 
 @Slf4j
@@ -22,12 +21,19 @@ public class SampoBot extends TelegramLongPollingSessionBot {
 
 
     private final BotProperties botProperties;
+    private final UpdateHandlerImpl updateHandlerImpl;
+
+
+    public SampoBot(BotProperties botProperties, UserService userService) {
+        this.botProperties = botProperties;
+        this.updateHandlerImpl = new UpdateHandlerImpl(new SendServiceImpl(this), userService);
+    }
 //    private final CommandContainer commands;
 
-    public SampoBot(BotProperties botProperties) {
-        this.botProperties = botProperties;
+//    public SampoBot(BotProperties botProperties) {
+//        this.botProperties = botProperties;
 //        this.commands = new CommandContainer(new SendServiceImpl(this));
-    }
+//    }
 
 
     @Override
@@ -60,39 +66,18 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
 
-//        Subject subject = SecurityUtils.getSubject();
-//
-//        Session sessionFromSubject = subject.getSession(false);
-
-        Long userId = update.getMessage().getFrom().getId();
-        String textFromUser = update.getMessage().getText();
-        Session session = botSession.get();
-        String oldText = (String) session.getAttribute("textFromUser");
-        String newText;
-        if (oldText == null) {
-            newText = textFromUser;
-        } else {
-            newText = oldText + "\n" + textFromUser;
-        }
-
-        session.setAttribute("textFromUser", newText);
-
-        String msg = (String) session.getAttribute("textFromUser");
-
-
-        sendText(userId, msg);
-
+        updateHandlerImpl.handleUpdate(update, botSession.get());
     }
 
 
     public void sendText(Long userId, String msg) {
         SendMessage sendMessage = SendMessage.builder()
-                .chatId(userId) //Who are we sending a message to
-                .text(msg).build();    //Message content
+                .chatId(userId)
+                .text(msg).build();
         try {
-            execute(sendMessage);                        //Actually sending the message
+            execute(sendMessage);
         } catch (TelegramApiException e) {
-            throw new RuntimeException(e);      //Any error will be printed here
+            throw new RuntimeException(e);
         }
     }
 

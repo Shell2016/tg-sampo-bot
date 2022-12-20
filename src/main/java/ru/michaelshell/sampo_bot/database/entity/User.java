@@ -28,8 +28,6 @@ public class User implements BaseEntity<Long>{
 
     private String lastName;
 
-    private String name;
-
     @Enumerated(EnumType.STRING)
     private Role role;
 
