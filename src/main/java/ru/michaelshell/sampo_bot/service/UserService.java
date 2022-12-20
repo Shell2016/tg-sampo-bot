@@ -12,9 +12,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     void save(User user) {
-        User.builder()
-                .id()
-                        .build();
+
         userRepository.save(user);
     }
 }
