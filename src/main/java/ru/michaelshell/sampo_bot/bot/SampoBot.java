@@ -1,16 +1,24 @@
 package ru.michaelshell.sampo_bot.bot;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.session.mgt.SimpleSession;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.session.TelegramLongPollingSessionBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
+
+import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 @Component
-public class SampoBot extends TelegramLongPollingBot {
+public class SampoBot extends TelegramLongPollingSessionBot {
 
 
     private final BotProperties botProperties;
@@ -32,21 +40,47 @@ public class SampoBot extends TelegramLongPollingBot {
         return botProperties.token();
     }
 
+//    @Override
+//    public void onUpdateReceived(Update update) {
+//
+//        if (update.hasMessage() && update.getMessage().hasText()) {
+//
+//            String message = update.getMessage().getText().trim();
+//
+//
+////            if (message.startsWith("/")) {
+////                String commandIdentifier = message.split(" ")[0].toLowerCase();
+////                commands.getCommand(commandIdentifier).execute(update);
+////            }
+//
+//        }
+//    }
+//
+
     @Override
-    public void onUpdateReceived(Update update) {
+    public void onUpdateReceived(Update update, Optional<Session> botSession) {
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
+//        Subject subject = SecurityUtils.getSubject();
+//
+//        Session sessionFromSubject = subject.getSession(false);
 
-            String message = update.getMessage().getText().trim();
-
-
-//            if (message.startsWith("/")) {
-//                String commandIdentifier = message.split(" ")[0].toLowerCase();
-//                commands.getCommand(commandIdentifier).execute(update);
-//            }
-
+        Long userId = update.getMessage().getFrom().getId();
+        String textFromUser = update.getMessage().getText();
+        Session session = botSession.get();
+        String oldText = (String) session.getAttribute("textFromUser");
+        String newText;
+        if (oldText == null) {
+            newText = textFromUser;
+        } else {
+            newText = oldText + "\n" + textFromUser;
         }
 
+        session.setAttribute("textFromUser", newText);
+
+        String msg = (String) session.getAttribute("textFromUser");
+
+
+        sendText(userId, msg);
 
     }
 
