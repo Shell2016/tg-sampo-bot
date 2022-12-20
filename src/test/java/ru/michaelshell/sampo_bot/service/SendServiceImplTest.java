@@ -30,7 +30,7 @@ class SendServiceImplTest {
                 .text(TEST_MESSAGE)
                 .build();
 
-//        sendServiceImpl.sendMessage(TEST_USER_ID, TEST_MESSAGE);
+        sendServiceImpl.send(TEST_USER_ID, TEST_MESSAGE);
 
         Mockito.verify(sampoBot).execute(sendMessage);
     }

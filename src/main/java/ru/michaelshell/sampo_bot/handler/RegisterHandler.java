@@ -10,8 +10,10 @@ import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.AUTHENTICATED;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
+
 
 
 @Slf4j
@@ -27,11 +29,16 @@ public class RegisterHandler implements UpdateHandler {
     @Override
     public void handleUpdate(Update update, Session session) {
         User user = update.getMessage().getFrom();
-        if (userService.findById(user.getId()).isEmpty()) {
+
+        UserReadDto dto = userService.findById(user.getId()).orElse(null);
+        if (dto == null) {
             createUser(user);
+        } else {
+            authenticate(session, dto);
         }
-        session.setAttribute(AUTHENTICATED, true);
+        session.setAttribute(AUTHENTICATED.name(), true);
     }
+
 
     private void createUser(User user) {
         UserCreateEditDto dto = UserCreateEditDto.builder()
@@ -46,6 +53,18 @@ public class RegisterHandler implements UpdateHandler {
 
         UserReadDto userReadDto = userService.createUser(dto);
         log.info("New user " + userReadDto.getUserName() + " have been successfully created");
+    }
+
+
+    private static void authenticate(Session session, UserReadDto dto) {
+        if (dto.getRole() != null) {
+            session.setAttribute(HAS_ROLE.name(), dto.getRole().name());
+        }
+        if (Status.ADMIN.equals(dto.getStatus())) {
+            session.setAttribute(STATUS.name(), Status.ADMIN.name());
+        } else {
+            session.setAttribute(STATUS.name(), Status.USER.name());
+        }
     }
 
 

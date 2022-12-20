@@ -18,7 +18,6 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
     public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService) {
-//        this.startHandler = new StartHandler(sendService);
         handlers.put("start", new StartHandler(sendService));
         handlers.put("register", new RegisterHandler(userService));
     }
@@ -29,7 +28,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
 
-            if (session.getAttribute(AUTHENTICATED) == null) {
+            if (session.getAttribute(AUTHENTICATED.name()) == null) {
                 handlers.get("register").handleUpdate(update, session);
             }
 
