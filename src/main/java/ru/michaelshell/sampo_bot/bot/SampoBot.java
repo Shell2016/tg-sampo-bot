@@ -2,7 +2,6 @@ package ru.michaelshell.sampo_bot.bot;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -26,14 +25,8 @@ public class SampoBot extends TelegramLongPollingSessionBot {
 
     public SampoBot(BotProperties botProperties, UserService userService) {
         this.botProperties = botProperties;
-        this.updateHandlerImpl = new UpdateHandlerImpl(new SendServiceImpl(this), userService);
+        this.updateHandlerImpl = new UpdateHandlerImpl(new SendServiceImpl(this), userService, botProperties);
     }
-//    private final CommandContainer commands;
-
-//    public SampoBot(BotProperties botProperties) {
-//        this.botProperties = botProperties;
-//        this.commands = new CommandContainer(new SendServiceImpl(this));
-//    }
 
 
     @Override
@@ -46,26 +39,9 @@ public class SampoBot extends TelegramLongPollingSessionBot {
         return botProperties.token();
     }
 
-//    @Override
-//    public void onUpdateReceived(Update update) {
-//
-//        if (update.hasMessage() && update.getMessage().hasText()) {
-//
-//            String message = update.getMessage().getText().trim();
-//
-//
-////            if (message.startsWith("/")) {
-////                String commandIdentifier = message.split(" ")[0].toLowerCase();
-////                commands.getCommand(commandIdentifier).execute(update);
-////            }
-//
-//        }
-//    }
-//
 
     @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
-
         updateHandlerImpl.handleUpdate(update, botSession.get());
     }
 
@@ -81,29 +57,5 @@ public class SampoBot extends TelegramLongPollingSessionBot {
         }
     }
 
-//    private void copyMessage(Long userId, Integer msgId) {
-//        CopyMessage copyMessage = CopyMessage.builder()
-//                .fromChatId(userId)
-//                .chatId(userId)
-//                .messageId(msgId)
-//                .build();
-//        try {
-//            execute(copyMessage);
-//        } catch (TelegramApiException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
-//    public void sendMenu(Long userId, String txt, InlineKeyboardMarkup keyBoard){
-//        SendMessage sm = SendMessage.builder().chatId(userId.toString())
-//                .parseMode("HTML").text(txt)
-//                .replyMarkup(keyBoard).build();
-//
-//        try {
-//            execute(sm);
-//        } catch (TelegramApiException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
 }

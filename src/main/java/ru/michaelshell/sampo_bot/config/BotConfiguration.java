@@ -10,8 +10,8 @@ public class BotConfiguration {
 
 
     @Bean
-    public BotInitializer botInitializer(SampoBot sampoBot) {
-        return new BotInitializer(sampoBot);
+    public BotInitializer botInitializer(SampoBot sampoBot, BotProperties botProperties) {
+        return new BotInitializer(sampoBot, botProperties);
     }
 
 }

@@ -18,9 +18,9 @@ public class SendServiceImpl implements SendService {
     }
 
     @Override
-    public void send(Long userId, String message) {
+    public void send(Long chatId, String message) {
         SendMessage sendMessage = SendMessage.builder()
-                .chatId(userId)
+                .chatId(chatId)
                 .text(message).build();
         try {
             sampoBot.execute(sendMessage);

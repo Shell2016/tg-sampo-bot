@@ -2,12 +2,17 @@ bot:
   username: SampoRegistrationBot
   token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48
   adminId: 528357712
+  adminUsername: shell_201777777777
 
 logging:
   level:
+    org:
+      springframework:
+        transaction: trace
     root: info
   file:
     name: bot.log
+    path: ./logs
 
 spring:
   datasource:
