@@ -33,10 +33,10 @@ public class EventsHandler implements UpdateHandler {
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
-            sendServiceImpl.sendMessageWithKeyboard(chatId, "В данный момент нет коллективок", session);
+            sendServiceImpl.sendWithKeyboard(chatId, "В данный момент нет коллективок", session);
             return;
         }
-        sendServiceImpl.sendMessageWithKeyboard(chatId, "Актуальный список коллективок", session);
+        sendServiceImpl.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
         events.forEach(event -> {
             String time = event.getTime().format(dateTimeFormatter);
             String eventInfo = """
@@ -45,7 +45,7 @@ public class EventsHandler implements UpdateHandler {
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
 
-            sendServiceImpl.sendMessageWithKeyboard(chatId, eventInfo, session, eventListButtons);
+            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
         });
 
 

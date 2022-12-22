@@ -38,7 +38,7 @@ public class PromotionHandler implements UpdateHandler {
 
         if (!checkPromotionRights(botProperties.admin().id(), user.getId(),
                 botProperties.admin().username(), user.getUserName())) {
-            sendService.sendMessageWithKeyboard(chatId, "Нет прав для выполнения команды", session);
+            sendService.sendWithKeyboard(chatId, "Нет прав для выполнения команды", session);
             return;
         }
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
@@ -49,17 +49,17 @@ public class PromotionHandler implements UpdateHandler {
                         "Если фунционал не заработал, ему нужно ввести команду\n" +
                         "/clear чтобы очистить текущую сессию";
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
-                sendService.sendMessageWithKeyboard(chatId, success, session);
+                sendService.sendWithKeyboard(chatId, success, session);
                 return;
             } catch (NoSuchElementException e) {
-                sendService.sendMessageWithKeyboard(chatId, "Пользователь не найден", session);
+                sendService.sendWithKeyboard(chatId, "Пользователь не найден", session);
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
                 return;
             }
 
         }
 
-        sendService.sendMessageWithKeyboard(chatId, "Введите имя для выдачи админских прав", session);
+        sendService.sendWithKeyboard(chatId, "Введите имя для выдачи админских прав", session);
         session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), true);
 
 

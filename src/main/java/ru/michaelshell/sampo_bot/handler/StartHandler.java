@@ -21,7 +21,7 @@ public class StartHandler implements UpdateHandler {
 
         Long chatId = update.getMessage().getChatId();
 
-        sendServiceImpl.sendMessageWithKeyboard(chatId, START_MSG, session);
+        sendServiceImpl.sendWithKeyboard(chatId, START_MSG, session);
     }
 
     @Override

@@ -51,7 +51,6 @@ public class RegisterHandler implements UpdateHandler {
                 .status(Status.USER)
                 .registeredAt(LocalDateTime.now())
                 .build();
-
         UserReadDto userReadDto = userService.createUser(dto);
         log.info("New user " + userReadDto + " have been successfully created");
         return userReadDto;

@@ -37,7 +37,7 @@ public class SendServiceImpl implements SendService {
     }
 
     @Override
-    public void sendMessageWithKeyboard(Long chatId, String msg, Session session) {
+    public void sendWithKeyboard(Long chatId, String msg, Session session) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
@@ -62,7 +62,7 @@ public class SendServiceImpl implements SendService {
     }
 
     @Override
-    public void sendMessageWithKeyboard(Long chatId, String msg, Session session, InlineKeyboardMarkup inlineKeyboardMarkup) {
+    public void sendWithKeyboard(Long chatId, String msg, Session session, InlineKeyboardMarkup inlineKeyboardMarkup) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
