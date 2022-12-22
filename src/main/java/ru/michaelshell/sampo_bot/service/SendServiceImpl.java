@@ -3,16 +3,15 @@ package ru.michaelshell.sampo_bot.service;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
 import ru.michaelshell.sampo_bot.database.entity.Status;
-import ru.michaelshell.sampo_bot.keyboard.KeyboardUtils;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.*;
+import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventListAdminKeyboard;
+import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventListKeyboard;
 
 
 @Service
@@ -43,11 +42,32 @@ public class SendServiceImpl implements SendService {
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(msg);
-        if ( session.getAttribute(SessionAttribute.STATUS.name()).equals(Status.ADMIN.name())) {
+        if (session.getAttribute(SessionAttribute.STATUS.name()).equals(Status.ADMIN.name())) {
             sendMessage.setReplyMarkup(eventListAdminKeyboard);
         } else {
             sendMessage.setReplyMarkup(eventListKeyboard);
         }
+//        SendMessage sendMessage = SendMessage.builder()
+//                .parseMode(ParseMode.MARKDOWN)
+//                .chatId(chatId)
+//                .text(msg)
+//                .replyMarkup(keyboard)
+//                .build();
+        try {
+            sampoBot.execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void sendMessageWithKeyboard(Long chatId, String msg, Session session, InlineKeyboardMarkup inlineKeyboardMarkup) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.enableMarkdown(true);
+        sendMessage.setChatId(chatId);
+        sendMessage.setText(msg);
+        sendMessage.setReplyMarkup(inlineKeyboardMarkup);
 
 //        SendMessage sendMessage = SendMessage.builder()
 //                .parseMode(ParseMode.MARKDOWN)
@@ -55,12 +75,10 @@ public class SendServiceImpl implements SendService {
 //                .text(msg)
 //                .replyMarkup(keyboard)
 //                .build();
-
         try {
             sampoBot.execute(sendMessage);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }
-
     }
 }

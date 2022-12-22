@@ -35,11 +35,9 @@ public class UpdateHandlerImpl implements UpdateHandler {
     public void handleUpdate(Update update, Session session) {
 
         Message message = update.getMessage();
-        if (!message.isUserMessage()) {
-            return;
-        }
 
-        if (message != null && message.hasText()) {
+
+        if (message != null && message.hasText() && message.isUserMessage()) {
 
             if (session.getAttribute(AUTHENTICATED.name()) == null) {
                 handlers.get("register").handleUpdate(update, session);

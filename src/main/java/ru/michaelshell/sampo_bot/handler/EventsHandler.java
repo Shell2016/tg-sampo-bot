@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventListKeyboard;
+import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.*;
 
 
 public class EventsHandler implements UpdateHandler {
@@ -36,6 +36,7 @@ public class EventsHandler implements UpdateHandler {
             sendServiceImpl.sendMessageWithKeyboard(chatId, "В данный момент нет коллективок", session);
             return;
         }
+        sendServiceImpl.sendMessageWithKeyboard(chatId, "Актуальный список коллективок", session);
         events.forEach(event -> {
             String time = event.getTime().format(dateTimeFormatter);
             String eventInfo = """
@@ -44,8 +45,9 @@ public class EventsHandler implements UpdateHandler {
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
 
-            sendServiceImpl.sendMessageWithKeyboard(chatId, eventInfo, session);
+            sendServiceImpl.sendMessageWithKeyboard(chatId, eventInfo, session, eventListButtons);
         });
+
 
     }
 
