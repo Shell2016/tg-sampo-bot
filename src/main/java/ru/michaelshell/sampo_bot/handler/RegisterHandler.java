@@ -29,14 +29,14 @@ public class RegisterHandler implements UpdateHandler {
     @Override
     public void handleUpdate(Update update, Session session) {
         User user = update.getMessage().getFrom();
-
-        UserReadDto dto = userService.findById(user.getId()).orElse(null);
-        if (dto == null) {
+        UserReadDto userDto = userService.findById(user.getId()).orElse(null);
+        if (userDto == null) {
             createUser(user);
         } else {
-            authenticate(session, dto);
+            authenticate(session, userDto);
         }
         session.setAttribute(AUTHENTICATED.name(), true);
+
     }
 
 
@@ -56,11 +56,11 @@ public class RegisterHandler implements UpdateHandler {
     }
 
 
-    private static void authenticate(Session session, UserReadDto dto) {
-        if (dto.getRole() != null) {
-            session.setAttribute(HAS_ROLE.name(), dto.getRole().name());
+    private static void authenticate(Session session, UserReadDto userDto) {
+        if (userDto.getRole() != null) {
+            session.setAttribute(HAS_ROLE.name(), userDto.getRole().name());
         }
-        if (Status.ADMIN.equals(dto.getStatus())) {
+        if (Status.ADMIN.equals(userDto.getStatus())) {
             session.setAttribute(STATUS.name(), Status.ADMIN.name());
         } else {
             session.setAttribute(STATUS.name(), Status.USER.name());

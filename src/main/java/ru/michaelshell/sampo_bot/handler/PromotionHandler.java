@@ -2,8 +2,6 @@ package ru.michaelshell.sampo_bot.handler;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
-import org.apache.shiro.session.mgt.SessionContext;
-import org.apache.shiro.session.mgt.SessionManager;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -44,8 +42,7 @@ public class PromotionHandler implements UpdateHandler {
             return;
         }
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
-            // TODO: 21.12.2022 Promotion
-            String userName = update.getMessage().getText();
+            String userName = update.getMessage().getText().trim();
             try {
                 userService.promoteByUserName(userName);
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
@@ -61,7 +58,7 @@ public class PromotionHandler implements UpdateHandler {
 
         }
 
-        sendService.send(user.getId(), "Enter username for promotion");
+        sendService.send(chatId, "Введите имя для выдачи админских прав");
         session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), true);
 
 

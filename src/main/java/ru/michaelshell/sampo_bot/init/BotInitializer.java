@@ -10,6 +10,8 @@ import ru.michaelshell.sampo_bot.bot.SampoBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.config.CommandConfig;
 
+import java.util.Locale;
+
 
 @RequiredArgsConstructor
 public class BotInitializer {

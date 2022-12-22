@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS event
 (
     id BIGSERIAL PRIMARY KEY ,
     name VARCHAR(64) NOT NULL,
-    info VARCHAR(256),
+    info VARCHAR(256) DEFAULT '',
     time TIMESTAMP,
     created_at TIMESTAMP NOT NULL ,
     created_by VARCHAR(64) NOT NULL ,

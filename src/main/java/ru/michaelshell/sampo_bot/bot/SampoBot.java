@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.session.TelegramLongPollingSessionBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.handler.UpdateHandlerImpl;
+import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
 
@@ -23,9 +24,13 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     private final UpdateHandlerImpl updateHandlerImpl;
 
 
-    public SampoBot(BotProperties botProperties, UserService userService) {
+    public SampoBot(BotProperties botProperties, UserService userService, EventService eventService) {
         this.botProperties = botProperties;
-        this.updateHandlerImpl = new UpdateHandlerImpl(new SendServiceImpl(this), userService, botProperties);
+        this.updateHandlerImpl = new UpdateHandlerImpl(
+                new SendServiceImpl(this),
+                userService,
+                eventService,
+                botProperties);
     }
 
 
