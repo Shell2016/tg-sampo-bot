@@ -51,5 +51,9 @@ public class EventsHandler implements UpdateHandler {
 
     }
 
+    @Override
+    public void handleCallback(Update update, Session session) {
+    }
+
 
 }

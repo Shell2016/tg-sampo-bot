@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface UpdateHandler {
 
     void handleUpdate(Update update, Session session);
+
+    void handleCallback(Update update, Session session);
 }

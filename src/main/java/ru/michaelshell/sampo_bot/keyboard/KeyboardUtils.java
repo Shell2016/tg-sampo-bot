@@ -16,6 +16,9 @@ public class KeyboardUtils {
     public final static ReplyKeyboardMarkup eventListKeyboard = KeyboardUtils.getEventListKeyboard();
     public final static ReplyKeyboardMarkup eventListAdminKeyboard = KeyboardUtils.getEventListAdminKeyboard();
     public final static InlineKeyboardMarkup eventListButtons = KeyboardUtils.getEventListButtons();
+    public final static InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
+
+
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -64,6 +67,28 @@ public class KeyboardUtils {
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);
         rowList.add(row2);
+
+        eventListButtons.setKeyboard(rowList);
+        return eventListButtons;
+    }
+
+    private static InlineKeyboardMarkup getEventInfoButtons() {
+        InlineKeyboardMarkup eventListButtons = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonInfoYes = new InlineKeyboardButton();
+        buttonInfoYes.setText("Да");
+        buttonInfoYes.setCallbackData("buttonInfoYes");
+
+        InlineKeyboardButton buttonInfoNo = new InlineKeyboardButton();
+        buttonInfoNo.setText("Нет");
+        buttonInfoNo.setCallbackData("buttonInfoNo");
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(buttonInfoYes);
+        row1.add(buttonInfoNo);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row1);
 
         eventListButtons.setKeyboard(rowList);
         return eventListButtons;

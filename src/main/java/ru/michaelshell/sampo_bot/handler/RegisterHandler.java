@@ -35,6 +35,11 @@ public class RegisterHandler implements UpdateHandler {
         authenticate(session, userDto);
     }
 
+    @Override
+    public void handleCallback(Update update, Session session) {
+
+    }
+
 
     private UserReadDto createUser(User user) {
         UserCreateEditDto dto = UserCreateEditDto.builder()

@@ -65,6 +65,11 @@ public class PromotionHandler implements UpdateHandler {
 
     }
 
+    @Override
+    public void handleCallback(Update update, Session session) {
+
+    }
+
 
     boolean checkPromotionRights(Long adminId, Long idToCheck, String adminUsername, String nameToCheck) {
         return Objects.equals(idToCheck, adminId) || Objects.equals(adminUsername, nameToCheck);

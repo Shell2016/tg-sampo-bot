@@ -11,12 +11,11 @@ import ru.michaelshell.sampo_bot.service.UserService;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.AUTHENTICATED;
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.PROMOTION_WAITING_FOR_USERNAME;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
 /**
  *  Класс с основной логикой перенаправления запросов в обработчики,
- *  а также для хранения и создания обработчиков запросов *
+ *  а также создает и хранит их
  */
 
 public class UpdateHandlerImpl implements UpdateHandler {
@@ -29,6 +28,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         handlers.put("register", new RegisterHandler(userService));
         handlers.put("promote", new PromotionHandler(sendService, userService, botProperties));
         handlers.put("events", new EventsHandler(sendService, eventService));
+        handlers.put("eventAdd", new EventAddHandler(sendService, eventService));
     }
 
     @Override
@@ -43,7 +43,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 handlers.get("register").handleUpdate(update, session);
             }
 
-            messageFilter(update, session);
+            waitingStatusMessageRouter(update, session);
 
             String messageText = message.getText();
             switch (messageText) {
@@ -51,6 +51,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "/promote" -> handlers.get("promote").handleUpdate(update, session);
                 case "/clear" -> session.stop();
                 case "/events", "Список коллективок" -> handlers.get("events").handleUpdate(update, session);
+                case "Добавить" -> handlers.get("eventAdd").handleUpdate(update, session);
 
 //                default -> handlers.get("default").handleUpdate(update, session);
 
@@ -60,17 +61,40 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
         if (update.hasCallbackQuery()) {
-            // TODO: 21.12.2022
+            String callbackData = update.getCallbackQuery().getData();
+            switch (callbackData) {
+                case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventAdd").handleCallback(update, session);
+            }
 
         }
 
     }
 
-    private void messageFilter(Update update, Session session) {
+    @Override
+    public void handleCallback(Update update, Session session) {
+
+    }
+
+    private void waitingStatusMessageRouter(Update update, Session session) {
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
+            handlers.get("eventAdd").handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name()))) {
+            handlers.get("eventAdd").handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
+            handlers.get("eventAdd").handleUpdate(update, session);
+        }
 
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
             handlers.get("promote").handleUpdate(update, session);
         }
+
+
+
 
     }
 

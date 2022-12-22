@@ -24,5 +24,10 @@ public class StartHandler implements UpdateHandler {
         sendServiceImpl.sendMessageWithKeyboard(chatId, START_MSG, session);
     }
 
+    @Override
+    public void handleCallback(Update update, Session session) {
+
+    }
+
 
 }
