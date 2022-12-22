@@ -25,7 +25,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
     public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService, EventService eventService, BotProperties botProperties) {
-        handlers.put("default", new DefaultHandler(sendService));
+        handlers.put("start", new StartHandler(sendService));
         handlers.put("register", new RegisterHandler(userService));
         handlers.put("promote", new PromotionHandler(sendService, userService, botProperties));
         handlers.put("events", new EventsHandler(sendService, eventService));
@@ -49,12 +49,12 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
             String messageText = message.getText();
             switch (messageText) {
-//                case "/start" -> handlers.get("start").handleUpdate(update, session);
+                case "/start", "/help" -> handlers.get("start").handleUpdate(update, session);
                 case "/promote" -> handlers.get("promote").handleUpdate(update, session);
                 case "/clear" -> session.stop();
                 case "/events", "Список коллективок" -> handlers.get("events").handleUpdate(update, session);
 
-                default -> handlers.get("default").handleUpdate(update, session);
+//                default -> handlers.get("default").handleUpdate(update, session);
 
             }
 

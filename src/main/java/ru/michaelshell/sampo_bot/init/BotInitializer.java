@@ -10,8 +10,6 @@ import ru.michaelshell.sampo_bot.bot.SampoBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.config.CommandConfig;
 
-import java.util.Locale;
-
 
 @RequiredArgsConstructor
 public class BotInitializer {
@@ -29,6 +27,6 @@ public class BotInitializer {
         ));
 
 
-        sampoBot.sendText(Long.valueOf(botProperties.adminId()), "Bot started!");
+        sampoBot.sendText(botProperties.admin().id(), "Bot started!");
     }
 }

@@ -12,6 +12,22 @@ import java.util.List;
 public class KeyboardUtils {
 
     public final static ReplyKeyboardMarkup eventListKeyboard = KeyboardUtils.getEventListKeyboard();
+    public final static ReplyKeyboardMarkup eventListAdminKeyboard = KeyboardUtils.getEventListAdminKeyboard();
+
+
+    public static ReplyKeyboardMarkup getEventListAdminKeyboard() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+
+        List<KeyboardRow> keyboard = new ArrayList<>();
+        KeyboardRow row = new KeyboardRow();
+        row.add(new KeyboardButton("Список коллективок"));
+        row.add(new KeyboardButton("Добавить"));
+        keyboard.add(row);
+        replyKeyboardMarkup.setKeyboard(keyboard);
+        return replyKeyboardMarkup;
+    }
 
     public static ReplyKeyboardMarkup getEventListKeyboard () {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();

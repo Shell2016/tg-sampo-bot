@@ -10,10 +10,8 @@ import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
-
 
 
 @Slf4j
@@ -31,16 +29,14 @@ public class RegisterHandler implements UpdateHandler {
         User user = update.getMessage().getFrom();
         UserReadDto userDto = userService.findById(user.getId()).orElse(null);
         if (userDto == null) {
-            createUser(user);
-        } else {
-            authenticate(session, userDto);
+            userDto = createUser(user);
+            log.info("New user " + userDto + " have been successfully created");
         }
-        session.setAttribute(AUTHENTICATED.name(), true);
-
+        authenticate(session, userDto);
     }
 
 
-    private void createUser(User user) {
+    private UserReadDto createUser(User user) {
         UserCreateEditDto dto = UserCreateEditDto.builder()
                 .id(user.getId())
                 .userName(user.getUserName())
@@ -52,7 +48,8 @@ public class RegisterHandler implements UpdateHandler {
                 .build();
 
         UserReadDto userReadDto = userService.createUser(dto);
-        log.info("New user " + userReadDto.getUserName() + " have been successfully created");
+        log.info("New user " + userReadDto + " have been successfully created");
+        return userReadDto;
     }
 
 
@@ -65,6 +62,7 @@ public class RegisterHandler implements UpdateHandler {
         } else {
             session.setAttribute(STATUS.name(), Status.USER.name());
         }
+        session.setAttribute(AUTHENTICATED.name(), true);
     }
 
 

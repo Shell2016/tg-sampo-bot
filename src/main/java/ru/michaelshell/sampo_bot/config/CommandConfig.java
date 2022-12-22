@@ -18,8 +18,8 @@ public class CommandConfig {
 
     public CommandConfig() {
         menuCommands = new ArrayList<>();
-        menuCommands.add(new BotCommand("/events", "Список актуальных коллективок"));
-//        menuCommands.add(new BotCommand("/help", "some help text"));
+        menuCommands.add(new BotCommand("/events", "Список коллективок"));
+        menuCommands.add(new BotCommand("/help", "Краткое описание"));
 //        menuCommands.add(new BotCommand("/settings", "Settings menu"));
     }
 

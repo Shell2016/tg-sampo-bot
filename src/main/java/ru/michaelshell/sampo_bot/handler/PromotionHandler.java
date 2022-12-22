@@ -36,29 +36,30 @@ public class PromotionHandler implements UpdateHandler {
         Long chatId = message.getChatId();
 
 
-        if (!checkPromotionRights(Long.valueOf(botProperties.adminId()), user.getId(),
-                botProperties.adminUsername(), user.getUserName())) {
-            sendService.send(chatId, "Нет прав для выполнения команды");
+        if (!checkPromotionRights(botProperties.admin().id(), user.getId(),
+                botProperties.admin().username(), user.getUserName())) {
+            sendService.sendMessageWithKeyboard(chatId, "Нет прав для выполнения команды", session);
             return;
         }
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
             String userName = update.getMessage().getText().trim();
             try {
                 userService.promoteByUserName(userName);
+                String success = "Пользователю выданы права админа.\n" +
+                        "Если фунционал не заработал, ему нужно ввести команду\n" +
+                        "/clear чтобы очистить текущую сессию";
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
-                sendService.send(chatId, ("Пользователю %s выданы права админа.\n" +
-                        "Если функционал не заработал, ему нужно будет ввести команду /clear," +
-                        " чтобы очистить текущую сессию").formatted(userName));
+                sendService.sendMessageWithKeyboard(chatId, success, session);
                 return;
             } catch (NoSuchElementException e) {
-                sendService.send(chatId, "Пользователь не найден");
+                sendService.sendMessageWithKeyboard(chatId, "Пользователь не найден", session);
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
                 return;
             }
 
         }
 
-        sendService.send(chatId, "Введите имя для выдачи админских прав");
+        sendService.sendMessageWithKeyboard(chatId, "Введите имя для выдачи админских прав", session);
         session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), true);
 
 

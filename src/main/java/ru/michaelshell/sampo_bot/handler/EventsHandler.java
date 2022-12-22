@@ -31,20 +31,22 @@ public class EventsHandler implements UpdateHandler {
         Long chatId = update.getMessage().getChatId();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM HH:mm", new Locale("ru"));
 
-        eventService.findAll().forEach(event -> {
+        List<EventReadDto> events = eventService.findAll();
+        if (events.isEmpty()) {
+            sendServiceImpl.sendMessageWithKeyboard(chatId, "В данный момент нет коллективок", session);
+            return;
+        }
+        events.forEach(event -> {
             String time = event.getTime().format(dateTimeFormatter);
-            String msg = """
+            String eventInfo = """
                     Уровень: %s
                     Время: %s
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
 
-
-            sendServiceImpl.sendMessageWithKeyboard(chatId, msg, eventListKeyboard);
+            sendServiceImpl.sendMessageWithKeyboard(chatId, eventInfo, session);
         });
 
-
-//        sendServiceImpl.sendMessageWithKeyboard(chatId, DEFAULT_MSG, keyboard);
     }
 
 

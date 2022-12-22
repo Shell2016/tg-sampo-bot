@@ -5,7 +5,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "bot")
 public record BotProperties(String username,
                             String token,
-                            String adminId,
-                            String adminUsername
-) {
+                            AdminProperties admin) {
+
+    public record AdminProperties(Long id,
+                                  String username) {
+
+    }
 }
