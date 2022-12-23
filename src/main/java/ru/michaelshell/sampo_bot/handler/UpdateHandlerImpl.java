@@ -33,6 +33,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         handlers.put("eventDelete", new EventDeleteHandler(sendService, eventService));
         handlers.put("eventRegister", new EventRegisterHandler(sendService, eventService));
         handlers.put("roleSet", new RoleSetHandler(sendService, userService));
+        handlers.put("eventSoloRegister", new EventSoloRegisterHandler(sendService, eventService));
     }
 
     @Override
@@ -75,6 +76,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonEventDelete" -> handlers.get("eventDelete").handleCallback(update, session);
                 case "buttonEventRegister" -> handlers.get("eventRegister").handleCallback(update, session);
                 case "buttonLeader", "buttonFollower" -> handlers.get("roleSet").handleCallback(update, session);
+                case "buttonSolo" -> handlers.get("eventSoloRegister").handleCallback(update, session);
+                case "buttonCouple" -> handlers.get("eventCoupleRegister").handleCallback(update, session);
             }
 
         }

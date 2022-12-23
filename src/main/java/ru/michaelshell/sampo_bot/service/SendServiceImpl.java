@@ -3,6 +3,7 @@ package ru.michaelshell.sampo_bot.service;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
@@ -65,4 +66,22 @@ public class SendServiceImpl implements SendService {
         }
     }
 
+
+    public void edit(Long chatId, Integer messageId, String msg) {
+//        EditMessageText editMessage = new EditMessageText();
+//        editMessage.setChatId(chatId);
+//        editMessage.setMessageId(messageId);
+//        editMessage.setText(msg);
+        EditMessageText editMessage = EditMessageText.builder()
+                .chatId(chatId)
+                .messageId(messageId)
+                .text(msg)
+                .build();
+        try {
+            sampoBot.execute(editMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }

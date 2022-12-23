@@ -66,13 +66,14 @@ public class RoleSetHandler implements UpdateHandler {
     public void handleCallback(Update update, Session session) {
         String data = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
+        Integer messageId = update.getCallbackQuery().getMessage().getMessageId();
         role = null;
         if ("buttonLeader".equals(data)) {
             role = Role.LEADER;
         } else if ("buttonFollower".equals(data)) {
             role = Role.FOLLOWER;
         }
-        sendService.sendWithKeyboard(chatId, "Введите имя и фамилию (именно в таком порядке)", session);
+        sendService.edit(chatId, messageId, "Введите имя и фамилию (именно в таком порядке)");
         session.setAttribute(SET_ROLE_WAITING_FOR_NAME.name(), true);
     }
 

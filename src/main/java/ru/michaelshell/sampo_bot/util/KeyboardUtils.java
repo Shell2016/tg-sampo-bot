@@ -19,7 +19,7 @@ public class KeyboardUtils {
     public final static InlineKeyboardMarkup eventListAdminButtons = KeyboardUtils.getEventListAdminButtons();
     public final static InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
     public static final InlineKeyboardMarkup roleSelectButtons = KeyboardUtils.getRoleSelectButtons();
-
+    public static final InlineKeyboardMarkup registerEventModeButtons = KeyboardUtils.getRegisterEventModeButtons();
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -148,5 +148,27 @@ public class KeyboardUtils {
 
         roleSelectButtons.setKeyboard(rowList);
         return roleSelectButtons;
+    }
+
+    private static InlineKeyboardMarkup getRegisterEventModeButtons() {
+        InlineKeyboardMarkup registerEventModeButtons = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonSolo = new InlineKeyboardButton();
+        buttonSolo.setText("Без пары");
+        buttonSolo.setCallbackData("buttonSolo");
+
+        InlineKeyboardButton buttonCouple = new InlineKeyboardButton();
+        buttonCouple.setText("В паре");
+        buttonCouple.setCallbackData("buttonCouple");
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(buttonSolo);
+        row.add(buttonCouple);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row);
+
+        registerEventModeButtons.setKeyboard(rowList);
+        return registerEventModeButtons;
     }
 }
