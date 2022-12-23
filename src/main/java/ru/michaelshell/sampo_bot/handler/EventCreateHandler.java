@@ -74,7 +74,8 @@ public class EventCreateHandler implements UpdateHandler {
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
-            sendServiceImpl.sendWithKeyboard(chatId, "Название/уровень коллективки:", session);
+            sendServiceImpl.sendWithKeyboard(chatId, "Введите название/уровень коллективки.\n" +
+                    "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_NAME.name(), true);
         }
     }

@@ -10,6 +10,9 @@ import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 import static ru.michaelshell.sampo_bot.util.BotUtils.hasRole;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.registerEventModeButtons;
@@ -19,6 +22,7 @@ public class EventRegisterHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
+
 
 
     public EventRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
@@ -38,6 +42,7 @@ public class EventRegisterHandler implements UpdateHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
         User user = callbackQuery.getFrom();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
             sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию", session, roleSelectButtons);
@@ -48,8 +53,13 @@ public class EventRegisterHandler implements UpdateHandler {
                 sendServiceImpl.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
                 return;
             }
-
-            sendServiceImpl.sendWithKeyboard(chatId, "Как регистрируемся?", session, registerEventModeButtons);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy  HH:mm", new Locale("ru"));
+            String time = event.getTime().format(formatter);
+            String eventHeader = """
+                    Уровень: %s
+                    Время: %s
+                    """.formatted(event.getName(), time);
+            sendServiceImpl.sendWithKeyboard(chatId, eventHeader, session, registerEventModeButtons);
 
 //            eventService.register(event, callbackQuery.getFrom());
 

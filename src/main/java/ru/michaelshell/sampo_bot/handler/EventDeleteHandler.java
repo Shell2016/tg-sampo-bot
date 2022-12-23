@@ -33,6 +33,7 @@ public class EventDeleteHandler implements UpdateHandler {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
 
         EventGetDto event = parseEvent(msgText);
         if (event.getName() == null || event.getTime() == null) {
@@ -41,7 +42,7 @@ public class EventDeleteHandler implements UpdateHandler {
         }
         if (eventService.delete(event) == 1) {
             log.info("Коллективка удалена");
-            sendServiceImpl.sendWithKeyboard(chatId, "Коллективка удалена", session);
+            sendServiceImpl.edit(chatId, messageId,"Коллективка удалена");
         } else {
             log.info("Ошибка удаления коллективки");
             sendServiceImpl.sendWithKeyboard(chatId, "Ошибка удаления", session);

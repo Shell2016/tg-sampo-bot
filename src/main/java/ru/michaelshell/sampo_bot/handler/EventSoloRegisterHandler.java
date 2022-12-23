@@ -1,32 +1,36 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.UserService;
 
-import static ru.michaelshell.sampo_bot.util.BotUtils.hasRole;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.registerEventModeButtons;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 
+@Slf4j
 public class EventSoloRegisterHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
+    private final UserService userService;
 
 
-    public EventSoloRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
+    public EventSoloRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService, UserService userService) {
         this.sendServiceImpl = sendServiceImpl;
         this.eventService = eventService;
+
+        this.userService = userService;
     }
 
     @Override
     public void handleUpdate(Update update, Session session) {
-
     }
 
 
@@ -36,29 +40,25 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
         User user = callbackQuery.getFrom();
+        Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        if (!hasRole(session)) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию", session, roleSelectButtons);
+        EventGetDto event = parseEvent(msgText);
 
-        } else {
-            EventGetDto event = parseEvent(msgText);
-            if (event.getName() == null || event.getTime() == null) {
-                sendServiceImpl.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
-                return;
-            }
-
-            sendServiceImpl.sendWithKeyboard(chatId, "Как регистрируемся?", session, registerEventModeButtons);
-
-//            eventService.register(event, callbackQuery.getFrom());
-
+        try {
+            userService.registerOnEvent(event, user.getId());
+        } catch (DataIntegrityViolationException e) {
+            sendServiceImpl.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
+            return;
         }
-
-
-
-
+        log.info("Registration on event " + event + " by " + user.getFirstName() + " " + user.getLastName());
+        sendServiceImpl.edit(chatId, messageId, msgText);
+        sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!", session);
 
 
     }
 
 
 }
+
+
+

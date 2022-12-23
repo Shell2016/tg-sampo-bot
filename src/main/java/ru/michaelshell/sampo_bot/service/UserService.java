@@ -3,15 +3,18 @@ package ru.michaelshell.sampo_bot.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.michaelshell.sampo_bot.database.entity.Role;
-import ru.michaelshell.sampo_bot.database.entity.Status;
-import ru.michaelshell.sampo_bot.database.entity.User;
+import ru.michaelshell.sampo_bot.database.entity.*;
+import ru.michaelshell.sampo_bot.database.repository.EventRepository;
+import ru.michaelshell.sampo_bot.database.repository.UserEventRepository;
 import ru.michaelshell.sampo_bot.database.repository.UserRepository;
+import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.mapper.UserCreateEditDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -20,6 +23,8 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final EventRepository eventRepository;
+    private final UserEventRepository userEventRepository;
     private final UserCreateEditDtoMapper userCreateEditDtoMapper;
     private final UserReadDtoMapper userReadDtoMapper;
 
@@ -62,5 +67,20 @@ public class UserService {
                 })
                 .map(userRepository::saveAndFlush)
                 .map(userReadDtoMapper::map);
+    }
+
+    @Transactional
+    public UserEvent registerOnEvent(EventGetDto eventDto, Long userId) {
+        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+
+        UserEvent userEvent = UserEvent.builder()
+                .signedAt(LocalDateTime.now())
+                .build();
+        userEvent.setUser(user);
+        userEvent.setEvent(event);
+
+        return userEventRepository.save(userEvent);
+
     }
 }

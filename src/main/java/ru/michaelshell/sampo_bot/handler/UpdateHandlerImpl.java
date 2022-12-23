@@ -38,7 +38,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         this.eventDeleteHandler = new EventDeleteHandler(sendService, eventService);
         this.eventRegisterHandler = new EventRegisterHandler(sendService, eventService);
         this.roleSetHandler = new RoleSetHandler(sendService, userService);
-        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService);
+        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService, userService);
     }
 
     @Override
