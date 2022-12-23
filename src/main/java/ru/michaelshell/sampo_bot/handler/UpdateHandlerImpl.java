@@ -22,13 +22,13 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
     private final Map<String, UpdateHandler> handlers = new HashMap<>();
 
-
     public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService, EventService eventService, BotProperties botProperties) {
         handlers.put("start", new StartHandler(sendService));
         handlers.put("register", new RegisterHandler(userService));
         handlers.put("promote", new PromotionHandler(sendService, userService, botProperties));
         handlers.put("events", new EventsHandler(sendService, eventService));
         handlers.put("eventAdd", new EventAddHandler(sendService, eventService));
+        handlers.put("eventDelete", new EventDeleteHandler(sendService, eventService));
     }
 
     @Override
@@ -64,6 +64,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
             String callbackData = update.getCallbackQuery().getData();
             switch (callbackData) {
                 case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventAdd").handleCallback(update, session);
+                case "buttonEventDelete" -> handlers.get("eventDelete").handleCallback(update, session);
             }
 
         }

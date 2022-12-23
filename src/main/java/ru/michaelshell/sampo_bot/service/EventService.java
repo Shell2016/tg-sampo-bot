@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
+import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.mapper.EventCreateDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +38,11 @@ public class EventService {
                 .map(eventRepository::save)
                 .map(eventReadDtoMapper::map)
                 .orElseThrow();
+    }
 
+    @Transactional
+    public int delete(EventGetDto event) {
+        return eventRepository.deleteEventByNameAndTime(event.getName(), event.getTime());
     }
 
 

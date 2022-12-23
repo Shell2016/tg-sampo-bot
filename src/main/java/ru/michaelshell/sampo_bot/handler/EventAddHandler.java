@@ -4,21 +4,20 @@ import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
-import ru.michaelshell.sampo_bot.session.SessionAttribute;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventInfoButtons;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
+import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX;
+import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 public class EventAddHandler implements UpdateHandler {
 
@@ -35,16 +34,17 @@ public class EventAddHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(Update update, Session session) {
-        if (session.getAttribute(SessionAttribute.STATUS.name()).equals(Status.ADMIN.name())) {
+        if (isAdmin(session)) {
 
             Message message = update.getMessage();
             Long chatId = message.getChatId();
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
-                String eventName = message.getText();
+                String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
                 eventParameters.clear();
                 eventParameters.put("eventName", eventName);
-                sendServiceImpl.sendWithKeyboard(chatId, "Дата и время:", session);
+                sendServiceImpl.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
+                        "Пример - 25 01 23 20:30", session);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_NAME.name());
                 session.setAttribute(EVENT_ADD_WAITING_FOR_DATE.name(), true);
                 return;
@@ -54,8 +54,8 @@ public class EventAddHandler implements UpdateHandler {
                 String eventDate = message.getText();
 
                 if (validateDate(eventDate)) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM HH:mmyyyy");
-                    LocalDateTime date = LocalDateTime.parse(eventDate + LocalDate.now().getYear(), formatter);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy HH:mm");
+                    LocalDateTime date = LocalDateTime.parse(eventDate, formatter);
                     eventParameters.put("eventDate", date);
                 } else {
                     sendServiceImpl.sendWithKeyboard(chatId, "Неверный формат даты", session);
@@ -67,7 +67,7 @@ public class EventAddHandler implements UpdateHandler {
             }
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
-                String eventInfo = message.getText();
+                String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
                 eventParameters.put("eventInfo", eventInfo);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_INFO.name());
                 EventReadDto event = createEvent(message.getFrom().getUserName());
@@ -81,7 +81,7 @@ public class EventAddHandler implements UpdateHandler {
 
 
     private boolean validateDate(String eventDate) {
-        return eventDate.matches("([0-2][0-9]|3[0-1]) (0[1-9]|1[0-2]) ([0-1][0-9]|2[0-3]):[0-5][0-9]");
+        return eventDate.matches("([0-2][0-9]|3[0-1]) (0[1-9]|1[0-2]) 2[2-9] ([0-1][0-9]|2[0-3]):[0-5][0-9]");
     }
 
     public void handleCallback(Update update, Session session) {

@@ -1,4 +1,4 @@
-package ru.michaelshell.sampo_bot.keyboard;
+package ru.michaelshell.sampo_bot.util;
 
 import lombok.experimental.UtilityClass;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -87,6 +87,7 @@ public class KeyboardUtils {
         InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
         buttonDelete.setText("Удалить");
         buttonDelete.setCallbackData("buttonEventDelete");
+
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonList);

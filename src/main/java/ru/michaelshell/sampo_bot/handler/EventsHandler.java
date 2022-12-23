@@ -1,18 +1,24 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.session.SessionAttribute;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.*;
+import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.*;
 
 
+@Slf4j
 public class EventsHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
@@ -29,7 +35,7 @@ public class EventsHandler implements UpdateHandler {
     public void handleUpdate(Update update, Session session) {
 
         Long chatId = update.getMessage().getChatId();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM HH:mm", new Locale("ru"));
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy  HH:mm", new Locale("ru"));
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
@@ -37,6 +43,7 @@ public class EventsHandler implements UpdateHandler {
             return;
         }
         sendServiceImpl.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
+
         events.forEach(event -> {
             String time = event.getTime().format(dateTimeFormatter);
             String eventInfo = """
@@ -44,11 +51,18 @@ public class EventsHandler implements UpdateHandler {
                     Время: %s
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
-
-            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
+            log.info(eventInfo);
+            sendEventList(session, chatId, eventInfo);
         });
+    }
 
 
+    private void sendEventList(Session session, Long chatId, String eventInfo) {
+        if (isAdmin(session)) {
+            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListAdminButtons);
+        } else {
+            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
+        }
     }
 
     @Override

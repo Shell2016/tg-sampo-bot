@@ -9,9 +9,11 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventListAdminKeyboard;
-import static ru.michaelshell.sampo_bot.keyboard.KeyboardUtils.eventListKeyboard;
+import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.*;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 
 
 @Service
@@ -19,7 +21,7 @@ public class SendServiceImpl implements SendService {
 
     private final SampoBot sampoBot;
 
-    @Autowired
+//    @Autowired
     public SendServiceImpl(SampoBot sampoBot) {
         this.sampoBot = sampoBot;
     }
@@ -42,7 +44,7 @@ public class SendServiceImpl implements SendService {
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(msg);
-        if (session.getAttribute(SessionAttribute.STATUS.name()).equals(Status.ADMIN.name())) {
+        if (isAdmin(session)) {
             sendMessage.setReplyMarkup(eventListAdminKeyboard);
         } else {
             sendMessage.setReplyMarkup(eventListKeyboard);
@@ -81,4 +83,6 @@ public class SendServiceImpl implements SendService {
             throw new RuntimeException(e);
         }
     }
+
+
 }
