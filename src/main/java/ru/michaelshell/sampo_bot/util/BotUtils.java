@@ -13,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.AUTHENTICATED;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
 
 @UtilityClass
 public class BotUtils {
@@ -44,5 +45,9 @@ public class BotUtils {
                 .name(name)
                 .time(time)
                 .build();
+    }
+
+    public static boolean hasRole(Session session) {
+        return session.getAttribute(HAS_ROLE.name()) != null;
     }
 }

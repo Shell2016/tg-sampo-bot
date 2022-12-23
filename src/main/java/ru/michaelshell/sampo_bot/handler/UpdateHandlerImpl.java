@@ -32,6 +32,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         handlers.put("eventCreate", new EventCreateHandler(sendService, eventService));
         handlers.put("eventDelete", new EventDeleteHandler(sendService, eventService));
         handlers.put("eventRegister", new EventRegisterHandler(sendService, eventService));
+        handlers.put("roleSet", new RoleSetHandler(sendService, userService));
     }
 
     @Override
@@ -56,6 +57,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "/events", "Список коллективок" -> handlers.get("eventList").handleUpdate(update, session);
                 case "Добавить" -> handlers.get("eventCreate").handleUpdate(update, session);
 
+
 //                default -> handlers.get("default").handleUpdate(update, session);
 
             }
@@ -71,7 +73,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
             switch (callbackData) {
                 case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventCreate").handleCallback(update, session);
                 case "buttonEventDelete" -> handlers.get("eventDelete").handleCallback(update, session);
-
+                case "buttonEventRegister" -> handlers.get("eventRegister").handleCallback(update, session);
+                case "buttonLeader", "buttonFollower" -> handlers.get("roleSet").handleCallback(update, session);
             }
 
         }
@@ -87,11 +90,9 @@ public class UpdateHandlerImpl implements UpdateHandler {
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
             handlers.get("eventCreate").handleUpdate(update, session);
         }
-
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name()))) {
             handlers.get("eventCreate").handleUpdate(update, session);
         }
-
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
             handlers.get("eventCreate").handleUpdate(update, session);
         }
@@ -99,6 +100,11 @@ public class UpdateHandlerImpl implements UpdateHandler {
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
             handlers.get("promote").handleUpdate(update, session);
         }
+
+        if (Boolean.TRUE.equals(session.getAttribute(SET_ROLE_WAITING_FOR_NAME.name()))) {
+            handlers.get("roleSet").handleUpdate(update, session);
+        }
+
 
 
 

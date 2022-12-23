@@ -18,7 +18,7 @@ public class KeyboardUtils {
     public final static InlineKeyboardMarkup eventListButtons = KeyboardUtils.getEventListButtons();
     public final static InlineKeyboardMarkup eventListAdminButtons = KeyboardUtils.getEventListAdminButtons();
     public final static InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
-
+    public static final InlineKeyboardMarkup roleSelectButtons = KeyboardUtils.getRoleSelectButtons();
 
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
@@ -126,5 +126,27 @@ public class KeyboardUtils {
 
         eventListButtons.setKeyboard(rowList);
         return eventListButtons;
+    }
+
+    private static InlineKeyboardMarkup getRoleSelectButtons() {
+        InlineKeyboardMarkup roleSelectButtons = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonLeader = new InlineKeyboardButton();
+        buttonLeader.setText("Партнёр");
+        buttonLeader.setCallbackData("buttonLeader");
+
+        InlineKeyboardButton buttonFollower = new InlineKeyboardButton();
+        buttonFollower.setText("Партнёрша");
+        buttonFollower.setCallbackData("buttonFollower");
+
+        List<InlineKeyboardButton> row = new ArrayList<>();
+        row.add(buttonLeader);
+        row.add(buttonFollower);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row);
+
+        roleSelectButtons.setKeyboard(rowList);
+        return roleSelectButtons;
     }
 }

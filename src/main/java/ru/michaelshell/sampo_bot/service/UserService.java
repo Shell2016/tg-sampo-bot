@@ -3,6 +3,7 @@ package ru.michaelshell.sampo_bot.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.database.repository.UserRepository;
@@ -48,5 +49,18 @@ public class UserService {
         User user = userRepository.findByUserName(userName).orElseThrow();
         user.setStatus(Status.ADMIN);
         userRepository.saveAndFlush(user);
+    }
+
+    @Transactional
+    public Optional<UserReadDto> setUserRole(Role role, String firstName, String lastName, Long userId) {
+        return userRepository.findById(userId)
+                .map(user -> {
+                    user.setRole(role);
+                    user.setFirstName(firstName);
+                    user.setLastName(lastName);
+                    return user;
+                })
+                .map(userRepository::saveAndFlush)
+                .map(userReadDtoMapper::map);
     }
 }

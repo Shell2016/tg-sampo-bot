@@ -48,7 +48,6 @@ public class EventListHandler implements UpdateHandler {
                     Время: %s
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
-            log.info(eventInfo);
             sendEventList(session, chatId, eventInfo);
         });
     }
