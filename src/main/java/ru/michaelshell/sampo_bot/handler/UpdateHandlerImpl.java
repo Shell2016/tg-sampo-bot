@@ -7,33 +7,38 @@ import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
-import ru.michaelshell.sampo_bot.util.BotUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 import static ru.michaelshell.sampo_bot.util.BotUtils.isAuthenticated;
 
 /**
- *  Класс с основной логикой перенаправления запросов в обработчики,
- *  а также создает и хранит их
+ * Класс с основной логикой перенаправления запросов в обработчики,
+ * а также создает и хранит их
  */
 
 public class UpdateHandlerImpl implements UpdateHandler {
 
-    private final Map<String, UpdateHandler> handlers = new HashMap<>();
+    private final UpdateHandler startHandler;
+    private final UpdateHandler registerHandler;
+    private final UpdateHandler promotionHandler;
+    private final UpdateHandler eventListHandler;
+    private final UpdateHandler eventCreateHandler;
+    private final UpdateHandler eventDeleteHandler;
+    private final UpdateHandler eventRegisterHandler;
+    private final UpdateHandler roleSetHandler;
+    private final UpdateHandler eventSoloRegisterHandler;
+
 
     public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService, EventService eventService, BotProperties botProperties) {
-        handlers.put("start", new StartHandler(sendService));
-        handlers.put("register", new RegisterHandler(userService));
-        handlers.put("promote", new PromotionHandler(sendService, userService, botProperties));
-        handlers.put("eventList", new EventListHandler(sendService, eventService));
-        handlers.put("eventCreate", new EventCreateHandler(sendService, eventService));
-        handlers.put("eventDelete", new EventDeleteHandler(sendService, eventService));
-        handlers.put("eventRegister", new EventRegisterHandler(sendService, eventService));
-        handlers.put("roleSet", new RoleSetHandler(sendService, userService));
-        handlers.put("eventSoloRegister", new EventSoloRegisterHandler(sendService, eventService));
+        this.startHandler = new StartHandler(sendService);
+        this.registerHandler = new RegisterHandler(userService);
+        this.promotionHandler = new PromotionHandler(sendService, userService, botProperties);
+        this.eventListHandler = new EventListHandler(sendService, eventService);
+        this.eventCreateHandler = new EventCreateHandler(sendService, eventService);
+        this.eventDeleteHandler = new EventDeleteHandler(sendService, eventService);
+        this.eventRegisterHandler = new EventRegisterHandler(sendService, eventService);
+        this.roleSetHandler = new RoleSetHandler(sendService, userService);
+        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService);
     }
 
     @Override
@@ -41,45 +46,40 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         Message message = update.getMessage();
 
-
         if (message != null && message.hasText() && message.isUserMessage()) {
 
             if (!isAuthenticated(session)) {
-                handlers.get("register").handleUpdate(update, session);
+                registerHandler.handleUpdate(update, session);
             }
 
             waitingStatusMessageRouter(update, session);
 
             String messageText = message.getText();
             switch (messageText) {
-                case "/start", "/help" -> handlers.get("start").handleUpdate(update, session);
-                case "/promote" -> handlers.get("promote").handleUpdate(update, session);
+                case "/start", "/help" -> startHandler.handleUpdate(update, session);
+                case "/promote" -> promotionHandler.handleUpdate(update, session);
                 case "/clear" -> session.stop();
-                case "/events", "Список коллективок" -> handlers.get("eventList").handleUpdate(update, session);
-                case "Добавить" -> handlers.get("eventCreate").handleUpdate(update, session);
-
+                case "/events", "Список коллективок" -> eventListHandler.handleUpdate(update, session);
+                case "Добавить" -> eventCreateHandler.handleUpdate(update, session);
 
 //                default -> handlers.get("default").handleUpdate(update, session);
-
             }
-
         }
 
 
         if (update.hasCallbackQuery()) {
             if (!isAuthenticated(session)) {
-                handlers.get("register").handleCallback(update, session);
+                registerHandler.handleCallback(update, session);
             }
             String callbackData = update.getCallbackQuery().getData();
             switch (callbackData) {
-                case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventCreate").handleCallback(update, session);
-                case "buttonEventDelete" -> handlers.get("eventDelete").handleCallback(update, session);
-                case "buttonEventRegister" -> handlers.get("eventRegister").handleCallback(update, session);
-                case "buttonLeader", "buttonFollower" -> handlers.get("roleSet").handleCallback(update, session);
-                case "buttonSolo" -> handlers.get("eventSoloRegister").handleCallback(update, session);
-                case "buttonCouple" -> handlers.get("eventCoupleRegister").handleCallback(update, session);
+                case "buttonInfoYes", "buttonInfoNo" -> eventCreateHandler.handleCallback(update, session);
+                case "buttonEventDelete" -> eventDeleteHandler.handleCallback(update, session);
+                case "buttonEventRegister" -> eventRegisterHandler.handleCallback(update, session);
+                case "buttonLeader", "buttonFollower" -> roleSetHandler.handleCallback(update, session);
+                case "buttonSolo" -> eventSoloRegisterHandler.handleCallback(update, session);
+//                case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
             }
-
         }
 
     }
@@ -90,29 +90,19 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
     private void waitingStatusMessageRouter(Update update, Session session) {
 
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
-            handlers.get("eventCreate").handleUpdate(update, session);
-        }
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name()))) {
-            handlers.get("eventCreate").handleUpdate(update, session);
-        }
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
-            handlers.get("eventCreate").handleUpdate(update, session);
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name())) ||
+                Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name())) ||
+                Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
+            eventCreateHandler.handleUpdate(update, session);
         }
 
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
-            handlers.get("promote").handleUpdate(update, session);
+            promotionHandler.handleUpdate(update, session);
         }
 
         if (Boolean.TRUE.equals(session.getAttribute(SET_ROLE_WAITING_FOR_NAME.name()))) {
-            handlers.get("roleSet").handleUpdate(update, session);
+            roleSetHandler.handleUpdate(update, session);
         }
 
-
-
-
-
     }
-
-
 }
