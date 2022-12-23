@@ -3,12 +3,9 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
-import ru.michaelshell.sampo_bot.session.SessionAttribute;
-import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -19,14 +16,14 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.*;
 
 
 @Slf4j
-public class EventsHandler implements UpdateHandler {
+public class EventListHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
 
     private final static String MSG = "";
 
-    public EventsHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
+    public EventListHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
         this.sendServiceImpl = sendServiceImpl;
         this.eventService = eventService;
     }

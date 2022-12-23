@@ -7,11 +7,13 @@ import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
+import static ru.michaelshell.sampo_bot.util.BotUtils.isAuthenticated;
 
 /**
  *  Класс с основной логикой перенаправления запросов в обработчики,
@@ -26,9 +28,10 @@ public class UpdateHandlerImpl implements UpdateHandler {
         handlers.put("start", new StartHandler(sendService));
         handlers.put("register", new RegisterHandler(userService));
         handlers.put("promote", new PromotionHandler(sendService, userService, botProperties));
-        handlers.put("events", new EventsHandler(sendService, eventService));
-        handlers.put("eventAdd", new EventAddHandler(sendService, eventService));
+        handlers.put("eventList", new EventListHandler(sendService, eventService));
+        handlers.put("eventCreate", new EventCreateHandler(sendService, eventService));
         handlers.put("eventDelete", new EventDeleteHandler(sendService, eventService));
+        handlers.put("eventRegister", new EventRegisterHandler(sendService, eventService));
     }
 
     @Override
@@ -39,7 +42,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         if (message != null && message.hasText() && message.isUserMessage()) {
 
-            if (session.getAttribute(AUTHENTICATED.name()) == null) {
+            if (!isAuthenticated(session)) {
                 handlers.get("register").handleUpdate(update, session);
             }
 
@@ -50,8 +53,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "/start", "/help" -> handlers.get("start").handleUpdate(update, session);
                 case "/promote" -> handlers.get("promote").handleUpdate(update, session);
                 case "/clear" -> session.stop();
-                case "/events", "Список коллективок" -> handlers.get("events").handleUpdate(update, session);
-                case "Добавить" -> handlers.get("eventAdd").handleUpdate(update, session);
+                case "/events", "Список коллективок" -> handlers.get("eventList").handleUpdate(update, session);
+                case "Добавить" -> handlers.get("eventCreate").handleUpdate(update, session);
 
 //                default -> handlers.get("default").handleUpdate(update, session);
 
@@ -61,10 +64,14 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
         if (update.hasCallbackQuery()) {
+            if (!isAuthenticated(session)) {
+                handlers.get("register").handleCallback(update, session);
+            }
             String callbackData = update.getCallbackQuery().getData();
             switch (callbackData) {
-                case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventAdd").handleCallback(update, session);
+                case "buttonInfoYes", "buttonInfoNo" -> handlers.get("eventCreate").handleCallback(update, session);
                 case "buttonEventDelete" -> handlers.get("eventDelete").handleCallback(update, session);
+
             }
 
         }
@@ -73,21 +80,20 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
     @Override
     public void handleCallback(Update update, Session session) {
-
     }
 
     private void waitingStatusMessageRouter(Update update, Session session) {
 
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
-            handlers.get("eventAdd").handleUpdate(update, session);
+            handlers.get("eventCreate").handleUpdate(update, session);
         }
 
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name()))) {
-            handlers.get("eventAdd").handleUpdate(update, session);
+            handlers.get("eventCreate").handleUpdate(update, session);
         }
 
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
-            handlers.get("eventAdd").handleUpdate(update, session);
+            handlers.get("eventCreate").handleUpdate(update, session);
         }
 
         if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {

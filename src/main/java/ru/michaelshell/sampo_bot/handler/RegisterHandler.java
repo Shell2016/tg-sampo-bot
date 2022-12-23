@@ -27,17 +27,22 @@ public class RegisterHandler implements UpdateHandler {
     @Override
     public void handleUpdate(Update update, Session session) {
         User user = update.getMessage().getFrom();
+        createAndAuthenticateUser(session, user);
+    }
+
+    @Override
+    public void handleCallback(Update update, Session session) {
+        User user = update.getCallbackQuery().getFrom();
+        createAndAuthenticateUser(session, user);
+    }
+
+    private void createAndAuthenticateUser(Session session, User user) {
         UserReadDto userDto = userService.findById(user.getId()).orElse(null);
         if (userDto == null) {
             userDto = createUser(user);
             log.info("New user " + userDto + " have been successfully created");
         }
         authenticate(session, userDto);
-    }
-
-    @Override
-    public void handleCallback(Update update, Session session) {
-
     }
 
 

@@ -47,7 +47,7 @@ public class SampoBot extends TelegramLongPollingSessionBot {
 
     @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
-        updateHandlerImpl.handleUpdate(update, botSession.get());
+        updateHandlerImpl.handleUpdate(update, botSession.orElseThrow());
     }
 
 

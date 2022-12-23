@@ -12,6 +12,8 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.AUTHENTICATED;
+
 @UtilityClass
 public class BotUtils {
 
@@ -20,6 +22,11 @@ public class BotUtils {
     public static boolean isAdmin(Session session) {
         return session.getAttribute(SessionAttribute.STATUS.name()).equals(Status.ADMIN.name());
     }
+
+    public static boolean isAuthenticated(Session session) {
+        return Boolean.TRUE.equals(session.getAttribute(AUTHENTICATED.name()));
+    }
+
 
     public static EventGetDto parseEvent(String msgText) {
 

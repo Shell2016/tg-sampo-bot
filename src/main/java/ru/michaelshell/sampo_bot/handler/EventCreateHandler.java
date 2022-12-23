@@ -19,7 +19,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMO
 import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
-public class EventAddHandler implements UpdateHandler {
+public class EventCreateHandler implements UpdateHandler {
 
     Map<String, Object> eventParameters = new HashMap<>();
 
@@ -27,7 +27,7 @@ public class EventAddHandler implements UpdateHandler {
     private final EventService eventService;
 
 
-    public EventAddHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
+    public EventCreateHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
         this.sendServiceImpl = sendServiceImpl;
         this.eventService = eventService;
     }
