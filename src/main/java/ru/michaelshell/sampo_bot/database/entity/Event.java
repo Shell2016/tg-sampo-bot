@@ -36,8 +36,8 @@ public class Event implements BaseEntity<Long> {
     @OneToMany(mappedBy = "event")
     private List<UserEvent> userEvents = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "event")
-    private List<Couple> couples = new ArrayList<>();
+//    @Builder.Default
+//    @OneToMany(mappedBy = "event")
+//    private List<Couple> couples = new ArrayList<>();
 
 }

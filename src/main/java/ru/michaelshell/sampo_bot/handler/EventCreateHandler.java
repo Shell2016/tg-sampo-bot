@@ -21,8 +21,6 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 public class EventCreateHandler implements UpdateHandler {
 
-    Map<String, Object> eventParameters = new HashMap<>();
-
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
 
@@ -41,8 +39,7 @@ public class EventCreateHandler implements UpdateHandler {
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
                 String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
-                eventParameters.clear();
-                eventParameters.put("eventName", eventName);
+                session.setAttribute("eventName", eventName);
                 sendServiceImpl.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                         "Пример - 25 01 23 20:30", session);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_NAME.name());
@@ -56,7 +53,7 @@ public class EventCreateHandler implements UpdateHandler {
                 if (validateDate(eventDate)) {
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy HH:mm");
                     LocalDateTime date = LocalDateTime.parse(eventDate, formatter);
-                    eventParameters.put("eventDate", date);
+                    session.setAttribute("eventDate", date);
                 } else {
                     sendServiceImpl.sendWithKeyboard(chatId, "Неверный формат даты", session);
                     return;
@@ -68,9 +65,9 @@ public class EventCreateHandler implements UpdateHandler {
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
                 String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
-                eventParameters.put("eventInfo", eventInfo);
+                session.setAttribute("eventInfo", eventInfo);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_INFO.name());
-                EventReadDto event = createEvent(message.getFrom().getUserName());
+                EventReadDto event = createEvent(message.getFrom().getUserName(), session);
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
@@ -79,7 +76,6 @@ public class EventCreateHandler implements UpdateHandler {
             session.setAttribute(EVENT_ADD_WAITING_FOR_NAME.name(), true);
         }
     }
-
 
     private boolean validateDate(String eventDate) {
         return eventDate.matches("([0-2][0-9]|3[0-1]) (0[1-9]|1[0-2]) 2[2-9] ([0-1][0-9]|2[0-3]):[0-5][0-9]");
@@ -94,16 +90,19 @@ public class EventCreateHandler implements UpdateHandler {
             sendServiceImpl.sendWithKeyboard(chatId, "Введите краткое описание:", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_INFO.name(), true);
         } else if ("buttonInfoNo".equals(callbackData)) {
-            EventReadDto event = createEvent(callbackQuery.getFrom().getUserName());
+            EventReadDto event = createEvent(callbackQuery.getFrom().getUserName(), session);
             onEventSuccessOrFail(session, chatId, event);
         }
     }
 
-    private EventReadDto createEvent(String createdBy) {
+    private EventReadDto createEvent(String createdBy, Session session) {
+        if (session.getAttribute("eventInfo") == null) {
+            session.setAttribute("eventInfo", "");
+        }
         EventCreateDto eventDto = EventCreateDto.builder()
-                .name((String) eventParameters.get("eventName"))
-                .time((LocalDateTime) eventParameters.get("eventDate"))
-                .info((String) eventParameters.getOrDefault("eventInfo", ""))
+                .name((String) session.getAttribute("eventName"))
+                .time((LocalDateTime) session.getAttribute("eventDate"))
+                .info((String) session.getAttribute("eventInfo"))
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
                 .build();

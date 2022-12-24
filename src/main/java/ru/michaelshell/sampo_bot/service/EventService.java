@@ -1,6 +1,7 @@
 package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
@@ -26,7 +27,8 @@ public class EventService {
     private final EventCreateDtoMapper eventCreateDtoMapper;
 
     public List<EventReadDto> findAll() {
-        return eventRepository.findAll().stream()
+
+        return eventRepository.findAll(Sort.by("time")).stream()
                 .map(eventReadDtoMapper::map)
                 .collect(toList());
     }

@@ -28,6 +28,8 @@ public class UserEvent implements BaseEntity<Long> {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    private String partnerFullname;
+
     private LocalDateTime signedAt;
 
     public void setUser(User user) {

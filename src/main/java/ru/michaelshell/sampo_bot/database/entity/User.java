@@ -40,7 +40,7 @@ public class User implements BaseEntity<Long>{
     @Builder.Default
     private List<UserEvent> userEvents = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user")
-    private List<Couple> couples = new ArrayList<>();
+//    @Builder.Default
+//    @OneToMany(mappedBy = "user")
+//    private List<Couple> couples = new ArrayList<>();
 }
