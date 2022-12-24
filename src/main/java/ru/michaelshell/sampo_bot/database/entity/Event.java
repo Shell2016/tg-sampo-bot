@@ -1,9 +1,6 @@
 package ru.michaelshell.sampo_bot.database.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +10,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+//@ToString(exclude = {"userEvent"})
 @Builder
 @Entity
 @Table(name = "event")

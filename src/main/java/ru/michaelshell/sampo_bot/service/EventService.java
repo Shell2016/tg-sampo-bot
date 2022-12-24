@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
@@ -14,6 +15,7 @@ import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalLong;
 
 import static java.util.stream.Collectors.toList;
 
@@ -46,6 +48,12 @@ public class EventService {
     public int delete(EventGetDto event) {
         return eventRepository.deleteEventByNameAndTime(event.getName(), event.getTime());
     }
+
+    public Optional<Long> findIdByDto(EventGetDto eventDto) {
+        return eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime())
+                .map(Event::getId);
+    }
+
 
 
 }

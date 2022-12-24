@@ -41,7 +41,6 @@ public class EventRegisterHandler implements UpdateHandler {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
-        User user = callbackQuery.getFrom();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
@@ -59,9 +58,7 @@ public class EventRegisterHandler implements UpdateHandler {
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
-            sendServiceImpl.sendWithKeyboard(chatId, eventHeader, session, registerEventModeButtons);
-
-//            eventService.register(event, callbackQuery.getFrom());
+            sendServiceImpl.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
 
         }
 

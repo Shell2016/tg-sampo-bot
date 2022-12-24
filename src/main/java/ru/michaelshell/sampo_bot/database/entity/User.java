@@ -12,6 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userName")
+//@ToString(exclude = {"userEvent"})
 @Builder
 @Entity
 @Table(name = "users")
@@ -39,6 +40,8 @@ public class User implements BaseEntity<Long>{
     @OneToMany(mappedBy = "user")
     @Builder.Default
     private List<UserEvent> userEvents = new ArrayList<>();
+
+
 
 //    @Builder.Default
 //    @OneToMany(mappedBy = "user")

@@ -47,14 +47,11 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         try {
             userService.registerOnEvent(event, user.getId());
         } catch (DataIntegrityViolationException e) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
+            sendServiceImpl.edit(chatId, messageId,"Ошибка записи! Вы уже записаны!");
             return;
         }
         log.info("Registration on event " + event + " by " + user.getFirstName() + " " + user.getLastName());
-        sendServiceImpl.edit(chatId, messageId, msgText);
-        sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!", session);
-
-
+        sendServiceImpl.edit(chatId, messageId,"Успешная запись!");
     }
 
 

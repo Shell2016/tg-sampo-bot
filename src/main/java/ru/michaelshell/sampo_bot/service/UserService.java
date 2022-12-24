@@ -1,6 +1,7 @@
 package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.*;
@@ -70,17 +71,35 @@ public class UserService {
     }
 
     @Transactional
-    public UserEvent registerOnEvent(EventGetDto eventDto, Long userId) {
+    public void registerOnEvent(EventGetDto eventDto, Long userId) {
         Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
-
         UserEvent userEvent = UserEvent.builder()
                 .signedAt(LocalDateTime.now())
                 .build();
         userEvent.setUser(user);
         userEvent.setEvent(event);
+        userEventRepository.save(userEvent);
+    }
 
-        return userEventRepository.save(userEvent);
+    @Transactional
+    public void registerOnEvent(Long eventId, Long userId, String partnerFirstName, String partnerLastName) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        UserEvent userEvent = UserEvent.builder()
+                .partnerFullname(partnerLastName + " " + partnerFirstName)
+                .signedAt(LocalDateTime.now())
+                .build();
+        userEvent.setUser(user);
+        userEvent.setEvent(event);
+        userEventRepository.save(userEvent);
+    }
 
+    public boolean isAlreadyRegistered(Long eventId, Long userId) {
+        Event event = eventRepository.findById(eventId).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+
+        return user.getUserEvents().stream()
+                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
     }
 }

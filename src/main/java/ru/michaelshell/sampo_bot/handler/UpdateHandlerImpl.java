@@ -27,6 +27,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
     private final UpdateHandler eventRegisterHandler;
     private final UpdateHandler roleSetHandler;
     private final UpdateHandler eventSoloRegisterHandler;
+    private final UpdateHandler eventCoupleRegisterHandler;
+
 
 
     public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService, EventService eventService, BotProperties botProperties) {
@@ -39,6 +41,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         this.eventRegisterHandler = new EventRegisterHandler(sendService, eventService);
         this.roleSetHandler = new RoleSetHandler(sendService, userService);
         this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService, userService);
+        this.eventCoupleRegisterHandler = new EventCoupleRegisterHandler(sendService, eventService, userService);
     }
 
     @Override
@@ -78,7 +81,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonEventRegister" -> eventRegisterHandler.handleCallback(update, session);
                 case "buttonLeader", "buttonFollower" -> roleSetHandler.handleCallback(update, session);
                 case "buttonSolo" -> eventSoloRegisterHandler.handleCallback(update, session);
-//                case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
+                case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
             }
         }
 
@@ -102,6 +105,10 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         if (Boolean.TRUE.equals(session.getAttribute(SET_ROLE_WAITING_FOR_NAME.name()))) {
             roleSetHandler.handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name()))) {
+            eventCoupleRegisterHandler.handleUpdate(update, session);
         }
 
     }
