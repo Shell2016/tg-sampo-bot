@@ -1,6 +1,5 @@
 package ru.michaelshell.sampo_bot.handler;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,16 +41,28 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         User user = callbackQuery.getFrom();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        EventGetDto event = parseEvent(msgText);
+        EventGetDto eventGetDto = parseEvent(msgText);
+        eventService.findIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
+                    if (userService.isAlreadyRegistered(eventId, user.getId())) {
+                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
+                        return;
+                    }
+                    try {
+                        userService.registerOnEvent(eventGetDto, user.getId());
+                    } catch (DataIntegrityViolationException e) {
+                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
+                        return;
+                    }
+                    log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
+                    sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
 
-        try {
-            userService.registerOnEvent(event, user.getId());
-        } catch (DataIntegrityViolationException e) {
-            sendServiceImpl.edit(chatId, messageId,"Ошибка записи! Вы уже записаны!");
-            return;
-        }
-        log.info("Registration on event " + event + " by " + user.getFirstName() + " " + user.getLastName());
-        sendServiceImpl.edit(chatId, messageId,"Успешная запись!");
+                },
+                () -> {
+                    log.error("Не удалось извлечь id коллективки");
+//                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
+                });
+
+
     }
 
 

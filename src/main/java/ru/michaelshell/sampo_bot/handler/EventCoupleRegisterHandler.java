@@ -34,7 +34,6 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
     @Override
     public void handleUpdate(Update update, Session session) {
 
-        // сюда приходит имя партнера
         Long chatId = update.getMessage().getChatId();
         String name = update.getMessage().getText();
         Long userId = update.getMessage().getFrom().getId();
@@ -78,7 +77,6 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         eventService.findIdByDto(event).ifPresentOrElse(eventId -> {
                     if (userService.isAlreadyRegistered(eventId, user.getId())) {
                         sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
-//                        sendServiceImpl.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
                         return;
                     }
                     session.setAttribute("eventId", eventId);
@@ -89,16 +87,8 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                 },
                 () -> {
                     log.error("Не удалось извлечь id коллективки");
-                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
+//                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
                 });
-//        try {
-//            userService.registerOnEvent(event, user.getId());
-//        } catch (DataIntegrityViolationException e) {
-//            sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
-//            return;
-//        }
-//        log.info("Registration on event " + event + " by " + user.getFirstName() + " " + user.getLastName());
-//        sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
     }
 
 
