@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.User;
+import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
@@ -14,10 +15,12 @@ import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.mapper.EventCreateDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -56,11 +59,10 @@ public class EventService {
     }
 
     public List<String> getCouples(EventGetDto eventDto) {
-
         Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
-
         return event.getUserEvents().stream()
                 .filter(userEvent -> userEvent.getPartnerFullname() != null)
+                .sorted(comparing(UserEvent::getSignedAt))
                 .map(userEvent -> {
                     User user = userEvent.getUser();
                     String couple;
@@ -76,5 +78,15 @@ public class EventService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<String> getDancers(EventGetDto eventGetDto, Role role) {
+        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
+        return event.getUserEvents().stream()
+                .filter(userEvent -> userEvent.getPartnerFullname() == null)
+                .filter(userEvent -> userEvent.getUser().getRole() == role)
+                .sorted(comparing(UserEvent::getSignedAt))
+                .map(userEvent -> userEvent.getUser().getLastName() + " " + userEvent.getUser().getFirstName())
+                .collect(toList());
+    }
 
 }

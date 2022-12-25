@@ -5,6 +5,7 @@ import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
@@ -44,18 +45,37 @@ public class DancerListHandler implements UpdateHandler {
 
         EventGetDto eventGetDto = BotUtils.parseEvent(text);
         List<String> coupleList = eventService.getCouples(eventGetDto);
+        List<String> leaderList = eventService.getDancers(eventGetDto, Role.LEADER);
+        List<String> followerList = eventService.getDancers(eventGetDto, Role.FOLLOWER);
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < coupleList.size(); i++) {
             sb.append(i + 1).append(". ").append(coupleList.get(i)).append("\n");
         }
-        String couples = "ОСНОВНОЙ СПИСОК ПАРЫ:\n" + sb;
-        String resultList = text  + "\n\n" +  couples;
+        String couples = "ПАРЫ:\n" + sb;
+        sb.setLength(0);
 
-        // TODO: 25.12.2022 Сделать вывод остальных списков, привязать кнопки снизу для регистрации либо её отмены
+        int max = Integer.max(leaderList.size(), followerList.size());
+        int dancerListLength = Integer.min(leaderList.size(), followerList.size());
+        for (int i = 0; i < dancerListLength; i++) {
+            sb.append(i + 1).append(". ").append(leaderList.get(i)).append("\n");
+        }
+        String leaders = "\nПАРТНЁРЫ:\n" + sb;
+        sb.setLength(0);
 
+        for (int i = 0; i < dancerListLength; i++) {
+            sb.append(i + 1).append(". ").append(followerList.get(i)).append("\n");
+        }
+        String followers = "\nПАРТНЁРШИ:\n" + sb;
+        sb.setLength(0);
 
+        List<String> waitList = leaderList.size() == max ? leaderList : followerList;
+        for (int i = dancerListLength; i < max; i++) {
+            sb.append(i + 1).append(". ").append(waitList.get(i)).append("\n");
+        }
+        String waitingList = "\nЛИСТ ОЖИДАНИЯ:\n" + sb;
 
+        String resultList = text  + "\n\n" +  couples + leaders + followers + waitingList;
         sendServiceImpl.edit(chatId, messageId, resultList);
 
     }
