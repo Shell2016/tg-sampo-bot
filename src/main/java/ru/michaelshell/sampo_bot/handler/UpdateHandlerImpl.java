@@ -29,6 +29,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
     private final UpdateHandler eventSoloRegisterHandler;
     private final UpdateHandler eventCoupleRegisterHandler;
     private final UpdateHandler dancerListHandler;
+    private final UpdateHandler deleteEventRegistrationHandler;
 
 
 
@@ -44,6 +45,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
         this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService, userService);
         this.eventCoupleRegisterHandler = new EventCoupleRegisterHandler(sendService, eventService, userService);
         this.dancerListHandler = new DancerListHandler(sendService, eventService, userService);
+        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, eventService, userService);
     }
 
     @Override
@@ -85,6 +87,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonSolo" -> eventSoloRegisterHandler.handleCallback(update, session);
                 case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
                 case "buttonShowDancersList" -> dancerListHandler.handleCallback(update, session);
+                case "buttonDeleteRegistration" -> deleteEventRegistrationHandler.handleCallback(update, session);
             }
         }
 

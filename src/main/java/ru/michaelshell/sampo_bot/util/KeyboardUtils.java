@@ -20,6 +20,8 @@ public class KeyboardUtils {
     public final static InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
     public static final InlineKeyboardMarkup roleSelectButtons = KeyboardUtils.getRoleSelectButtons();
     public static final InlineKeyboardMarkup registerEventModeButtons = KeyboardUtils.getRegisterEventModeButtons();
+    public static final InlineKeyboardMarkup eventRegisterButton = KeyboardUtils.getEventRegisterButton();
+    public static final InlineKeyboardMarkup deleteRegistrationButton = KeyboardUtils.getDeleteRegistrationButton();
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -170,5 +172,39 @@ public class KeyboardUtils {
 
         registerEventModeButtons.setKeyboard(rowList);
         return registerEventModeButtons;
+    }
+
+    private static InlineKeyboardMarkup getEventRegisterButton() {
+        InlineKeyboardMarkup eventRegisterButton = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonRegister = new InlineKeyboardButton();
+        buttonRegister.setText("Записаться");
+        buttonRegister.setCallbackData("buttonEventRegister");
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(buttonRegister);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row1);
+
+        eventRegisterButton.setKeyboard(rowList);
+        return eventRegisterButton;
+    }
+
+    private static InlineKeyboardMarkup getDeleteRegistrationButton() {
+        InlineKeyboardMarkup deleteRegistrationButton = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonDeleteRegistration = new InlineKeyboardButton();
+        buttonDeleteRegistration.setText("Удалить запись");
+        buttonDeleteRegistration.setCallbackData("buttonDeleteRegistration");
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(buttonDeleteRegistration);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row1);
+
+        deleteRegistrationButton.setKeyboard(rowList);
+        return deleteRegistrationButton;
     }
 }

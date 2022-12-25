@@ -111,5 +111,16 @@ public class UserService {
                 .anyMatch(userEvent -> userEvent.getEvent().equals(event));
     }
 
+    @Transactional
+    public void deleteEventRegistration(EventGetDto eventDto, Long userId) {
+        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+        UserEvent userEvent = userEventRepository.findUserEventByUserAndEvent(user, event).orElseThrow();
+
+        user.getUserEvents().remove(userEvent);
+        event.getUserEvents().remove(userEvent);
+        userEventRepository.delete(userEvent);
+    }
+
 
 }

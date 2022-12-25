@@ -11,8 +11,12 @@ import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
+import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import java.util.List;
+
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 
 @Slf4j
@@ -76,7 +80,14 @@ public class DancerListHandler implements UpdateHandler {
         String waitingList = "\nЛИСТ ОЖИДАНИЯ:\n" + sb;
 
         String resultList = text  + "\n\n" +  couples + leaders + followers + waitingList;
-        sendServiceImpl.edit(chatId, messageId, resultList);
+
+        if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
+            sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
+        } else {
+            sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
+        }
+
+//        sendServiceImpl.edit(chatId, messageId, resultList);
 
     }
 
