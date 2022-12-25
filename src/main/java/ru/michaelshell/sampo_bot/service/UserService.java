@@ -102,4 +102,14 @@ public class UserService {
         return user.getUserEvents().stream()
                 .anyMatch(userEvent -> userEvent.getEvent().equals(event));
     }
+
+    public boolean isAlreadyRegistered(EventGetDto eventGetDto, Long userId) {
+        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
+        User user = userRepository.findById(userId).orElseThrow();
+
+        return user.getUserEvents().stream()
+                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
+    }
+
+
 }

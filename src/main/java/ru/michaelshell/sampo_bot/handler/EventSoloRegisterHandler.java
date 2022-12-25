@@ -42,7 +42,10 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         EventGetDto eventGetDto = parseEvent(msgText);
-        eventService.findIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
+
+
+
+        eventService.findEventIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
                     if (userService.isAlreadyRegistered(eventId, user.getId())) {
                         sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
                         return;

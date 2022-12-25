@@ -19,7 +19,6 @@ public class CommandContainer {
         commands.put(START.getCommandName(), new StartCommand(sendServiceImpl));
         commands.put(HELP.getCommandName(), new HelpCommand(sendServiceImpl));
         commands.put(SETTINGS.getCommandName(), new SettingsCommand(sendServiceImpl));
-        // TODO: 17.12.2022 add more commands
     }
 
     public Command getCommand(String commandIdentifier) {

@@ -5,6 +5,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.Event;
+import ru.michaelshell.sampo_bot.database.entity.Role;
+import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
@@ -12,10 +14,9 @@ import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.mapper.EventCreateDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -49,11 +50,31 @@ public class EventService {
         return eventRepository.deleteEventByNameAndTime(event.getName(), event.getTime());
     }
 
-    public Optional<Long> findIdByDto(EventGetDto eventDto) {
+    public Optional<Long> findEventIdByDto(EventGetDto eventDto) {
         return eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime())
                 .map(Event::getId);
     }
 
+    public List<String> getCouples(EventGetDto eventDto) {
+
+        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
+
+        return event.getUserEvents().stream()
+                .filter(userEvent -> userEvent.getPartnerFullname() != null)
+                .map(userEvent -> {
+                    User user = userEvent.getUser();
+                    String couple;
+                    if (user.getRole() == Role.LEADER) {
+                        couple = user.getLastName() + " " + user.getFirstName() + "  -  " +
+                                userEvent.getPartnerFullname();
+                    } else {
+                        couple = userEvent.getPartnerFullname() + "  -  " +
+                                user.getLastName() + " " + user.getFirstName();
+                    }
+                    return couple;
+                })
+                .collect(Collectors.toList());
+    }
 
 
 }

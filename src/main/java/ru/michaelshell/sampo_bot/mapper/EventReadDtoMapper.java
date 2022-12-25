@@ -13,6 +13,7 @@ public class EventReadDtoMapper implements Mapper<Event, EventReadDto> {
     public EventReadDto map(Event event) {
 
         return EventReadDto.builder()
+                .id(event.getId())
                 .name(event.getName())
                 .info(event.getInfo())
                 .time(event.getTime())

@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class EventReadDto {
 
+    Long id;
     String name;
     String info;
     LocalDateTime time;

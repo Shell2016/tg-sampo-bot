@@ -10,9 +10,6 @@ import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
-import ru.michaelshell.sampo_bot.session.SessionAttribute;
-
-import java.util.Arrays;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.COUPLE_REGISTER_WAITING_FOR_NAME;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
@@ -74,7 +71,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
 
 
         EventGetDto event = parseEvent(msgText);
-        eventService.findIdByDto(event).ifPresentOrElse(eventId -> {
+        eventService.findEventIdByDto(event).ifPresentOrElse(eventId -> {
                     if (userService.isAlreadyRegistered(eventId, user.getId())) {
                         sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
                         return;
