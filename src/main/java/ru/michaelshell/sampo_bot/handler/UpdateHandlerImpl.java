@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
@@ -33,7 +34,11 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
 
-    public UpdateHandlerImpl(SendServiceImpl sendService, UserService userService, EventService eventService, BotProperties botProperties) {
+    public UpdateHandlerImpl(SendServiceImpl sendService,
+                             UserService userService,
+                             EventService eventService,
+                             UserEventService userEventService,
+                             BotProperties botProperties) {
         this.startHandler = new StartHandler(sendService);
         this.registerHandler = new RegisterHandler(userService);
         this.promotionHandler = new PromotionHandler(sendService, userService, botProperties);
@@ -44,8 +49,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
         this.roleSetHandler = new RoleSetHandler(sendService, userService);
         this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService, userService);
         this.eventCoupleRegisterHandler = new EventCoupleRegisterHandler(sendService, eventService, userService);
-        this.dancerListHandler = new DancerListHandler(sendService, eventService, userService);
-        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, eventService, userService);
+        this.dancerListHandler = new DancerListHandler(sendService, userEventService, userService);
+        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, userEventService, userService);
     }
 
     @Override

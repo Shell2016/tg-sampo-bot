@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "userName")
-//@ToString(exclude = {"userEvent"})
+@ToString(exclude = {"userEvent"})
 @Builder
 @Entity
 @Table(name = "users")

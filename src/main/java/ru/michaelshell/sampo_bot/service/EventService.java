@@ -9,6 +9,7 @@ import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
+import ru.michaelshell.sampo_bot.database.repository.UserEventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;

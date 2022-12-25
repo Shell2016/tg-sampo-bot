@@ -104,23 +104,18 @@ public class UserService {
     }
 
     public boolean isAlreadyRegistered(EventGetDto eventGetDto, Long userId) {
-        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
+//        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
+//        User user = userRepository.findById(userId).orElseThrow();
 
-        return user.getUserEvents().stream()
-                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
+//        return user.getUserEvents().stream()
+//                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
+
+        return userEventRepository
+                .findUserEventByUserIdAndEventNameAndEventTime(userId, eventGetDto.getName(), eventGetDto.getTime())
+                .isPresent();
     }
 
-    @Transactional
-    public void deleteEventRegistration(EventGetDto eventDto, Long userId) {
-        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
-        UserEvent userEvent = userEventRepository.findUserEventByUserAndEvent(user, event).orElseThrow();
 
-        user.getUserEvents().remove(userEvent);
-        event.getUserEvents().remove(userEvent);
-        userEventRepository.delete(userEvent);
-    }
 
 
 }

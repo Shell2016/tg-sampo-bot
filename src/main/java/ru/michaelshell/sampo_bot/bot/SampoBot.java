@@ -11,6 +11,7 @@ import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.handler.UpdateHandlerImpl;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.util.Optional;
@@ -24,12 +25,16 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     private final UpdateHandlerImpl updateHandlerImpl;
 
 
-    public SampoBot(BotProperties botProperties, UserService userService, EventService eventService) {
+    public SampoBot(BotProperties botProperties,
+                    UserService userService,
+                    EventService eventService,
+                    UserEventService userEventService) {
         this.botProperties = botProperties;
         this.updateHandlerImpl = new UpdateHandlerImpl(
                 new SendServiceImpl(this),
                 userService,
                 eventService,
+                userEventService,
                 botProperties);
     }
 

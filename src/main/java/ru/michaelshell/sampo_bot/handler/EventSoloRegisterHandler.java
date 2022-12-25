@@ -43,27 +43,41 @@ public class EventSoloRegisterHandler implements UpdateHandler {
 
         EventGetDto eventGetDto = parseEvent(msgText);
 
+        if (userService.isAlreadyRegistered(eventGetDto,user.getId())) {
+            sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
+            return;
+        }
+
+        try {
+            userService.registerOnEvent(eventGetDto, user.getId());
+        } catch (DataIntegrityViolationException e) {
+            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
+            return;
+        }
+        log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
+        sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
 
 
-        eventService.findEventIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
-                    if (userService.isAlreadyRegistered(eventId, user.getId())) {
-                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
-                        return;
-                    }
-                    try {
-                        userService.registerOnEvent(eventGetDto, user.getId());
-                    } catch (DataIntegrityViolationException e) {
-                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
-                        return;
-                    }
-                    log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
-                    sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
 
-                },
-                () -> {
-                    log.error("Не удалось извлечь id коллективки");
-//                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
-                });
+//        eventService.findEventIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
+//                    if (userService.isAlreadyRegistered(eventId, user.getId())) {
+//                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
+//                        return;
+//                    }
+//                    try {
+//                        userService.registerOnEvent(eventGetDto, user.getId());
+//                    } catch (DataIntegrityViolationException e) {
+//                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
+//                        return;
+//                    }
+//                    log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
+//                    sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
+//
+//                },
+//                () -> {
+//                    log.error("Не удалось извлечь id коллективки");
+////                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
+//                });
 
 
     }

@@ -7,19 +7,20 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 public class DeleteEventRegistrationHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
-    private final EventService eventService;
+    private final UserEventService userEventService;
     private final UserService userService;
 
 
-    public DeleteEventRegistrationHandler(SendServiceImpl sendServiceImpl, EventService eventService, UserService userService) {
+    public DeleteEventRegistrationHandler(SendServiceImpl sendServiceImpl, UserEventService userEventService, UserService userService) {
         this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
+        this.userEventService = userEventService;
         this.userService = userService;
     }
 
@@ -38,7 +39,7 @@ public class DeleteEventRegistrationHandler implements UpdateHandler {
 
         EventGetDto eventGetDto = BotUtils.parseEvent(text);
         if (eventGetDto != null) {
-            userService.deleteEventRegistration(eventGetDto, user.getId());
+            userEventService.deleteEventRegistration(eventGetDto, user.getId());
             sendServiceImpl.edit(chatId, messageId, "Запись удалена!");
         }
     }
