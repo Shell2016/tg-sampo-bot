@@ -35,7 +35,7 @@ public class EventRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию", session, roleSelectButtons);
+            sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", session, roleSelectButtons);
 
         } else {
             EventGetDto event = parseEvent(msgText);

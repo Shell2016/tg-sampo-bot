@@ -40,18 +40,18 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         EventGetDto eventGetDto = parseEvent(msgText);
 
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
+            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
 
         try {
             userService.registerOnEvent(eventGetDto, user.getId());
         } catch (DataIntegrityViolationException e) {
-            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
+            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
         log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
-        sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
+        sendServiceImpl.edit(chatId, messageId, "Успешная запись!\uD83E\uDD73");
     }
 
 

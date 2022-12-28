@@ -22,7 +22,6 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     private final BotProperties botProperties;
     private final UpdateHandlerImpl updateHandlerImpl;
 
-
     public SampoBot(BotProperties botProperties,
                     UserService userService,
                     EventService eventService,

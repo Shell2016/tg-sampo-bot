@@ -54,7 +54,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                     "partner " + partnerLastName + " " + partnerFirstName);
             session.removeAttribute("eventId");
             session.removeAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name());
-            sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!", session);
+            sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
         }
     }
 
@@ -70,7 +70,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         EventGetDto event = parseEvent(msgText);
 
         if (userService.isAlreadyRegistered(event, user.getId())) {
-            sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
+            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
 

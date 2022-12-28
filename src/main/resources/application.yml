@@ -1,8 +1,6 @@
 bot:
-#  username: SampoRegistrationBot    основной бот
-#  token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48     основной бот
-  username: sampotestbot
-  token: 5857216499:AAE1kDEu5b9voRR7L8CUhmVPl608Yhb5OK0
+  username: SampoRegistrationBot
+  token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48
   admin:
     id: 528357712
     username: shell_2017
@@ -27,8 +25,8 @@ spring:
     database: postgresql
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+#        format_sql: true
+#        show_sql: true
         hbm2ddl:
           auto: validate
 

@@ -7,13 +7,10 @@ plugins {
 }
 
 group = 'ru.michaelshell'
-version = '0.9.0-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '17'
 
 configurations {
-//    compileOnly {
-//        extendsFrom annotationProcessor
-//    }
 }
 
 repositories {
@@ -28,8 +25,6 @@ dependencies {
     implementation 'org.liquibase:liquibase-core'
 
     runtimeOnly 'org.postgresql:postgresql'
-//    compileOnly 'org.projectlombok:lombok'
-//    annotationProcessor 'org.projectlombok:lombok'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }

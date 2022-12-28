@@ -63,7 +63,7 @@ public class RoleSetHandler implements UpdateHandler {
         } else if ("buttonFollower".equals(data)) {
             role = Role.FOLLOWER;
         }
-        sendService.edit(chatId, messageId, "Введите имя и фамилию (именно в таком порядке)");
+        sendService.edit(chatId, messageId, "Введите имя и фамилию (желательно в этом порядке)");
         session.setAttribute(SET_ROLE_WAITING_FOR_NAME.name(), true);
     }
 
