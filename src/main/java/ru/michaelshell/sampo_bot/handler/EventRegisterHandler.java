@@ -3,12 +3,8 @@ package ru.michaelshell.sampo_bot.handler;
 import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
-import ru.michaelshell.sampo_bot.session.SessionAttribute;
-import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
@@ -21,18 +17,13 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 public class EventRegisterHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
-    private final EventService eventService;
 
-
-
-    public EventRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
+    public EventRegisterHandler(SendServiceImpl sendServiceImpl) {
         this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
     }
 
     @Override
     public void handleUpdate(Update update, Session session) {
-
     }
 
 
@@ -61,11 +52,6 @@ public class EventRegisterHandler implements UpdateHandler {
             sendServiceImpl.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
 
         }
-
-
-
-
-
 
     }
 

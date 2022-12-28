@@ -1,14 +1,17 @@
 package ru.michaelshell.sampo_bot.database.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
-@Data
+@Getter
+@Setter
+@RequiredArgsConstructor
 @AllArgsConstructor
-@NoArgsConstructor
-@ToString(exclude = {"user", "event"})
+@ToString
 @Builder
 @Entity
 @Table(name = "users_event")
@@ -20,10 +23,12 @@ public class UserEvent implements BaseEntity<Long> {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @ToString.Exclude
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
+    @ToString.Exclude
     private Event event;
 
     private String partnerFullname;
@@ -38,5 +43,18 @@ public class UserEvent implements BaseEntity<Long> {
     public void setEvent(Event event) {
         this.event = event;
         this.event.getUserEvents().add(this);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        UserEvent userEvent = (UserEvent) o;
+        return id != null && Objects.equals(id, userEvent.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
     }
 }

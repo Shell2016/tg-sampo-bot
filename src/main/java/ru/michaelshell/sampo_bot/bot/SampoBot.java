@@ -3,9 +3,7 @@ package ru.michaelshell.sampo_bot.bot;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.session.TelegramLongPollingSessionBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
 import ru.michaelshell.sampo_bot.handler.UpdateHandlerImpl;
@@ -52,20 +50,9 @@ public class SampoBot extends TelegramLongPollingSessionBot {
 
     @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
-        updateHandlerImpl.handleUpdate(update, botSession.orElseThrow());
-    }
-
-
-    public void sendText(Long userId, String msg) {
-        SendMessage sendMessage = SendMessage.builder()
-                .chatId(userId)
-                .text(msg).build();
-        try {
-            execute(sendMessage);
-        } catch (TelegramApiException e) {
-            throw new RuntimeException(e);
+        if (update.getMessage() != null || update.getCallbackQuery() != null) {
+            updateHandlerImpl.handleUpdate(update, botSession.orElseThrow());
         }
     }
-
 
 }

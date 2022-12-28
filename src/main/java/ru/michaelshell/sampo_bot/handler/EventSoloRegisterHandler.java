@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
 
@@ -17,14 +16,11 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 public class EventSoloRegisterHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
-    private final EventService eventService;
     private final UserService userService;
 
 
-    public EventSoloRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService, UserService userService) {
+    public EventSoloRegisterHandler(SendServiceImpl sendServiceImpl, UserService userService) {
         this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
-
         this.userService = userService;
     }
 
@@ -43,7 +39,7 @@ public class EventSoloRegisterHandler implements UpdateHandler {
 
         EventGetDto eventGetDto = parseEvent(msgText);
 
-        if (userService.isAlreadyRegistered(eventGetDto,user.getId())) {
+        if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
             sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
             return;
         }
@@ -56,30 +52,6 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         }
         log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
         sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
-
-
-
-//        eventService.findEventIdByDto(eventGetDto).ifPresentOrElse(eventId -> {
-//                    if (userService.isAlreadyRegistered(eventId, user.getId())) {
-//                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
-//                        return;
-//                    }
-//                    try {
-//                        userService.registerOnEvent(eventGetDto, user.getId());
-//                    } catch (DataIntegrityViolationException e) {
-//                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи!! Вы уже записаны!");
-//                        return;
-//                    }
-//                    log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
-//                    sendServiceImpl.edit(chatId, messageId, "Успешная запись!");
-//
-//                },
-//                () -> {
-//                    log.error("Не удалось извлечь id коллективки");
-////                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
-//                });
-
-
     }
 
 

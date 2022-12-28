@@ -5,17 +5,8 @@ import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Role;
-import ru.michaelshell.sampo_bot.database.entity.Status;
-import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.service.UserService;
-import ru.michaelshell.sampo_bot.session.SessionAttribute;
-import ru.michaelshell.sampo_bot.util.BotUtils;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.SET_ROLE_WAITING_FOR_NAME;
@@ -56,7 +47,6 @@ public class RoleSetHandler implements UpdateHandler {
                 session.removeAttribute(SET_ROLE_WAITING_FOR_NAME.name());
                 sendService.sendWithKeyboard(chatId, "Что-то пошло не так", session);
             }
-
         }
 
 

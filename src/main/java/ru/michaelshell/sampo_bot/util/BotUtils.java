@@ -40,6 +40,7 @@ public class BotUtils {
             timeString = matcher.group(2);
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy  HH:mm", new Locale("ru"));
+        assert timeString != null;
         LocalDateTime time = LocalDateTime.parse(timeString, formatter);
         return EventGetDto.builder()
                 .name(name)

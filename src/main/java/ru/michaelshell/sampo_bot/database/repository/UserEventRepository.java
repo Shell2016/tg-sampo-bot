@@ -11,14 +11,13 @@ import java.util.Optional;
 
 public interface UserEventRepository extends JpaRepository<UserEvent, Long> {
 
-    //    @EntityGraph(attributePaths = {"user"})
     @Query(value = "select ue from UserEvent ue " +
             "join ue.event e " +
             "join fetch ue.user u " +
             "where e.name = :eventName and e.time = :eventTime")
-    List<UserEvent> findUserEventsByEventNameAndEventTime(String eventName, LocalDateTime eventTime);
+    List<UserEvent> findAllByNameAndTime(String eventName, LocalDateTime eventTime);
 
-    Optional<UserEvent> findUserEventByUserIdAndEventNameAndEventTime(Long userId, String eventName, LocalDateTime eventTime);
+    Optional<UserEvent> findByUserIdAndEventNameAndEventTime(Long userId, String eventName, LocalDateTime eventTime);
 
 
 }

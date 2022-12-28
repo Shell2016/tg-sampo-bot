@@ -1,22 +1,23 @@
 package ru.michaelshell.sampo_bot.database.entity;
 
 import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = "userName")
-@ToString(exclude = {"userEvent"})
 @Builder
 @Entity
 @Table(name = "users")
-public class User implements BaseEntity<Long>{
+public class User implements BaseEntity<Long> {
 
     @Id
     private Long id;
@@ -39,11 +40,19 @@ public class User implements BaseEntity<Long>{
 
     @OneToMany(mappedBy = "user")
     @Builder.Default
+    @ToString.Exclude
     private List<UserEvent> userEvents = new ArrayList<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
+    }
 
-
-//    @Builder.Default
-//    @OneToMany(mappedBy = "user")
-//    private List<Couple> couples = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

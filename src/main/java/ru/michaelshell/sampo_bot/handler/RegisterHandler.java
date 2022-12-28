@@ -19,7 +19,6 @@ public class RegisterHandler implements UpdateHandler {
 
     private final UserService userService;
 
-
     public RegisterHandler(UserService userService) {
         this.userService = userService;
     }

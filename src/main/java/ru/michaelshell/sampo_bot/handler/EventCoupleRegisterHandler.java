@@ -34,7 +34,6 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         Long chatId = update.getMessage().getChatId();
         String name = update.getMessage().getText();
         Long userId = update.getMessage().getFrom().getId();
-        Integer messageId = update.getMessage().getMessageId();
         User user = update.getMessage().getFrom();
 
         if (name.split(" ").length != 2) {
@@ -55,9 +54,8 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                     "partner " + partnerLastName + " " + partnerFirstName);
             session.removeAttribute("eventId");
             session.removeAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name());
-            sendServiceImpl.sendWithKeyboard(chatId,"Успешная запись!", session);
+            sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!", session);
         }
-
     }
 
 
@@ -68,7 +66,6 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         String msgText = callbackQuery.getMessage().getText();
         User user = callbackQuery.getFrom();
         Integer messageId = callbackQuery.getMessage().getMessageId();
-
 
         EventGetDto event = parseEvent(msgText);
 
@@ -81,26 +78,9 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         session.setAttribute("eventId", eventId);
         sendServiceImpl.edit(chatId, messageId, msgText);
         sendServiceImpl.sendWithKeyboard(chatId, "Введите имя и фамилию партнера/партнерши" +
-                "(именно в таком порядке)", session);
+                "(желательно в таком порядке)", session);
         session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
 
-
-
-//        eventService.findEventIdByDto(event).ifPresentOrElse(eventId -> {
-//                    if (userService.isAlreadyRegistered(eventId, user.getId())) {
-//                        sendServiceImpl.edit(chatId, messageId, "Ошибка записи! Вы уже записаны!");
-//                        return;
-//                    }
-//                    session.setAttribute("eventId", eventId);
-//                    sendServiceImpl.edit(chatId, messageId, msgText);
-//                    sendServiceImpl.sendWithKeyboard(chatId, "Введите имя и фамилию партнера/партнерши" +
-//                            "(именно в таком порядке)", session);
-//                    session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
-//                },
-//                () -> {
-//                    log.error("Не удалось извлечь id коллективки");
-////                    sendServiceImpl.sendWithKeyboard(chatId, "event data receiving error", session);
-//                });
     }
 
 

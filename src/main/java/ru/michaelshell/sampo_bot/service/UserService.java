@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.*;
@@ -14,7 +13,6 @@ import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.mapper.UserCreateEditDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -31,7 +29,6 @@ public class UserService {
 
     @Transactional
     public UserReadDto createUser(UserCreateEditDto dto) {
-
         return Optional.of(dto)
                 .map(userCreateEditDtoMapper::map)
                 .map(userRepository::save)
@@ -39,14 +36,8 @@ public class UserService {
                 .orElseThrow();
     }
 
-
     public Optional<UserReadDto> findById(Long id) {
         return userRepository.findById(id)
-                .map(userReadDtoMapper::map);
-    }
-
-    public Optional<UserReadDto> findByUserName(String userName) {
-        return userRepository.findByUserName(userName)
                 .map(userReadDtoMapper::map);
     }
 
@@ -72,7 +63,7 @@ public class UserService {
 
     @Transactional
     public void registerOnEvent(EventGetDto eventDto, Long userId) {
-        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
+        Event event = eventRepository.findByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         UserEvent userEvent = UserEvent.builder()
                 .signedAt(LocalDateTime.now())
@@ -95,23 +86,9 @@ public class UserService {
         userEventRepository.save(userEvent);
     }
 
-    public boolean isAlreadyRegistered(Long eventId, Long userId) {
-        Event event = eventRepository.findById(eventId).orElseThrow();
-        User user = userRepository.findById(userId).orElseThrow();
-
-        return user.getUserEvents().stream()
-                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
-    }
-
     public boolean isAlreadyRegistered(EventGetDto eventGetDto, Long userId) {
-//        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
-//        User user = userRepository.findById(userId).orElseThrow();
-
-//        return user.getUserEvents().stream()
-//                .anyMatch(userEvent -> userEvent.getEvent().equals(event));
-
         return userEventRepository
-                .findUserEventByUserIdAndEventNameAndEventTime(userId, eventGetDto.getName(), eventGetDto.getTime())
+                .findByUserIdAndEventNameAndEventTime(userId, eventGetDto.getName(), eventGetDto.getTime())
                 .isPresent();
     }
 

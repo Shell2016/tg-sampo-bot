@@ -1,25 +1,27 @@
 bot:
-  username: SampoRegistrationBot
-  token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48
+#  username: SampoRegistrationBot    основной бот
+#  token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48     основной бот
+  username: sampotestbot
+  token: 5857216499:AAE1kDEu5b9voRR7L8CUhmVPl608Yhb5OK0
   admin:
     id: 528357712
-    username: shell_201777777777
+    username: shell_2017
 
 logging:
   level:
-    org:
-      springframework:
-        transaction: trace
+#    org:
+#      springframework:
+#        transaction: trace
     root: info
   file:
-    name: bot.log
-    path: ./logs
+    name: /opt/bots/sampobot/logs/bot.log
+
 
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: pass
+    username: sampobot
+    password: 1636postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql

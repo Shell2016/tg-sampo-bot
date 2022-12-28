@@ -33,7 +33,6 @@ public class UpdateHandlerImpl implements UpdateHandler {
     private final UpdateHandler deleteEventRegistrationHandler;
 
 
-
     public UpdateHandlerImpl(SendServiceImpl sendService,
                              UserService userService,
                              EventService eventService,
@@ -45,12 +44,12 @@ public class UpdateHandlerImpl implements UpdateHandler {
         this.eventListHandler = new EventListHandler(sendService, eventService);
         this.eventCreateHandler = new EventCreateHandler(sendService, eventService);
         this.eventDeleteHandler = new EventDeleteHandler(sendService, eventService);
-        this.eventRegisterHandler = new EventRegisterHandler(sendService, eventService);
+        this.eventRegisterHandler = new EventRegisterHandler(sendService);
         this.roleSetHandler = new RoleSetHandler(sendService, userService);
-        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, eventService, userService);
+        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, userService);
         this.eventCoupleRegisterHandler = new EventCoupleRegisterHandler(sendService, eventService, userService);
         this.dancerListHandler = new DancerListHandler(sendService, userEventService, userService);
-        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, userEventService, userService);
+        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, userEventService);
     }
 
     @Override
@@ -73,8 +72,6 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "/clear" -> session.stop();
                 case "/events", "Список коллективок" -> eventListHandler.handleUpdate(update, session);
                 case "Добавить" -> eventCreateHandler.handleUpdate(update, session);
-
-//                default -> handlers.get("default").handleUpdate(update, session);
             }
         }
 

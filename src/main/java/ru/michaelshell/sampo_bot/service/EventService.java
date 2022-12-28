@@ -5,11 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.Event;
-import ru.michaelshell.sampo_bot.database.entity.Role;
-import ru.michaelshell.sampo_bot.database.entity.User;
-import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
-import ru.michaelshell.sampo_bot.database.repository.UserEventRepository;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
@@ -18,9 +14,7 @@ import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
 
 @Service
@@ -50,43 +44,12 @@ public class EventService {
 
     @Transactional
     public int delete(EventGetDto event) {
-        return eventRepository.deleteEventByNameAndTime(event.getName(), event.getTime());
+        return eventRepository.deleteByNameAndTime(event.getName(), event.getTime());
     }
 
     public Optional<Long> findEventIdByDto(EventGetDto eventDto) {
-        return eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime())
+        return eventRepository.findByNameAndTime(eventDto.getName(), eventDto.getTime())
                 .map(Event::getId);
-    }
-
-    public List<String> getCouples(EventGetDto eventDto) {
-        Event event = eventRepository.findEventByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
-        return event.getUserEvents().stream()
-                .filter(userEvent -> userEvent.getPartnerFullname() != null)
-                .sorted(comparing(UserEvent::getSignedAt))
-                .map(userEvent -> {
-                    User user = userEvent.getUser();
-                    String couple;
-                    if (user.getRole() == Role.LEADER) {
-                        couple = user.getLastName() + " " + user.getFirstName() + "  -  " +
-                                userEvent.getPartnerFullname();
-                    } else {
-                        couple = userEvent.getPartnerFullname() + "  -  " +
-                                user.getLastName() + " " + user.getFirstName();
-                    }
-                    return couple;
-                })
-                .collect(Collectors.toList());
-    }
-
-
-    public List<String> getDancers(EventGetDto eventGetDto, Role role) {
-        Event event = eventRepository.findEventByNameAndTime(eventGetDto.getName(), eventGetDto.getTime()).orElseThrow();
-        return event.getUserEvents().stream()
-                .filter(userEvent -> userEvent.getPartnerFullname() == null)
-                .filter(userEvent -> userEvent.getUser().getRole() == role)
-                .sorted(comparing(UserEvent::getSignedAt))
-                .map(userEvent -> userEvent.getUser().getLastName() + " " + userEvent.getUser().getFirstName())
-                .collect(toList());
     }
 
 }

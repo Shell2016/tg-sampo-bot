@@ -11,8 +11,6 @@ import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX;
@@ -23,7 +21,6 @@ public class EventCreateHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
-
 
     public EventCreateHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
         this.sendServiceImpl = sendServiceImpl;
@@ -68,6 +65,7 @@ public class EventCreateHandler implements UpdateHandler {
                 session.setAttribute("eventInfo", eventInfo);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_INFO.name());
                 EventReadDto event = createEvent(message.getFrom().getUserName(), session);
+                session.removeAttribute("eventInfo");
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }

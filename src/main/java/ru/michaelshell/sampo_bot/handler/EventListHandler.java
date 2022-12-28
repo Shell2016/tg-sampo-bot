@@ -21,8 +21,6 @@ public class EventListHandler implements UpdateHandler {
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
 
-    private final static String MSG = "";
-
     public EventListHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
         this.sendServiceImpl = sendServiceImpl;
         this.eventService = eventService;

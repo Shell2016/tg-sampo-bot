@@ -69,10 +69,6 @@ public class SendServiceImpl implements SendService {
 
 
     public void edit(Long chatId, Integer messageId, String msg) {
-//        EditMessageText editMessage = new EditMessageText();
-//        editMessage.setChatId(chatId);
-//        editMessage.setMessageId(messageId);
-//        editMessage.setText(msg);
         EditMessageText editMessage = EditMessageText.builder()
                 .chatId(chatId)
                 .messageId(messageId)

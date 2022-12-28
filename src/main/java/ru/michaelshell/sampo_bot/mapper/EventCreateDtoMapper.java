@@ -4,8 +4,6 @@ import org.springframework.stereotype.Component;
 import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 
-import java.time.LocalDateTime;
-
 @Component
 public class EventCreateDtoMapper implements Mapper<EventCreateDto, Event> {
 

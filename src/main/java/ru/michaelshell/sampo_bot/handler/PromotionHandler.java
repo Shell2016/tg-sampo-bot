@@ -35,7 +35,6 @@ public class PromotionHandler implements UpdateHandler {
         User user = message.getFrom();
         Long chatId = message.getChatId();
 
-
         if (!checkPromotionRights(botProperties.admin().id(), user.getId(),
                 botProperties.admin().username(), user.getUserName())) {
             sendService.sendWithKeyboard(chatId, "Нет прав для выполнения команды", session);
@@ -45,9 +44,10 @@ public class PromotionHandler implements UpdateHandler {
             String userName = update.getMessage().getText().trim();
             try {
                 userService.promoteByUserName(userName);
-                String success = "Пользователю выданы права админа.\n" +
-                        "Если фунционал не заработал, ему нужно ввести команду\n" +
-                        "/clear чтобы очистить текущую сессию";
+                String success = """
+                        Пользователю выданы права админа.
+                        Если фунционал не заработал, ему нужно ввести команду
+                        /clear чтобы очистить текущую сессию""";
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
                 sendService.sendWithKeyboard(chatId, success, session);
                 return;
@@ -56,18 +56,13 @@ public class PromotionHandler implements UpdateHandler {
                 session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), false);
                 return;
             }
-
         }
-
         sendService.sendWithKeyboard(chatId, "Введите имя для выдачи админских прав", session);
         session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), true);
-
-
     }
 
     @Override
     public void handleCallback(Update update, Session session) {
-
     }
 
 
