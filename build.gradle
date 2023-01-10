@@ -3,8 +3,8 @@ plugins {
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "io.freefair.lombok" version "6.6.1"
-
 }
+apply from: 'version.gradle'
 
 group = 'ru.michaelshell'
 version = '1.0.1'
@@ -20,13 +20,15 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.telegram:telegrambots-spring-boot-starter:6.3.0'
-    implementation 'org.telegram:telegrambots-chat-session-bot:6.3.0'
+    implementation "org.telegram:telegrambots-spring-boot-starter:${versions.telegrambots}"
+    implementation "org.telegram:telegrambots-chat-session-bot:${versions.tgsession}"
     implementation 'org.liquibase:liquibase-core'
 
     runtimeOnly 'org.postgresql:postgresql'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
+
 }
 
 test {

@@ -2,6 +2,7 @@ INSERT INTO event (id, name, time, created_at, created_by)
 VALUES (1,'RS-Main', '2022-12-22 03:43:00.000000', '2022-12-22 03:43:38.580000', 'shell'),
        (2,'Beginner', '2022-01-22 03:43:00.000000', '2022-12-22 03:43:38.580000', 'shell'),
        (3,'Star', '2022-05-22 03:43:00.000000', '2022-12-22 03:43:38.580000', 'shell');
+SELECT setval('event_id_seq', (SELECT max(id) FROM event));
 
 INSERT INTO users (id, user_name, first_name, last_name, role, status, registered_at)
 VALUES ('1', 'test1', 'Партнер1', 'ФамилияПартнер1', 'LEADER', 'USER', '2022-12-22 03:43:38.580000'),
