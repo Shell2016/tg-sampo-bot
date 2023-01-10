@@ -1,6 +1,6 @@
 bot:
   username: SampoRegistrationBot
-  token: 5883387628:AAG5DDzl0_LAar-DCr6_gD71qE1XENm_e48
+  token: ${SAMPOBOT_TOKEN}
   admin:
     id: 528357712
     username: shell_2017

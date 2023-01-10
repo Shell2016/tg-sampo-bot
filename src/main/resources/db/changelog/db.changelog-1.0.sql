@@ -35,24 +35,3 @@ CREATE TABLE IF NOT EXISTS users_event
     signed_at TIMESTAMP NOT NULL ,
     UNIQUE (event_id, user_id)
 );
-
---changeset michaelshell:4
--- CREATE TABLE IF NOT EXISTS couple
--- (
---     id BIGSERIAL PRIMARY KEY ,
---     leader_name VARCHAR(64) NOT NULL ,
---     follower_name VARCHAR(64) NOT NULL ,
---     user_id BIGINT NOT NULL REFERENCES users (id) ON DELETE CASCADE,
---     event_id BIGINT NOT NULL REFERENCES event (id) ON DELETE CASCADE,
---     signed_at TIMESTAMP NOT NULL
--- );
-
---changeset michaelshell:5
--- CREATE TABLE IF NOT EXISTS couple_event
--- (
---     id BIGSERIAL PRIMARY KEY ,
---     couple_id BIGINT NOT NULL REFERENCES couple (id) ON DELETE CASCADE ,
---     event_id BIGINT NOT NULL REFERENCES event (id) ON DELETE CASCADE ,
---     signed_at TIMESTAMP,
---     UNIQUE (couple_id, event_id)
--- );
