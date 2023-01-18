@@ -2,19 +2,23 @@ package ru.michaelshell.sampo_bot.integration.service;
 
 
 import lombok.RequiredArgsConstructor;
-import org.assertj.core.api.Assertions;
+
 import org.junit.jupiter.api.Test;
 import ru.michaelshell.sampo_bot.IntegrationTestBase;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.database.repository.UserRepository;
+import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 @RequiredArgsConstructor
 public class UserServiceIT extends IntegrationTestBase {
@@ -43,6 +47,26 @@ public class UserServiceIT extends IntegrationTestBase {
 
     @Test
     void createUser() {
+        UserReadDto dto = userService.createUser(
+                UserCreateEditDto.builder()
+                        .id(100L)
+                        .userName("test_user")
+                        .firstName("test_firstname")
+                        .registeredAt(LocalDateTime.now())
+                        .build()
+        );
+
+        Optional<UserReadDto> readDto = userService.findById(100L);
+
+        assertThat(readDto).isPresent();
+        readDto.ifPresent(user -> {
+            assertEquals(dto.getUserName(), user.getUserName());
+            assertEquals(dto.getFirstName(), user.getFirstName());
+            assertEquals(dto.getRegisteredAt(), user.getRegisteredAt());
+            assertEquals(dto.getLastName(), user.getLastName());
+            assertSame(dto.getRole(), user.getRole());
+        });
+
     }
 
     @Test

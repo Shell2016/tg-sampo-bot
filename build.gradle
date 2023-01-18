@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "io.freefair.lombok" version "6.6.1"
+    id 'jacoco'
 }
 apply from: 'version.gradle'
 
@@ -34,3 +35,6 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
+test.finalizedBy jacocoTestReport
+jacocoTestReport.dependsOn test
