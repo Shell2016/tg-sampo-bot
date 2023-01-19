@@ -50,8 +50,11 @@ public class DancerListHandler implements UpdateHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        EventGetDto eventGetDto = BotUtils.parseEvent(text);
+        printDancerList(text, user, chatId, messageId);
+    }
 
+    private void printDancerList(String text, User user, Long chatId, Integer messageId) {
+        EventGetDto eventGetDto = BotUtils.parseEvent(text);
         List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
 
         String resultList = buildResultList(text,
@@ -64,9 +67,8 @@ public class DancerListHandler implements UpdateHandler {
         } else {
             sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
-
-
     }
+
 
     private List<String> getCoupleList(List<UserEvent> userEvents) {
         return userEvents.stream()

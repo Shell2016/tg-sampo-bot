@@ -51,6 +51,10 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             return;
         }
         log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
+
+        // TODO: 20.01.2023
+
+
         sendServiceImpl.edit(chatId, messageId, "Успешная запись!\uD83E\uDD73");
     }
 
