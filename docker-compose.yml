@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  sampobot:
+    image: sampobot
+    container_name: sampobot
+    build: .
+    environment:
+      - SAMPOBOT_TOKEN=
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/sampobot
+      - SPRING_DATASOURCE_USERNAME=
+      - SPRING_DATASOURCE_PASSWORD=
+    restart: unless-stopped
+    depends_on:
+      - db
+  db:
+    image: postgres:15.1
+    container_name: sampobot_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=
+      - POSTGRES_PASSWORD=
+      - POSTGRES_DB=sampobot
+    ports:
+      - "5432:5432"
+
+
