@@ -1,9 +1,6 @@
 FROM amazoncorretto:17
-
 ARG JAR_FILE=build/libs/*.jar
-RUN mkdir /opt/bots
-COPY ${JAR_FILE} /opt/bots/sampobot.jar
-
+WORKDIR /app
+COPY ${JAR_FILE} sampobot.jar
 ENV TZ Europe/Moscow
-
-ENTRYPOINT ["java", "-jar", "/opt/bots/sampobot.jar"]
+ENTRYPOINT ["java", "-jar", "/app/sampobot.jar"]

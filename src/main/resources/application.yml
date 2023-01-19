@@ -12,7 +12,7 @@ logging:
         transaction: trace
     root: info
   file:
-    name: /opt/bots/sampobot/logs/bot.log
+    name: /home/${USER}/sampobot_logs/bot.log
 
 
 spring:

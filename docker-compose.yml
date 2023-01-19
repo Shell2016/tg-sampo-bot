@@ -3,9 +3,9 @@ version: "3.9"
 services:
 
   sampobot:
-    image: sampobot    # при деплое заменить на image: shell2016/sampobot
+    image: shell2016/sampobot    # при деплое заменить на image: shell2016/sampobot
     container_name: sampobot
-    build: .  #    при деплое удалить строку
+#    build: .  #    при деплое удалить строку
     environment:
       - SAMPOBOT_TOKEN=${TOKEN}
       - SPRING_DATASOURCE_URL=${DB_URL}
@@ -13,11 +13,13 @@ services:
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - SPRING_JPA_PROPERTIES_HIBERNATE_SHOW_SQL=false
       - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=info
+      - LOGGING_FILE_NAME=${LOG_FILE}
     volumes:
-      - /home/$USER/sampobot_logs:/opt/bots/sampobot
+      - /home/$USER/sampobot_logs:/app/logs
     restart: always
     depends_on:
       - db
+
   db:
     image: postgres:${DB_VERSION}
     container_name: sampobot_db
