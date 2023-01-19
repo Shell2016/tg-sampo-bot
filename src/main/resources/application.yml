@@ -1,15 +1,15 @@
 bot:
-  username: SampoRegistrationBot
+  username: ${BOT_USERNAME:SampoRegistrationBot}
   token: ${SAMPOBOT_TOKEN}
   admin:
-    id: 528357712
-    username: shell_2017
+    id: ${ADMIN_ID:528357712}
+    username: ${ADMIN_USERNAME:shell_2017}
 
 logging:
   level:
-#    org:
-#      springframework:
-#        transaction: trace
+    org:
+      springframework:
+        transaction: trace
     root: info
   file:
     name: /opt/bots/sampobot/logs/bot.log
@@ -19,7 +19,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
-    password: postgres
+    password: pass
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql

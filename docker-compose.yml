@@ -1,26 +1,31 @@
 version: "3.9"
 
 services:
+
   sampobot:
-    image: sampobot
+    image: sampobot    # при деплое заменить на image: shell2016/sampobot
     container_name: sampobot
-    build: .
+    build: .  #    при деплое удалить строку
     environment:
-      - SAMPOBOT_TOKEN=
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/sampobot
-      - SPRING_DATASOURCE_USERNAME=
-      - SPRING_DATASOURCE_PASSWORD=
-    restart: unless-stopped
+      - SAMPOBOT_TOKEN=${TOKEN}
+      - SPRING_DATASOURCE_URL=${DB_URL}
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - SPRING_JPA_PROPERTIES_HIBERNATE_SHOW_SQL=false
+      - LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_TRANSACTION=info
+    volumes:
+      - /home/$USER/sampobot_logs:/opt/bots/sampobot
+    restart: always
     depends_on:
       - db
   db:
-    image: postgres:15.1
+    image: postgres:${DB_VERSION}
     container_name: sampobot_db
-    restart: unless-stopped
+    restart: always
     environment:
-      - POSTGRES_USER=
-      - POSTGRES_PASSWORD=
-      - POSTGRES_DB=sampobot
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
     ports:
       - "5432:5432"
 
