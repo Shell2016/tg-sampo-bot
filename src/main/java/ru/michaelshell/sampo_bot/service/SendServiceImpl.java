@@ -2,6 +2,7 @@ package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +20,12 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListKeyboard;
 @RequiredArgsConstructor
 public class SendServiceImpl implements SendService {
 
-    private final SampoBot sampoBot;
+    private SampoBot sampoBot;
+
+    @Autowired
+    public void setSampoBot(SampoBot sampoBot) {
+        this.sampoBot = sampoBot;
+    }
 
     @Override
     public void send(Long chatId, String message) {

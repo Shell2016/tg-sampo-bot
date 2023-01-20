@@ -10,3 +10,7 @@ spring:
         show_sql: true
         hbm2ddl:
           auto: validate
+
+logging:
+  file:
+    name: /home/michaelshell/sampobot_logs/bot_test.log
