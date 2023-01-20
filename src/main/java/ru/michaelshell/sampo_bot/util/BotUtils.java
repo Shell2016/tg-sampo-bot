@@ -2,24 +2,18 @@ package ru.michaelshell.sampo_bot.util;
 
 import lombok.experimental.UtilityClass;
 import org.apache.shiro.session.Session;
-import org.telegram.telegrambots.meta.api.objects.User;
-import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.Status;
-import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.AUTHENTICATED;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 @UtilityClass
 public class BotUtils {

@@ -1,6 +1,8 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -17,15 +19,12 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMO
 import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
+@Component
+@RequiredArgsConstructor
 public class EventCreateHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
-
-    public EventCreateHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
-        this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {

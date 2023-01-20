@@ -7,15 +7,17 @@ bot:
 
 logging:
   level:
-    org:
-      springframework:
-        transaction: trace
+#    org:
+#      springframework:
+#        transaction: trace
     root: info
   file:
     name: /home/${USER}/sampobot_logs/bot.log
 
 
 spring:
+  main:
+    allow-circular-references: true
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres

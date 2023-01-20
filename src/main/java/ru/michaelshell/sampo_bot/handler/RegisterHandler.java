@@ -1,7 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Status;
@@ -15,13 +17,11 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class RegisterHandler implements UpdateHandler {
 
     private final UserService userService;
-
-    public RegisterHandler(UserService userService) {
-        this.userService = userService;
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -43,7 +43,6 @@ public class RegisterHandler implements UpdateHandler {
         }
         authenticate(session, userDto);
     }
-
 
     private UserReadDto createUser(User user) {
         UserCreateEditDto dto = UserCreateEditDto.builder()

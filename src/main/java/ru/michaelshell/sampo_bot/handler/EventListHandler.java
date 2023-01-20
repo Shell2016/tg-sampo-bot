@@ -1,7 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
@@ -16,15 +18,12 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.*;
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class EventListHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
-
-    public EventListHandler(SendServiceImpl sendServiceImpl, EventService eventService) {
-        this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {

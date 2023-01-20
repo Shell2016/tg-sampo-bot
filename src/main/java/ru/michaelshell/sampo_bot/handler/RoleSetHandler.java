@@ -1,7 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Role;
@@ -14,18 +16,14 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMO
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class RoleSetHandler implements UpdateHandler {
 
     private Role role;
 
     private final UserService userService;
     private final SendServiceImpl sendService;
-
-
-    public RoleSetHandler(SendServiceImpl sendService, UserService userService) {
-        this.userService = userService;
-        this.sendService = sendService;
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {

@@ -25,7 +25,6 @@ public class UserEventService {
         userEventRepository.delete(userEvent);
     }
 
-
     public List<UserEvent> findUserEventsByEvent(EventGetDto eventGetDto) {
         return userEventRepository.findAllByNameAndTime(eventGetDto.getName(), eventGetDto.getTime());
     }

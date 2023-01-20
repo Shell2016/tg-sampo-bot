@@ -1,22 +1,16 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.config.BotProperties;
-import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
-import ru.michaelshell.sampo_bot.service.UserEventService;
-import ru.michaelshell.sampo_bot.service.UserService;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 import static ru.michaelshell.sampo_bot.util.BotUtils.isAuthenticated;
 
-/**
- * Класс с основной логикой перенаправления запросов в обработчики,
- * а также создает и хранит их
- */
-
+@Component
+@RequiredArgsConstructor
 public class UpdateHandlerImpl implements UpdateHandler {
 
     private final UpdateHandler startHandler;
@@ -33,26 +27,6 @@ public class UpdateHandlerImpl implements UpdateHandler {
     private final UpdateHandler deleteEventRegistrationHandler;
     private final UpdateHandler editProfileHandler;
 
-
-    public UpdateHandlerImpl(SendServiceImpl sendService,
-                             UserService userService,
-                             EventService eventService,
-                             UserEventService userEventService,
-                             BotProperties botProperties) {
-        this.startHandler = new StartHandler(sendService);
-        this.registerHandler = new RegisterHandler(userService);
-        this.promotionHandler = new PromotionHandler(sendService, userService, botProperties);
-        this.eventListHandler = new EventListHandler(sendService, eventService);
-        this.eventCreateHandler = new EventCreateHandler(sendService, eventService);
-        this.eventDeleteHandler = new EventDeleteHandler(sendService, eventService);
-        this.eventRegisterHandler = new EventRegisterHandler(sendService);
-        this.roleSetHandler = new RoleSetHandler(sendService, userService);
-        this.eventSoloRegisterHandler = new EventSoloRegisterHandler(sendService, userService);
-        this.eventCoupleRegisterHandler = new EventCoupleRegisterHandler(sendService, eventService, userService);
-        this.dancerListHandler = new DancerListHandler(sendService, userEventService, userService);
-        this.deleteEventRegistrationHandler = new DeleteEventRegistrationHandler(sendService, userEventService);
-        this.editProfileHandler = new EditProfileHandler(sendService);
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {

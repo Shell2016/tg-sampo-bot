@@ -1,7 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -23,50 +25,44 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class DancerListHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final UserEventService userEventService;
     private final UserService userService;
 
-
-    public DancerListHandler(SendServiceImpl sendServiceImpl, UserEventService userEventService, UserService userService) {
-        this.sendServiceImpl = sendServiceImpl;
-        this.userEventService = userEventService;
-        this.userService = userService;
-    }
-
     @Override
     public void handleUpdate(Update update, Session session) {
     }
-
 
     @Override
     public void handleCallback(Update update, Session session) {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
-        String text = callbackQuery.getMessage().getText();
+        String eventInfo = callbackQuery.getMessage().getText();
         User user = callbackQuery.getFrom();
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
-        printDancerList(text, user, chatId, messageId);
-    }
+        String resultList = getDancerList(eventInfo);
 
-    private void printDancerList(String text, User user, Long chatId, Integer messageId) {
-        EventGetDto eventGetDto = BotUtils.parseEvent(text);
-        List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
-
-        String resultList = buildResultList(text,
-                getCoupleList(userEvents),
-                getDancerList(userEvents, Role.LEADER),
-                getDancerList(userEvents, Role.FOLLOWER));
-
-        if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
+        if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
             sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
             sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
+    }
+
+    public String getDancerList(String eventInfo) {
+        EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
+        List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
+
+        return buildResultList(eventInfo,
+                getCoupleList(userEvents),
+                printDancerList(userEvents, Role.LEADER),
+                printDancerList(userEvents, Role.FOLLOWER));
     }
 
 
@@ -89,7 +85,7 @@ public class DancerListHandler implements UpdateHandler {
                 .collect(Collectors.toList());
     }
 
-    private List<String> getDancerList(List<UserEvent> userEvents, Role role) {
+    private List<String> printDancerList(List<UserEvent> userEvents, Role role) {
         return userEvents.stream()
                 .filter(userEvent -> userEvent.getPartnerFullname() == null)
                 .filter(userEvent -> userEvent.getUser().getRole() == role)

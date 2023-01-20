@@ -1,7 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -16,18 +18,13 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.PROMOTION_WAITI
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class PromotionHandler implements UpdateHandler {
 
     private final SendServiceImpl sendService;
     private final UserService userService;
     private final BotProperties botProperties;
-
-
-    public PromotionHandler(SendServiceImpl sendService, UserService userService, BotProperties botProperties) {
-        this.userService = userService;
-        this.sendService = sendService;
-        this.botProperties = botProperties;
-    }
 
     @Override
     public void handleUpdate(Update update, Session session) {

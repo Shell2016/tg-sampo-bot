@@ -1,8 +1,10 @@
 package ru.michaelshell.sampo_bot.handler;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
@@ -16,18 +18,14 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_INFO;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class EventCoupleRegisterHandler implements UpdateHandler {
 
     private final SendServiceImpl sendServiceImpl;
     private final EventService eventService;
     private final UserService userService;
-
-
-    public EventCoupleRegisterHandler(SendServiceImpl sendServiceImpl, EventService eventService, UserService userService) {
-        this.sendServiceImpl = sendServiceImpl;
-        this.eventService = eventService;
-        this.userService = userService;
-    }
+    private final EventSoloRegisterHandler eventSoloRegisterHandler;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -36,7 +34,6 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         String name = update.getMessage().getText();
         Long userId = update.getMessage().getFrom().getId();
         User user = update.getMessage().getFrom();
-
 
         if (name.split(" ").length != 2) {
             sendServiceImpl.sendWithKeyboard(chatId, "Неверный формат! Нужно два слова, разделенные одним пробелом.", session);
@@ -59,10 +56,8 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
 
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
             session.removeAttribute(EVENT_INFO.name());
-
-
-            // TODO: 20.01.2023
             sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+            eventSoloRegisterHandler.sendDancerListWithButtons(eventInfo, user, chatId, session);
         }
     }
 
@@ -84,8 +79,8 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
 
         Long eventId = eventService.findEventIdByDto(event).orElseThrow();
         session.setAttribute("eventId", eventId);
-        sendServiceImpl.edit(chatId, messageId, msgText +
-                "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)");
+        sendServiceImpl.sendWithKeyboard(chatId, msgText +
+                "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)", session);
         session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
         session.setAttribute(EVENT_INFO.name(), msgText);
     }
