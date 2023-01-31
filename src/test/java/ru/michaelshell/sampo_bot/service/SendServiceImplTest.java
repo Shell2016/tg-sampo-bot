@@ -4,11 +4,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
+
+import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -32,6 +33,6 @@ class SendServiceImplTest {
 
         sendServiceImpl.send(TEST_USER_ID, TEST_MESSAGE);
 
-        Mockito.verify(sampoBot).execute(sendMessage);
+        verify(sampoBot).execute(sendMessage);
     }
 }

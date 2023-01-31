@@ -1,11 +1,11 @@
-version: "3.9"
+version: "3.8"
 
 services:
 
   sampobot:
-    image: sampobot    # при деплое заменить на image: shell2016/sampobot
+    image: shell2016/sampobot
     container_name: sampobot
-    build: .  #    при деплое удалить строку
+    build: .
     environment:
       - SAMPOBOT_TOKEN=${TOKEN}
       - SPRING_DATASOURCE_URL=${DB_URL}

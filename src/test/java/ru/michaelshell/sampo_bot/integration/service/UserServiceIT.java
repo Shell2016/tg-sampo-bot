@@ -2,13 +2,9 @@ package ru.michaelshell.sampo_bot.integration.service;
 
 
 import lombok.RequiredArgsConstructor;
-
 import org.junit.jupiter.api.Test;
 import ru.michaelshell.sampo_bot.IntegrationTestBase;
-import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.Status;
-import ru.michaelshell.sampo_bot.database.entity.User;
-import ru.michaelshell.sampo_bot.database.repository.UserRepository;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
@@ -47,15 +43,14 @@ public class UserServiceIT extends IntegrationTestBase {
 
     @Test
     void createUser() {
-        UserReadDto dto = userService.createUser(
-                UserCreateEditDto.builder()
-                        .id(100L)
-                        .userName("test_user")
-                        .firstName("test_firstname")
-                        .registeredAt(LocalDateTime.now())
-                        .build()
-        );
+        UserCreateEditDto userDto = UserCreateEditDto.builder()
+                .id(100L)
+                .userName("test_user")
+                .firstName("test_firstname")
+                .registeredAt(LocalDateTime.now())
+                .build();
 
+        UserReadDto dto = userService.createUser(userDto);
         Optional<UserReadDto> readDto = userService.findById(100L);
 
         assertThat(readDto).isPresent();
