@@ -10,13 +10,13 @@ import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.util.AuthUtils;
+import ru.michaelshell.sampo_bot.util.TimeParser;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX;
-import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 @Component
@@ -28,7 +28,7 @@ public class EventCreateHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(Update update, Session session) {
-        if (isAdmin(session)) {
+        if (AuthUtils.isAdmin(session)) {
 
             Message message = update.getMessage();
             Long chatId = message.getChatId();
@@ -46,9 +46,8 @@ public class EventCreateHandler implements UpdateHandler {
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name()))) {
                 String eventDate = message.getText();
 
-                if (validateDate(eventDate)) {
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yy HH:mm");
-                    LocalDateTime date = LocalDateTime.parse(eventDate, formatter);
+                if (TimeParser.isValid(eventDate)) {
+                    LocalDateTime date = TimeParser.parseForEventCreation(eventDate);
                     session.setAttribute("eventDate", date);
                 } else {
                     sendServiceImpl.sendWithKeyboard(chatId, "Неверный формат даты", session);
@@ -74,9 +73,7 @@ public class EventCreateHandler implements UpdateHandler {
         }
     }
 
-    private boolean validateDate(String eventDate) {
-        return eventDate.matches("([0-2][0-9]|3[0-1]) (0[1-9]|1[0-2]) 2[2-9] ([0-1][0-9]|2[0-3]):[0-5][0-9]");
-    }
+
 
     public void handleCallback(Update update, Session session) {
 

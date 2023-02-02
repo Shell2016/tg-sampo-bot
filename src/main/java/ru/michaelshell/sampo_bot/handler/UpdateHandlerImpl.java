@@ -5,9 +5,9 @@ import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.util.AuthUtils;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
-import static ru.michaelshell.sampo_bot.util.BotUtils.isAuthenticated;
 
 @Component
 @RequiredArgsConstructor
@@ -35,7 +35,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         if (message != null && message.hasText() && message.isUserMessage()) {
 
-            if (!isAuthenticated(session)) {
+            if (!AuthUtils.isAuthenticated(session)) {
                 registerHandler.handleUpdate(update, session);
             }
 
@@ -55,7 +55,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
 
         if (update.hasCallbackQuery()) {
-            if (!isAuthenticated(session)) {
+            if (!AuthUtils.isAuthenticated(session)) {
                 registerHandler.handleCallback(update, session);
             }
             String callbackData = update.getCallbackQuery().getData();

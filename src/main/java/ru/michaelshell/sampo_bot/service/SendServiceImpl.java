@@ -10,8 +10,8 @@ import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageTe
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
+import ru.michaelshell.sampo_bot.util.AuthUtils;
 
-import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListAdminKeyboard;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListKeyboard;
 
@@ -45,7 +45,7 @@ public class SendServiceImpl implements SendService {
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);
         sendMessage.setText(msg);
-        if (isAdmin(session)) {
+        if (AuthUtils.isAdmin(session)) {
             sendMessage.setReplyMarkup(eventListAdminKeyboard);
         } else {
             sendMessage.setReplyMarkup(eventListKeyboard);

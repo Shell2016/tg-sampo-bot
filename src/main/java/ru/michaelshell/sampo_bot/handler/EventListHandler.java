@@ -8,13 +8,14 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.util.AuthUtils;
 
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
-import static ru.michaelshell.sampo_bot.util.BotUtils.isAdmin;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.*;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListAdminButtons;
+import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 
 
 @Slf4j
@@ -51,7 +52,7 @@ public class EventListHandler implements UpdateHandler {
 
 
     private void sendEventList(Session session, Long chatId, String eventInfo) {
-        if (isAdmin(session)) {
+        if (AuthUtils.isAdmin(session)) {
             sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListAdminButtons);
         } else {
             sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
