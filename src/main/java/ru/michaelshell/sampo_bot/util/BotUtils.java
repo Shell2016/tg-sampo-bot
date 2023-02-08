@@ -1,14 +1,11 @@
 package ru.michaelshell.sampo_bot.util;
 
 import lombok.experimental.UtilityClass;
-import org.apache.shiro.session.Session;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 
 import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
 
 @UtilityClass
 public class BotUtils {
@@ -35,8 +32,8 @@ public class BotUtils {
                 .build();
     }
 
-    public static boolean hasRole(Session session) {
-        return session.getAttribute(HAS_ROLE.name()) != null;
-    }
+//    public static boolean hasRole(Session session) {
+//        return session.getAttribute(HAS_ROLE.name()) != null;
+//    }
 
 }

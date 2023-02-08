@@ -60,13 +60,13 @@ public class DancerListHandler implements UpdateHandler {
         List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
 
         return buildResultList(eventInfo,
-                getCoupleList(userEvents),
+                printCoupleList(userEvents),
                 printDancerList(userEvents, Role.LEADER),
                 printDancerList(userEvents, Role.FOLLOWER));
     }
 
 
-    private List<String> getCoupleList(List<UserEvent> userEvents) {
+    private List<String> printCoupleList(List<UserEvent> userEvents) {
         return userEvents.stream()
                 .filter(userEvent -> userEvent.getPartnerFullname() != null)
                 .sorted(comparing(UserEvent::getSignedAt))

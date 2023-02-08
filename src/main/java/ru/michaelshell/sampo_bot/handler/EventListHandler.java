@@ -9,10 +9,9 @@ import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
+import ru.michaelshell.sampo_bot.util.TimeParser;
 
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListAdminButtons;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
@@ -30,7 +29,6 @@ public class EventListHandler implements UpdateHandler {
     public void handleUpdate(Update update, Session session) {
 
         Long chatId = update.getMessage().getChatId();
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMMM yyyy  HH:mm", new Locale("ru"));
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
@@ -40,7 +38,7 @@ public class EventListHandler implements UpdateHandler {
         sendServiceImpl.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
 
         events.forEach(event -> {
-            String time = event.getTime().format(dateTimeFormatter);
+            String time = TimeParser.parseFromTimeToString(event.getTime());
             String eventInfo = """
                     Уровень: %s
                     Время: %s

@@ -7,11 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.util.TimeParser;
 
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
-
-import static ru.michaelshell.sampo_bot.util.BotUtils.hasRole;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.registerEventModeButtons;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
@@ -36,23 +34,23 @@ public class EventRegisterHandler implements UpdateHandler {
 
         if (!hasRole(session)) {
             sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", session, roleSelectButtons);
-
         } else {
             EventGetDto event = parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
                 sendServiceImpl.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
                 return;
             }
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy  HH:mm", new Locale("ru"));
-            String time = event.getTime().format(formatter);
+            String time = TimeParser.parseFromTimeToString(event.getTime());
             String eventHeader = """
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
             sendServiceImpl.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
-
         }
+    }
 
+    private boolean hasRole(Session session) {
+        return session.getAttribute(HAS_ROLE.name()) != null;
     }
 
 

@@ -12,16 +12,21 @@ import java.util.Optional;
 public class TimeParser {
 
     private static final String PATTERN_FOR_EVENT_CREATION = "dd MM yy HH:mm";
-    private static final String PATTERN_FOR_DTO_CREATION = "dd MMMM yyyy  HH:mm";
+    private static final String PATTERN = "dd MMMM yyyy  HH:mm";
+    private static final DateTimeFormatter FORMATTER_FOR_EVENT_CREATION = DateTimeFormatter.ofPattern(PATTERN_FOR_EVENT_CREATION);
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN, new Locale("ru"));
+
 
     public static LocalDateTime parseForEventCreation(String timeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FOR_EVENT_CREATION);
-        return LocalDateTime.parse(timeString, formatter);
+        return LocalDateTime.parse(timeString, FORMATTER_FOR_EVENT_CREATION);
     }
 
     public static LocalDateTime parseForDtoCreation(String timeString) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN_FOR_DTO_CREATION, new Locale("ru"));
-        return LocalDateTime.parse(timeString, formatter);
+        return LocalDateTime.parse(timeString, FORMATTER);
+    }
+
+    public static String parseFromTimeToString(LocalDateTime time) {
+        return time.format(FORMATTER);
     }
 
 
@@ -34,8 +39,4 @@ public class TimeParser {
             return false;
         }
     }
-
-//    private boolean regexValidateDate(String eventDate) {
-//        return eventDate.matches("([0-2][0-9]|3[0-1]) (0[1-9]|1[0-2]) 2[2-9] ([0-1][0-9]|2[0-3]):[0-5][0-9]");
-//    }
 }
