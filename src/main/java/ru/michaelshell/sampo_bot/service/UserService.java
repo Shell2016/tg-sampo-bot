@@ -62,7 +62,7 @@ public class UserService {
     }
 
     @Transactional
-    public void registerOnEvent(EventGetDto eventDto, Long userId) {
+    public UserEvent registerOnEvent(EventGetDto eventDto, Long userId) {
         Event event = eventRepository.findByNameAndTime(eventDto.getName(), eventDto.getTime()).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         UserEvent userEvent = UserEvent.builder()
@@ -71,10 +71,11 @@ public class UserService {
         userEvent.setUser(user);
         userEvent.setEvent(event);
         userEventRepository.save(userEvent);
+        return userEvent;
     }
 
     @Transactional
-    public void registerOnEvent(Long eventId, Long userId, String partnerFirstName, String partnerLastName) {
+    public UserEvent registerOnEvent(Long eventId, Long userId, String partnerFirstName, String partnerLastName) {
         Event event = eventRepository.findById(eventId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         UserEvent userEvent = UserEvent.builder()
@@ -84,6 +85,7 @@ public class UserService {
         userEvent.setUser(user);
         userEvent.setEvent(event);
         userEventRepository.save(userEvent);
+        return userEvent;
     }
 
     public boolean isAlreadyRegistered(EventGetDto eventGetDto, Long userId) {
