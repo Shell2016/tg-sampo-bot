@@ -32,7 +32,7 @@ public class EventListHandler implements UpdateHandler {
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
-            sendServiceImpl.sendWithKeyboard(chatId, "В данный момент коллективок нет", session);
+            sendServiceImpl.sendWithKeyboard(chatId, "В данный момент нет коллективок", session);
             return;
         }
         sendServiceImpl.sendWithKeyboard(chatId, "Актуальный список коллективок", session);

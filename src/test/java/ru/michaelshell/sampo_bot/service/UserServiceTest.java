@@ -30,7 +30,7 @@ class UserServiceTest {
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_USERNAME = "testUserName";
     private static final String TEST_EVENT_NAME = "RS-Main";
-    private static final LocalDateTime TEST_EVENT_TIME = LocalDateTime.of(2023, 01, 31, 19, 0);
+    private static final LocalDateTime TEST_EVENT_TIME = LocalDateTime.of(2023, 1, 31, 19, 0);
 
     @Mock
     private UserRepository userRepository;
@@ -151,7 +151,6 @@ class UserServiceTest {
     void registerOnEventWithPartner() {
         User user = getUser();
         Event event = getEvent();
-        EventGetDto eventDto = getEventDto();
         doReturn(Optional.of(user)).when(userRepository).findById(TEST_USER_ID);
         doReturn(Optional.of(event)).when(eventRepository).findById(1L);
 
