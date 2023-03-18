@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 
@@ -14,7 +14,7 @@ import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 @RequiredArgsConstructor
 public class EditProfileHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendService;
+    private final SendService sendService;
 
     @Override
     public void handleUpdate(Update update, Session session) {

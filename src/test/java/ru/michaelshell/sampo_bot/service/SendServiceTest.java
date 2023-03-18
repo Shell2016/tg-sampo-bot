@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
-class SendServiceImplTest {
+class SendServiceTest {
 
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_MESSAGE = "Test message";
@@ -21,7 +21,7 @@ class SendServiceImplTest {
     @Mock
     private SampoBot sampoBot;
     @InjectMocks
-    private SendServiceImpl sendServiceImpl;
+    private SendService sendServiceImpl;
 
 
     @Test

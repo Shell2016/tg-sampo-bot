@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
@@ -17,7 +17,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 @RequiredArgsConstructor
 public class EventDeleteHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final EventService eventService;
 
     @Override
@@ -34,15 +34,13 @@ public class EventDeleteHandler implements UpdateHandler {
 
         EventGetDto event = parseEvent(msgText);
         if (event.getName() == null || event.getTime() == null) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+            SendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
             return;
         }
         if (eventService.delete(event) == 1) {
-            log.info("Коллективка удалена");
-            sendServiceImpl.edit(chatId, messageId,"Коллективка удалена");
+            SendService.edit(chatId, messageId,"Коллективка удалена");
         } else {
-            log.info("Ошибка удаления коллективки");
-            sendServiceImpl.sendWithKeyboard(chatId, "Ошибка удаления", session);
+            SendService.sendWithKeyboard(chatId, "Ошибка удаления", session);
         }
 
 

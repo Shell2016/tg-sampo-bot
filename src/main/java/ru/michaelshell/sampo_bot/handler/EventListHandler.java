@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -22,7 +22,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 @RequiredArgsConstructor
 public class EventListHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final EventService eventService;
 
     @Override
@@ -32,10 +32,10 @@ public class EventListHandler implements UpdateHandler {
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
-            sendServiceImpl.sendWithKeyboard(chatId, "В данный момент нет коллективок", session);
+            SendService.sendWithKeyboard(chatId, "В данный момент нет коллективок", session);
             return;
         }
-        sendServiceImpl.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
+        SendService.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
 
         events.forEach(event -> {
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -51,9 +51,9 @@ public class EventListHandler implements UpdateHandler {
 
     private void sendEventList(Session session, Long chatId, String eventInfo) {
         if (AuthUtils.isAdmin(session)) {
-            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListAdminButtons);
+            SendService.sendWithKeyboard(chatId, eventInfo, session, eventListAdminButtons);
         } else {
-            sendServiceImpl.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
+            SendService.sendWithKeyboard(chatId, eventInfo, session, eventListButtons);
         }
     }
 

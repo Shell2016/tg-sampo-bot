@@ -10,7 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
@@ -29,7 +29,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class DancerListHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final UserEventService userEventService;
     private final UserService userService;
 
@@ -49,9 +49,9 @@ public class DancerListHandler implements UpdateHandler {
         String resultList = getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
+            SendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
-            sendServiceImpl.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
+            SendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
     }
 

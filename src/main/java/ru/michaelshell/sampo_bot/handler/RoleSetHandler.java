@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Role;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
@@ -23,7 +23,7 @@ public class RoleSetHandler implements UpdateHandler {
     private Role role;
 
     private final UserService userService;
-    private final SendServiceImpl sendService;
+    private final SendService sendService;
 
     @Override
     public void handleUpdate(Update update, Session session) {

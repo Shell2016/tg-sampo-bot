@@ -8,7 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.config.BotProperties;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -22,7 +22,7 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.PROMOTION_WAITI
 @RequiredArgsConstructor
 public class PromotionHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendService;
+    private final SendService sendService;
     private final UserService userService;
     private final BotProperties botProperties;
 

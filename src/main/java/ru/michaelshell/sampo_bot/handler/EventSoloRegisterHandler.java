@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
@@ -22,7 +22,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class EventSoloRegisterHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final UserService userService;
     private final DancerListHandler dancerListHandler;
 
@@ -42,18 +42,18 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         EventGetDto eventGetDto = parseEvent(eventInfo);
 
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
+            SendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
 
         try {
             userService.registerOnEvent(eventGetDto, user.getId());
         } catch (DataIntegrityViolationException e) {
-            sendServiceImpl.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
+            SendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
         log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
-        sendServiceImpl.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+        SendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
         sendDancerListWithButtons(eventInfo, user, chatId, session);
     }
 
@@ -61,9 +61,9 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         String resultList = dancerListHandler.getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            sendServiceImpl.sendWithKeyboard(chatId, resultList, session, deleteRegistrationButton);
+            SendService.sendWithKeyboard(chatId, resultList, session, deleteRegistrationButton);
         } else {
-            sendServiceImpl.sendWithKeyboard(chatId, resultList, session, eventRegisterButton);
+            SendService.sendWithKeyboard(chatId, resultList, session, eventRegisterButton);
         }
     }
 

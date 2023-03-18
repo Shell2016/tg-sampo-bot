@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -23,7 +23,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 @RequiredArgsConstructor
 public class EventCreateHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final EventService eventService;
 
     @Override
@@ -36,7 +36,7 @@ public class EventCreateHandler implements UpdateHandler {
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
                 String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
                 session.setAttribute("eventName", eventName);
-                sendServiceImpl.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
+                SendService.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                         "Пример - 25 01 23 20:30", session);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_NAME.name());
                 session.setAttribute(EVENT_ADD_WAITING_FOR_DATE.name(), true);
@@ -50,10 +50,10 @@ public class EventCreateHandler implements UpdateHandler {
                     LocalDateTime date = TimeParser.parseForEventCreation(eventDate);
                     session.setAttribute("eventDate", date);
                 } else {
-                    sendServiceImpl.sendWithKeyboard(chatId, "Неверный формат даты", session);
+                    SendService.sendWithKeyboard(chatId, "Неверный формат даты", session);
                     return;
                 }
-                sendServiceImpl.sendWithKeyboard(chatId, "Нужно краткое описание?", session, eventInfoButtons);
+                SendService.sendWithKeyboard(chatId, "Нужно краткое описание?", session, eventInfoButtons);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_DATE.name());
                 return;
             }
@@ -67,7 +67,7 @@ public class EventCreateHandler implements UpdateHandler {
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
-            sendServiceImpl.sendWithKeyboard(chatId, "Введите название/уровень коллективки.\n" +
+            SendService.sendWithKeyboard(chatId, "Введите название/уровень коллективки.\n" +
                     "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_NAME.name(), true);
         }
@@ -81,7 +81,7 @@ public class EventCreateHandler implements UpdateHandler {
         String callbackData = callbackQuery.getData();
         Long chatId = callbackQuery.getMessage().getChatId();
         if ("buttonInfoYes".equals(callbackData)) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Введите краткое описание:", session);
+            SendService.sendWithKeyboard(chatId, "Введите краткое описание:", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_INFO.name(), true);
         } else if ("buttonInfoNo".equals(callbackData)) {
             EventReadDto event = createEvent(callbackQuery.getFrom().getUserName(), session);
@@ -105,9 +105,9 @@ public class EventCreateHandler implements UpdateHandler {
 
     private void onEventSuccessOrFail(Session session, Long chatId, EventReadDto event) {
         if (event != null) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Коллективка успешно добавлена", session);
+            SendService.sendWithKeyboard(chatId, "Коллективка успешно добавлена", session);
         } else {
-            sendServiceImpl.sendWithKeyboard(chatId, "Не удалось добавить, что-то пошло не так", session);
+            SendService.sendWithKeyboard(chatId, "Не удалось добавить, что-то пошло не так", session);
         }
     }
 }

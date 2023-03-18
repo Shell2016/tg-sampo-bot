@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
@@ -15,7 +15,7 @@ import ru.michaelshell.sampo_bot.util.BotUtils;
 @RequiredArgsConstructor
 public class DeleteEventRegistrationHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
     private final UserEventService userEventService;
 
     @Override
@@ -34,7 +34,7 @@ public class DeleteEventRegistrationHandler implements UpdateHandler {
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         if (eventGetDto != null) {
             userEventService.deleteEventRegistration(eventGetDto, user.getId());
-            sendServiceImpl.edit(chatId, messageId, "Запись удалена!");
+            SendService.edit(chatId, messageId, "Запись удалена!");
         }
     }
 

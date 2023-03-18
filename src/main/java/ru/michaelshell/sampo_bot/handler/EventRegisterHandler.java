@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendServiceImpl;
+import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
@@ -18,7 +18,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 @RequiredArgsConstructor
 public class EventRegisterHandler implements UpdateHandler {
 
-    private final SendServiceImpl sendServiceImpl;
+    private final SendService SendService;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -33,11 +33,11 @@ public class EventRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
-            sendServiceImpl.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", session, roleSelectButtons);
+            SendService.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", session, roleSelectButtons);
         } else {
             EventGetDto event = parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
-                sendServiceImpl.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+                SendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
                 return;
             }
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -45,7 +45,7 @@ public class EventRegisterHandler implements UpdateHandler {
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
-            sendServiceImpl.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
+            SendService.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
         }
     }
 
