@@ -12,15 +12,7 @@ import ru.michaelshell.sampo_bot.dto.EventGetDto;
 @Slf4j
 @Aspect
 @Component
-public class LoggingAspect {
-
-    @Pointcut("@within(org.springframework.stereotype.Service)")
-    public void isServiceLayer() {
-    }
-
-    @Pointcut("target(ru.michaelshell.sampo_bot.service.SendService)")
-    public void isSendService() {
-    }
+public class EventServiceLoggingAspect {
 
     @Pointcut("execution(ru.michaelshell.sampo_bot.dto.EventReadDto ru.michaelshell.sampo_bot.service.EventService.create(ru.michaelshell.sampo_bot.dto.EventCreateDto)) java.util.NoSuchElementException)")
     public void createEventMethod() {
@@ -32,21 +24,20 @@ public class LoggingAspect {
 
     @AfterThrowing("createEventMethod()")
     public void createEventErrorLogging() {
-        log.info("Error occurred while creating event");
+        log.info("Event creation error");
     }
 
     @AfterReturning("createEventMethod() && args(eventDto)")
     public void createEventLogging(EventCreateDto eventDto) {
-        log.info("Создана новая коллективка пользователем {}: Уровень {} Время {}",
-                eventDto.getCreatedBy(), eventDto.getName(), eventDto.getTime());
+        log.info("Event created {}", eventDto);
     }
 
     @AfterReturning(value = "deleteEventMethod() &&args(eventDto)", returning = "result", argNames = "result,eventDto")
     public void deleteEventLogging(int result, EventGetDto eventDto) {
         if (result == 1) {
-            log.info("Удалена коллективка {} {}", eventDto.getName(), eventDto.getTime());
+            log.info("Event deleted {}", eventDto);
         } else {
-            log.info("Ошибка удаление коллективки {} {}", eventDto.getName(), eventDto.getTime());
+            log.info("Event deleting error {}", eventDto);
         }
     }
 }

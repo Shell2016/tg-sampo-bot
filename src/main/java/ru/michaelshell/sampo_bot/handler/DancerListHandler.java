@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -24,7 +23,6 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationBut
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class DancerListHandler implements UpdateHandler {

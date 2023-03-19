@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -17,7 +16,6 @@ import java.util.Objects;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.PROMOTION_WAITING_FOR_USERNAME;
 
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class PromotionHandler implements UpdateHandler {

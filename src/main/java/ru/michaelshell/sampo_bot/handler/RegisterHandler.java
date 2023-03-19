@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
@@ -15,8 +14,6 @@ import java.time.LocalDateTime;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
-
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RegisterHandler implements UpdateHandler {
@@ -53,9 +50,7 @@ public class RegisterHandler implements UpdateHandler {
                 .status(Status.USER)
                 .registeredAt(LocalDateTime.now())
                 .build();
-        UserReadDto userReadDto = userService.createUser(dto);
-        log.info("New user " + userReadDto + " have been successfully created");
-        return userReadDto;
+        return userService.createUser(dto);
     }
 
 

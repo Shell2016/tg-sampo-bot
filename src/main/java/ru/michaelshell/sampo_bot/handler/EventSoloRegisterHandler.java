@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
-@Slf4j
+
 @Component
 @RequiredArgsConstructor
 public class EventSoloRegisterHandler implements UpdateHandler {
@@ -52,18 +51,17 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             SendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
-        log.info("Registration on event " + eventGetDto + " by " + user.getUserName());
         SendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
-        sendDancerListWithButtons(eventInfo, user, chatId, session);
+        sendDancerListWithButtons(eventInfo, user, chatId);
     }
 
-    public void sendDancerListWithButtons(String eventInfo, User user, Long chatId, Session session) {
+    public void sendDancerListWithButtons(String eventInfo, User user, Long chatId) {
         String resultList = dancerListHandler.getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            SendService.sendWithKeyboard(chatId, resultList, session, deleteRegistrationButton);
+            SendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
         } else {
-            SendService.sendWithKeyboard(chatId, resultList, session, eventRegisterButton);
+            SendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
         }
     }
 

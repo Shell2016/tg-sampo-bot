@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
@@ -17,7 +16,7 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.COUPLE_REGISTER
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_INFO;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
-@Slf4j
+
 @Component
 @RequiredArgsConstructor
 public class EventCoupleRegisterHandler implements UpdateHandler {
@@ -49,15 +48,13 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                 SendService.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
                 return;
             }
-            log.info("Registration couple on event by " + user.getFirstName() + " " + user.getLastName() + ", " +
-                    "partner " + partnerLastName + " " + partnerFirstName);
             session.removeAttribute("eventId");
             session.removeAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name());
 
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
             session.removeAttribute(EVENT_INFO.name());
             SendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
-            eventSoloRegisterHandler.sendDancerListWithButtons(eventInfo, user, chatId, session);
+            eventSoloRegisterHandler.sendDancerListWithButtons(eventInfo, user, chatId);
         }
     }
 

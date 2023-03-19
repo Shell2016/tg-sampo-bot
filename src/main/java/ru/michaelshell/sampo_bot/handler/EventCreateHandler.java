@@ -53,7 +53,7 @@ public class EventCreateHandler implements UpdateHandler {
                     SendService.sendWithKeyboard(chatId, "Неверный формат даты", session);
                     return;
                 }
-                SendService.sendWithKeyboard(chatId, "Нужно краткое описание?", session, eventInfoButtons);
+                SendService.sendWithKeyboard(chatId, "Нужно краткое описание?", eventInfoButtons);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_DATE.name());
                 return;
             }
