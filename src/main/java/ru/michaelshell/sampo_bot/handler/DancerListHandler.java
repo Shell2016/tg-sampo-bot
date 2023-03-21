@@ -15,6 +15,8 @@ import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -39,18 +41,30 @@ public class DancerListHandler implements UpdateHandler {
     public void handleCallback(Update update, Session session) {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
-        String eventInfo = callbackQuery.getMessage().getText();
+        String msgText = callbackQuery.getMessage().getText();
+
+        Matcher matcher = Pattern.compile("^(.+\\n.+)").matcher(msgText);
+        String eventInfo = "";
+        if (matcher.find()) {
+            eventInfo = matcher.group();
+        }
         User user = callbackQuery.getFrom();
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         String resultList = getDancerList(eventInfo);
 
+        if ((msgText + "\n").equals(resultList)) {
+            return;
+        }
+
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
             sendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
             sendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
+
+
     }
 
     public String getDancerList(String eventInfo) {

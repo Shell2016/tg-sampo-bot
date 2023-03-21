@@ -66,7 +66,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonLeader", "buttonFollower" -> roleSetHandler.handleCallback(update, session);
                 case "buttonSolo" -> eventSoloRegisterHandler.handleCallback(update, session);
                 case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
-                case "buttonShowDancersList" -> dancerListHandler.handleCallback(update, session);
+                case "buttonShowDancersList", "buttonRefresh" -> dancerListHandler.handleCallback(update, session);
                 case "buttonDeleteRegistration" -> deleteEventRegistrationHandler.handleCallback(update, session);
             }
         }

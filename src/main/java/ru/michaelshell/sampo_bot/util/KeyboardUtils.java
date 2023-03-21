@@ -195,11 +195,18 @@ public class KeyboardUtils {
         buttonRegister.setText("Записаться");
         buttonRegister.setCallbackData("buttonEventRegister");
 
+        InlineKeyboardButton buttonRefresh = new InlineKeyboardButton();
+        buttonRefresh.setText("Обновить списки");
+        buttonRefresh.setCallbackData("buttonRefresh");
+
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonRegister);
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(buttonRefresh);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);
+        rowList.add(row2);
 
         eventRegisterButton.setKeyboard(rowList);
         return eventRegisterButton;
@@ -212,11 +219,18 @@ public class KeyboardUtils {
         buttonDeleteRegistration.setText("Удалить запись");
         buttonDeleteRegistration.setCallbackData("buttonDeleteRegistration");
 
+        InlineKeyboardButton buttonRefresh = new InlineKeyboardButton();
+        buttonRefresh.setText("Обновить списки");
+        buttonRefresh.setCallbackData("buttonRefresh");
+
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonDeleteRegistration);
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(buttonRefresh);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);
+        rowList.add(row2);
 
         deleteRegistrationButton.setKeyboard(rowList);
         return deleteRegistrationButton;
