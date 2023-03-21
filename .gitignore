@@ -40,3 +40,4 @@ out/
 /bot.log.*
 bot.log
 /.env*
+/versions/
