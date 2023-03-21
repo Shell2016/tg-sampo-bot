@@ -12,6 +12,8 @@ import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
+import java.util.NoSuchElementException;
+
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
@@ -49,6 +51,9 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             userService.registerOnEvent(eventGetDto, user.getId());
         } catch (DataIntegrityViolationException e) {
             sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
+            return;
+        } catch (NoSuchElementException e) {
+            sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Коллективка уже удалена!");
             return;
         }
         sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);

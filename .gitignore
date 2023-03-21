@@ -39,4 +39,4 @@ out/
 /src/main/java/Tests.java
 /bot.log.*
 bot.log
-/.env
+/.env*

@@ -12,6 +12,8 @@ import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
+import java.util.NoSuchElementException;
+
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.COUPLE_REGISTER_WAITING_FOR_NAME;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_INFO;
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
@@ -48,6 +50,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                 sendService.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
                 return;
             }
+
             session.removeAttribute("eventId");
             session.removeAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name());
 
@@ -74,7 +77,14 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             return;
         }
 
-        Long eventId = eventService.findEventIdByDto(event).orElseThrow();
+        Long eventId = null;
+        try {
+            eventId = eventService.findEventIdByDto(event).orElseThrow();
+
+        } catch (NoSuchElementException e) {
+            sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Коллективка удалена!");
+            return;
+        }
         session.setAttribute("eventId", eventId);
         sendService.sendWithKeyboard(chatId, msgText +
                 "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)", session);
