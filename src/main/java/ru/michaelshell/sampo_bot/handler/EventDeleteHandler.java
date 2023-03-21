@@ -8,6 +8,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendService;
+import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
@@ -16,7 +17,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 @RequiredArgsConstructor
 public class EventDeleteHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
     private final EventService eventService;
 
     @Override
@@ -30,16 +31,21 @@ public class EventDeleteHandler implements UpdateHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
         Integer messageId = callbackQuery.getMessage().getMessageId();
+        if ("buttonEventDeleteConfirmation".equals(callbackQuery.getData())) {
 
-        EventGetDto event = parseEvent(msgText);
-        if (event.getName() == null || event.getTime() == null) {
-            SendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
-            return;
-        }
-        if (eventService.delete(event) == 1) {
-            SendService.edit(chatId, messageId,"Коллективка удалена");
+            EventGetDto event = parseEvent(msgText);
+            if (event.getName() == null || event.getTime() == null) {
+                sendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+                return;
+            }
+            if (eventService.delete(event) == 1) {
+                sendService.edit(chatId, messageId,"Коллективка удалена");
+            } else {
+                sendService.sendWithKeyboard(chatId, "Ошибка удаления", session);
+            }
+
         } else {
-            SendService.sendWithKeyboard(chatId, "Ошибка удаления", session);
+            sendService.editWithKeyboard(chatId, messageId, msgText, KeyboardUtils.eventListAdminButtonsDeleteConfirmation);
         }
 
 

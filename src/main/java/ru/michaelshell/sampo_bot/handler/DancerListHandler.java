@@ -27,7 +27,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class DancerListHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
     private final UserEventService userEventService;
     private final UserService userService;
 
@@ -47,9 +47,9 @@ public class DancerListHandler implements UpdateHandler {
         String resultList = getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            SendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
+            sendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
-            SendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
+            sendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
     }
 

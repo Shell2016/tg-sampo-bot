@@ -17,6 +17,7 @@ public class KeyboardUtils {
     public static final ReplyKeyboardMarkup eventListAdminKeyboard = KeyboardUtils.getEventListAdminKeyboard();
     public static final InlineKeyboardMarkup eventListButtons = KeyboardUtils.getEventListButtons();
     public static final InlineKeyboardMarkup eventListAdminButtons = KeyboardUtils.getEventListAdminButtons();
+    public static final InlineKeyboardMarkup eventListAdminButtonsDeleteConfirmation = KeyboardUtils.getEventListAdminButtonsDeleteConfirmation();
     public static final InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
     public static final InlineKeyboardMarkup roleSelectButtons = KeyboardUtils.getRoleSelectButtons();
     public static final InlineKeyboardMarkup registerEventModeButtons = KeyboardUtils.getRegisterEventModeButtons();
@@ -37,7 +38,7 @@ public class KeyboardUtils {
         return replyKeyboardMarkup;
     }
 
-    private static ReplyKeyboardMarkup getEventListKeyboard () {
+    private static ReplyKeyboardMarkup getEventListKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
         replyKeyboardMarkup.setResizeKeyboard(true);
         replyKeyboardMarkup.setOneTimeKeyboard(false);
@@ -77,6 +78,33 @@ public class KeyboardUtils {
         InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
         buttonDelete.setText("Удалить");
         buttonDelete.setCallbackData("buttonEventDelete");
+
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(buttonList);
+
+        List<InlineKeyboardButton> row2 = new ArrayList<>();
+        row2.add(buttonDelete);
+
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row1);
+        rowList.add(row2);
+
+        eventListAdminButtons.setKeyboard(rowList);
+        return eventListAdminButtons;
+    }
+
+    private static InlineKeyboardMarkup getEventListAdminButtonsDeleteConfirmation() {
+        InlineKeyboardMarkup eventListAdminButtons = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonList = new InlineKeyboardButton();
+        buttonList.setText("Списки");
+        buttonList.setCallbackData("buttonShowDancersList");
+
+        InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
+        buttonDelete.setText("❗️❗️Подтверждение удаления коллективки❗❗️️");
+        buttonDelete.setCallbackData("buttonEventDeleteConfirmation");
 
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();

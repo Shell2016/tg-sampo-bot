@@ -10,7 +10,7 @@ import ru.michaelshell.sampo_bot.service.SendService;
 @RequiredArgsConstructor
 public class StartHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
 
     private final static String START_MSG = "Привет! Чтобы посмотреть список актуальных колллективок," +
             " нужно тыкнуть на кнопку или ввести команду /events (также доступно через главное меню)";
@@ -19,7 +19,7 @@ public class StartHandler implements UpdateHandler {
     public void handleUpdate(Update update, Session session) {
 
         Long chatId = update.getMessage().getChatId();
-        SendService.sendWithKeyboard(chatId, START_MSG, session);
+        sendService.sendWithKeyboard(chatId, START_MSG, session);
     }
 
     @Override

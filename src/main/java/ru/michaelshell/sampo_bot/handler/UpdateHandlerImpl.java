@@ -61,7 +61,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
             String callbackData = update.getCallbackQuery().getData();
             switch (callbackData) {
                 case "buttonInfoYes", "buttonInfoNo" -> eventCreateHandler.handleCallback(update, session);
-                case "buttonEventDelete" -> eventDeleteHandler.handleCallback(update, session);
+                case "buttonEventDelete", "buttonEventDeleteConfirmation" -> eventDeleteHandler.handleCallback(update, session);
                 case "buttonEventRegister" -> eventRegisterHandler.handleCallback(update, session);
                 case "buttonLeader", "buttonFollower" -> roleSetHandler.handleCallback(update, session);
                 case "buttonSolo" -> eventSoloRegisterHandler.handleCallback(update, session);

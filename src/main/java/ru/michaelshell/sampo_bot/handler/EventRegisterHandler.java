@@ -18,7 +18,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 @RequiredArgsConstructor
 public class EventRegisterHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -33,11 +33,11 @@ public class EventRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
-            SendService.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
+            sendService.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
         } else {
             EventGetDto event = parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
-                SendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+                sendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
                 return;
             }
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -45,7 +45,7 @@ public class EventRegisterHandler implements UpdateHandler {
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
-            SendService.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
+            sendService.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
         }
     }
 

@@ -21,7 +21,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class EventSoloRegisterHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
     private final UserService userService;
     private final DancerListHandler dancerListHandler;
 
@@ -41,17 +41,17 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         EventGetDto eventGetDto = parseEvent(eventInfo);
 
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            SendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
+            sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
 
         try {
             userService.registerOnEvent(eventGetDto, user.getId());
         } catch (DataIntegrityViolationException e) {
-            SendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
+            sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
-        SendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+        sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
         sendDancerListWithButtons(eventInfo, user, chatId);
     }
 
@@ -59,9 +59,9 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         String resultList = dancerListHandler.getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            SendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
+            sendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
         } else {
-            SendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
+            sendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
         }
     }
 

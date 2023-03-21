@@ -21,7 +21,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 @RequiredArgsConstructor
 public class EventCoupleRegisterHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
     private final EventService eventService;
     private final UserService userService;
     private final EventSoloRegisterHandler eventSoloRegisterHandler;
@@ -35,7 +35,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         User user = update.getMessage().getFrom();
 
         if (name.split(" ").length != 2) {
-            SendService.sendWithKeyboard(chatId, "Неверный формат! Нужно два слова, разделенные одним пробелом.", session);
+            sendService.sendWithKeyboard(chatId, "Неверный формат! Нужно два слова, разделенные одним пробелом.", session);
         } else {
 
             String[] s = name.split(" ");
@@ -45,7 +45,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             try {
                 userService.registerOnEvent(eventId, userId, partnerFirstName, partnerLastName);
             } catch (DataIntegrityViolationException e) {
-                SendService.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
+                sendService.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
                 return;
             }
             session.removeAttribute("eventId");
@@ -53,7 +53,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
 
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
             session.removeAttribute(EVENT_INFO.name());
-            SendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+            sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
             eventSoloRegisterHandler.sendDancerListWithButtons(eventInfo, user, chatId);
         }
     }
@@ -70,13 +70,13 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         EventGetDto event = parseEvent(msgText);
 
         if (userService.isAlreadyRegistered(event, user.getId())) {
-            SendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
+            sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
 
         Long eventId = eventService.findEventIdByDto(event).orElseThrow();
         session.setAttribute("eventId", eventId);
-        SendService.sendWithKeyboard(chatId, msgText +
+        sendService.sendWithKeyboard(chatId, msgText +
                 "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)", session);
         session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
         session.setAttribute(EVENT_INFO.name(), msgText);

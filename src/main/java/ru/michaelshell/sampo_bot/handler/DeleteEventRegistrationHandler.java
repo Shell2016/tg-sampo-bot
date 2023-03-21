@@ -15,7 +15,7 @@ import ru.michaelshell.sampo_bot.util.BotUtils;
 @RequiredArgsConstructor
 public class DeleteEventRegistrationHandler implements UpdateHandler {
 
-    private final SendService SendService;
+    private final SendService sendService;
     private final UserEventService userEventService;
 
     @Override
@@ -34,7 +34,7 @@ public class DeleteEventRegistrationHandler implements UpdateHandler {
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         if (eventGetDto != null) {
             userEventService.deleteEventRegistration(eventGetDto, user.getId());
-            SendService.edit(chatId, messageId, "Запись удалена!");
+            sendService.edit(chatId, messageId, "Запись удалена!");
         }
     }
 
