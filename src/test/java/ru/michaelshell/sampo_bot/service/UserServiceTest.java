@@ -79,12 +79,11 @@ class UserServiceTest {
     void promoteByUserName() {
         User user = getUser();
         doReturn(Optional.of(user)).when(userRepository).findByUserName(TEST_USERNAME);
-        doReturn(user).when(userRepository).saveAndFlush(user);
 
         userService.promoteByUserName(TEST_USERNAME);
 
         assertThat(user.getStatus()).isEqualTo(Status.ADMIN);
-        verify(userRepository).saveAndFlush(user);
+        verifyNoMoreInteractions(userRepository);
     }
 
     @Test
@@ -107,7 +106,6 @@ class UserServiceTest {
                 .registeredAt(LocalDateTime.of(2023, 1, 31, 23, 50))
                 .build();
         doReturn(Optional.of(user)).when(userRepository).findById(TEST_USER_ID);
-        doReturn(user).when(userRepository).saveAndFlush(user);
         doReturn(userReadDto).when(userReadDtoMapper).map(user);
 
         Optional<UserReadDto> result = userService.setUserRole(Role.LEADER, "Michael", "Shell", TEST_USER_ID);
@@ -117,7 +115,7 @@ class UserServiceTest {
         assertThat(user.getRole()).isSameAs(Role.LEADER);
         assertThat(user.getFirstName()).isEqualTo("Michael");
         assertThat(user.getLastName()).isEqualTo("Shell");
-        verify(userRepository).saveAndFlush(user);
+        verifyNoMoreInteractions(userRepository);
         verify(userReadDtoMapper).map(user);
     }
 

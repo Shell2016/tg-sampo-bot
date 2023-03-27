@@ -1,6 +1,7 @@
 package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.*;
@@ -16,6 +17,7 @@ import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -45,7 +47,6 @@ public class UserService {
     public void promoteByUserName(String userName) {
         User user = userRepository.findByUserName(userName).orElseThrow();
         user.setStatus(Status.ADMIN);
-        userRepository.saveAndFlush(user);
     }
 
     @Transactional
@@ -57,7 +58,6 @@ public class UserService {
                     user.setLastName(lastName);
                     return user;
                 })
-                .map(userRepository::saveAndFlush)
                 .map(userReadDtoMapper::map);
     }
 
@@ -94,7 +94,8 @@ public class UserService {
                 .isPresent();
     }
 
-
-
-
+    @Transactional
+    public int updateUserName(Long id, String userName) {
+        return userRepository.updateUserName(id, userName);
+    }
 }

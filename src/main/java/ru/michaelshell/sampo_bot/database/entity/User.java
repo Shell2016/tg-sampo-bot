@@ -22,7 +22,7 @@ public class User implements BaseEntity<Long> {
     @Id
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String userName;
 
     @Column(nullable = false)

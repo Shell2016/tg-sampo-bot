@@ -1,17 +1,13 @@
 bot:
   username: ${BOT_USERNAME:SampoRegistrationBot}
   token: ${SAMPOBOT_TOKEN}
-#  username: sampotestbot
-#  token: 5857216499:AAE1kDEu5b9voRR7L8CUhmVPl608Yhb5OK0
   admin:
     id: ${ADMIN_ID:528357712}
     username: ${ADMIN_USERNAME:shell_2017}
 
+
 logging:
   level:
-#    org:
-#      springframework:
-#        transaction: trace
     root: info
   file:
     name: /home/${USER}/sampobot_logs/bot.log
@@ -29,12 +25,10 @@ spring:
     database: postgresql
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
         hbm2ddl:
           auto: validate
-#  profiles:
-#    active: dev
+#    open-in-view: false
+
 
 
 

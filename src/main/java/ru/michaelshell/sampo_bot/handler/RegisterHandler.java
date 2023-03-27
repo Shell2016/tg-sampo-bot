@@ -36,6 +36,8 @@ public class RegisterHandler implements UpdateHandler {
         UserReadDto userDto = userService.findById(user.getId()).orElse(null);
         if (userDto == null) {
             userDto = createUser(user);
+        } else if (userDto.getUserName() == null && user.getUserName() != null) {
+            userService.updateUserName(user.getId(), user.getUserName());
         }
         authenticate(session, userDto);
     }
