@@ -79,6 +79,14 @@ public class KeyboardUtils {
         buttonDelete.setText("Удалить");
         buttonDelete.setCallbackData("buttonEventDelete");
 
+        InlineKeyboardButton buttonEventEdit = new InlineKeyboardButton();
+        buttonEventEdit.setText("Редактировать");
+        buttonEventEdit.setCallbackData("buttonEventEdit");
+
+        InlineKeyboardButton buttonEventNotify = new InlineKeyboardButton();
+        buttonEventNotify.setText("Оповещение\uD83D\uDCE3");
+        buttonEventNotify.setCallbackData("buttonEventNotify");
+
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonList);
@@ -86,10 +94,18 @@ public class KeyboardUtils {
         List<InlineKeyboardButton> row2 = new ArrayList<>();
         row2.add(buttonDelete);
 
+        List<InlineKeyboardButton> row3 = new ArrayList<>();
+        row3.add(buttonEventEdit);
+
+        List<InlineKeyboardButton> row4 = new ArrayList<>();
+        row4.add(buttonEventNotify);
+
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);
         rowList.add(row2);
+        rowList.add(row3);
+        rowList.add(row4);
 
         eventListAdminButtons.setKeyboard(rowList);
         return eventListAdminButtons;
@@ -103,7 +119,7 @@ public class KeyboardUtils {
         buttonList.setCallbackData("buttonShowDancersList");
 
         InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
-        buttonDelete.setText("❗️❗️Подтверждение удаления коллективки❗❗️️");
+        buttonDelete.setText("❗️️ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ❗️️");
         buttonDelete.setCallbackData("buttonEventDeleteConfirmation");
 
 

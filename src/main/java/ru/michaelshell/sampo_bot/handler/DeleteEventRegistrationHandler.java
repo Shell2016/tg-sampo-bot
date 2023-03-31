@@ -11,12 +11,15 @@ import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
+import java.util.NoSuchElementException;
+
 @Component
 @RequiredArgsConstructor
 public class DeleteEventRegistrationHandler implements UpdateHandler {
 
     private final SendService sendService;
     private final UserEventService userEventService;
+    private final DancerListHandler dancerListHandler;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -27,14 +30,18 @@ public class DeleteEventRegistrationHandler implements UpdateHandler {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
-        String eventInfo = callbackQuery.getMessage().getText();
+        String msgText = callbackQuery.getMessage().getText();
         Integer messageId = callbackQuery.getMessage().getMessageId();
         User user = callbackQuery.getFrom();
 
-        EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
+        EventGetDto eventGetDto = BotUtils.parseEvent(msgText);
         if (eventGetDto != null) {
-            userEventService.deleteEventRegistration(eventGetDto, user.getId());
-            sendService.edit(chatId, messageId, "Запись удалена!");
+            try {
+                userEventService.deleteEventRegistration(eventGetDto, user.getId());
+                dancerListHandler.editDancerListWithButtons(msgText, user, chatId, messageId);
+            } catch (NoSuchElementException e) {
+                sendService.edit(chatId, messageId, "Ошибка удаления!");
+            }
         }
     }
 

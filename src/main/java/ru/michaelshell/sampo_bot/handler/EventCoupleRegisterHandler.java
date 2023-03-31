@@ -26,7 +26,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
     private final SendService sendService;
     private final EventService eventService;
     private final UserService userService;
-    private final EventSoloRegisterHandler eventSoloRegisterHandler;
+    private final DancerListHandler dancerListHandler;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -57,7 +57,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
             session.removeAttribute(EVENT_INFO.name());
             sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
-            eventSoloRegisterHandler.sendDancerListWithButtons(eventInfo, user, chatId);
+            dancerListHandler.sendDancerListWithButtons(eventInfo, user, chatId);
         }
     }
 

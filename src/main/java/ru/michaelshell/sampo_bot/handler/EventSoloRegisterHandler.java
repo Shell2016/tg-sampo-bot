@@ -10,13 +10,10 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
-import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.NoSuchElementException;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
-import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 
 @Component
@@ -57,19 +54,8 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             return;
         }
         sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
-        sendDancerListWithButtons(eventInfo, user, chatId);
+        dancerListHandler.sendDancerListWithButtons(eventInfo, user, chatId);
     }
-
-    public void sendDancerListWithButtons(String eventInfo, User user, Long chatId) {
-        String resultList = dancerListHandler.getDancerList(eventInfo);
-
-        if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            sendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
-        } else {
-            sendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
-        }
-    }
-
 
 }
 

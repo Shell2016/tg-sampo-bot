@@ -43,15 +43,18 @@ public class DancerListHandler implements UpdateHandler {
         CallbackQuery callbackQuery = update.getCallbackQuery();
         String msgText = callbackQuery.getMessage().getText();
 
-        Matcher matcher = Pattern.compile("^(.+\\n.+)").matcher(msgText);
-        String eventInfo = "";
-        if (matcher.find()) {
-            eventInfo = matcher.group();
-        }
+
         User user = callbackQuery.getFrom();
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
+        editDancerListWithButtons(msgText, user, chatId, messageId);
+
+    }
+
+    public void editDancerListWithButtons(String msgText, User user, Long chatId, Integer messageId) {
+
+        String eventInfo = getEventInfo(msgText);
         String resultList = getDancerList(eventInfo);
 
         if ((msgText + "\n").equals(resultList)) {
@@ -63,8 +66,15 @@ public class DancerListHandler implements UpdateHandler {
         } else {
             sendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
         }
+    }
 
-
+    private String getEventInfo(String msgText) {
+        Matcher matcher = Pattern.compile("^(.+\\n.+)").matcher(msgText);
+        String eventInfo = "";
+        if (matcher.find()) {
+            eventInfo = matcher.group();
+        }
+        return eventInfo;
     }
 
     public String getDancerList(String eventInfo) {
@@ -135,6 +145,18 @@ public class DancerListHandler implements UpdateHandler {
         String waitingList = "\nЛИСТ ОЖИДАНИЯ:\n" + sb;
 
         return text + "\n\n" + couples + leaders + followers + waitingList;
+    }
+
+    public void sendDancerListWithButtons(String msgText, User user, Long chatId) {
+
+        String eventInfo = getEventInfo(msgText);
+        String resultList = getDancerList(eventInfo);
+
+        if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
+            sendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
+        } else {
+            sendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
+        }
     }
 
 

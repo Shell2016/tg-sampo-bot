@@ -32,8 +32,4 @@ public class BotUtils {
                 .build();
     }
 
-//    public static boolean hasRole(Session session) {
-//        return session.getAttribute(HAS_ROLE.name()) != null;
-//    }
-
 }

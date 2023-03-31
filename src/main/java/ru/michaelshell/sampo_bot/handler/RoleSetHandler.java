@@ -24,6 +24,7 @@ public class RoleSetHandler implements UpdateHandler {
 
     private final UserService userService;
     private final SendService sendService;
+    private final EventListHandler eventListHandler;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -32,7 +33,7 @@ public class RoleSetHandler implements UpdateHandler {
         String fullName = update.getMessage().getText();
         String[] nameArr = fullName.split(" ");
         if (nameArr.length != 2) {
-            sendService.sendWithKeyboard(chatId, "Неверный формат, введите еще раз", session);
+            sendService.sendWithKeyboard(chatId, "Неверный формат: нужно 2 слова, разделённые пробелом", session);
         } else {
             String firstName = nameArr[0].replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ").trim();
             String lastName = nameArr[1].replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ").trim();
@@ -40,7 +41,8 @@ public class RoleSetHandler implements UpdateHandler {
             if (userService.setUserRole(role, firstName, lastName, user.getId()).isPresent()) {
                 session.setAttribute(HAS_ROLE.name(), role.name());
                 session.removeAttribute(SET_ROLE_WAITING_FOR_NAME.name());
-                sendService.sendWithKeyboard(chatId, "Теперь можно записываться на коллективки", session);
+                sendService.sendWithKeyboard(chatId, "Теперь можно записываться на коллективки\uD83D\uDC83\uD83D\uDD7A", session);
+                eventListHandler.handleUpdate(update, session);
             } else {
                 session.removeAttribute(SET_ROLE_WAITING_FOR_NAME.name());
                 sendService.sendWithKeyboard(chatId, "Что-то пошло не так", session);
