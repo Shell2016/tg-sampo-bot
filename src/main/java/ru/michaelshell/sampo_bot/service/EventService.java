@@ -12,6 +12,7 @@ import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.mapper.EventCreateDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,32 @@ public class EventService {
     private final EventCreateDtoMapper eventCreateDtoMapper;
 
     public List<EventReadDto> findAll() {
-
         return eventRepository.findAll(Sort.by("time")).stream()
                 .map(eventReadDtoMapper::map)
                 .collect(toList());
     }
+
+    @Transactional
+    public Optional<EventReadDto> updateEventTitle(Long eventId, String title) {
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        optionalEvent.ifPresent(event -> event.setName(title));
+        return optionalEvent.map(eventReadDtoMapper::map);
+    }
+
+    @Transactional
+    public Optional<EventReadDto> updateEventInfo(Long eventId, String info) {
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        optionalEvent.ifPresent(event -> event.setInfo(info));
+        return optionalEvent.map(eventReadDtoMapper::map);
+    }
+
+    @Transactional
+    public Optional<EventReadDto> updateEventTime(Long eventId, LocalDateTime time) {
+        Optional<Event> optionalEvent = eventRepository.findById(eventId);
+        optionalEvent.ifPresent(event -> event.setTime(time));
+        return optionalEvent.map(eventReadDtoMapper::map);
+    }
+
 
     @Transactional
     public EventReadDto create(EventCreateDto dto) {

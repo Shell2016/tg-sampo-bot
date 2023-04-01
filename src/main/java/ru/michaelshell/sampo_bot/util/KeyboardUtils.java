@@ -23,6 +23,7 @@ public class KeyboardUtils {
     public static final InlineKeyboardMarkup registerEventModeButtons = KeyboardUtils.getRegisterEventModeButtons();
     public static final InlineKeyboardMarkup eventRegisterButton = KeyboardUtils.getEventRegisterButton();
     public static final InlineKeyboardMarkup deleteRegistrationButton = KeyboardUtils.getDeleteRegistrationButton();
+    public static final InlineKeyboardMarkup eventEditButtons = KeyboardUtils.getEventEditButtons();
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
@@ -84,22 +85,20 @@ public class KeyboardUtils {
         buttonEventEdit.setCallbackData("buttonEventEdit");
 
         InlineKeyboardButton buttonEventNotify = new InlineKeyboardButton();
-        buttonEventNotify.setText("Оповещение\uD83D\uDCE3");
+        buttonEventNotify.setText("\uD83D\uDCE3 Оповещение \uD83D\uDCE3");
         buttonEventNotify.setCallbackData("buttonEventNotify");
-
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonList);
 
         List<InlineKeyboardButton> row2 = new ArrayList<>();
-        row2.add(buttonDelete);
+        row2.add(buttonEventEdit);
 
         List<InlineKeyboardButton> row3 = new ArrayList<>();
-        row3.add(buttonEventEdit);
+        row3.add(buttonDelete);
 
         List<InlineKeyboardButton> row4 = new ArrayList<>();
         row4.add(buttonEventNotify);
-
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);
@@ -251,4 +250,32 @@ public class KeyboardUtils {
         deleteRegistrationButton.setKeyboard(rowList);
         return deleteRegistrationButton;
     }
+
+    private static InlineKeyboardMarkup getEventEditButtons() {
+        InlineKeyboardMarkup eventEditButtons = new InlineKeyboardMarkup();
+
+        InlineKeyboardButton buttonEditEventTitle = new InlineKeyboardButton();
+        buttonEditEventTitle.setText("Уровень");
+        buttonEditEventTitle.setCallbackData("buttonEditEventTitle");
+
+        InlineKeyboardButton buttonEditEventTime = new InlineKeyboardButton();
+        buttonEditEventTime.setText("Время");
+        buttonEditEventTime.setCallbackData("buttonEditEventTime");
+
+        InlineKeyboardButton buttonEditEventInfo = new InlineKeyboardButton();
+        buttonEditEventInfo.setText("Инфо");
+        buttonEditEventInfo.setCallbackData("buttonEditEventInfo");
+
+        List<InlineKeyboardButton> row1 = new ArrayList<>();
+        row1.add(buttonEditEventTitle);
+        row1.add(buttonEditEventTime);
+        row1.add(buttonEditEventInfo);
+
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(row1);
+
+        eventEditButtons.setKeyboard(rowList);
+        return eventEditButtons;
+    }
+
 }

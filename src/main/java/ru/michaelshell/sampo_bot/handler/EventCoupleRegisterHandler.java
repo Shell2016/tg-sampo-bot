@@ -82,7 +82,8 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             eventId = eventService.findEventIdByDto(event).orElseThrow();
 
         } catch (NoSuchElementException e) {
-            sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Коллективка удалена!");
+            sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Коллективка удалена либо изменена!\n" +
+                    "Обновите список");
             return;
         }
         session.setAttribute("eventId", eventId);

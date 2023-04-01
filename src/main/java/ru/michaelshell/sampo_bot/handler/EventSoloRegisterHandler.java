@@ -50,7 +50,7 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Вы уже записаны!");
             return;
         } catch (NoSuchElementException e) {
-            sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Коллективка уже удалена!");
+            sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Коллективка удалена или изменена!\nОбновите список");
             return;
         }
         sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);

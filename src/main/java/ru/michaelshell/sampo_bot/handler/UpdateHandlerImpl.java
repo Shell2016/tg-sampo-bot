@@ -13,19 +13,23 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 @RequiredArgsConstructor
 public class UpdateHandlerImpl implements UpdateHandler {
 
-    private final UpdateHandler startHandler;
-    private final UpdateHandler registerHandler;
-    private final UpdateHandler promotionHandler;
-    private final UpdateHandler eventListHandler;
-    private final UpdateHandler eventCreateHandler;
-    private final UpdateHandler eventDeleteHandler;
-    private final UpdateHandler eventRegisterHandler;
-    private final UpdateHandler roleSetHandler;
-    private final UpdateHandler eventSoloRegisterHandler;
-    private final UpdateHandler eventCoupleRegisterHandler;
-    private final UpdateHandler dancerListHandler;
-    private final UpdateHandler deleteEventRegistrationHandler;
-    private final UpdateHandler editProfileHandler;
+    private final StartHandler startHandler;
+    private final RegisterHandler registerHandler;
+    private final PromotionHandler promotionHandler;
+    private final EventListHandler eventListHandler;
+    private final EventCreateHandler eventCreateHandler;
+    private final EventDeleteHandler eventDeleteHandler;
+    private final EventRegisterHandler eventRegisterHandler;
+    private final RoleSetHandler roleSetHandler;
+    private final EventSoloRegisterHandler eventSoloRegisterHandler;
+    private final EventCoupleRegisterHandler eventCoupleRegisterHandler;
+    private final DancerListHandler dancerListHandler;
+    private final DeleteEventRegistrationHandler deleteEventRegistrationHandler;
+    private final EditProfileHandler editProfileHandler;
+    private final EventEditHandler eventEditHandler;
+    private final EventEditInfoHandler eventEditInfoHandler;
+    private final EventEditTimeHandler eventEditTimeHandler;
+    private final EventEditTitleHandler eventEditTitleHandler;
 
 
     @Override
@@ -68,6 +72,10 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonCouple" -> eventCoupleRegisterHandler.handleCallback(update, session);
                 case "buttonShowDancersList", "buttonRefresh" -> dancerListHandler.handleCallback(update, session);
                 case "buttonDeleteRegistration" -> deleteEventRegistrationHandler.handleCallback(update, session);
+                case "buttonEventEdit" -> eventEditHandler.handleCallback(update, session);
+                case "buttonEditEventTitle" -> eventEditTitleHandler.handleCallback(update, session);
+                case "buttonEditEventTime" -> eventEditTimeHandler.handleCallback(update, session);
+                case "buttonEditEventInfo" -> eventEditInfoHandler.handleCallback(update, session);
             }
         }
 
@@ -95,6 +103,18 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         if (Boolean.TRUE.equals(session.getAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name()))) {
             eventCoupleRegisterHandler.handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_NAME.name()))) {
+            eventEditTitleHandler.handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_INFO.name()))) {
+            eventEditInfoHandler.handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_DATE.name()))) {
+            eventEditTimeHandler.handleUpdate(update, session);
         }
 
     }

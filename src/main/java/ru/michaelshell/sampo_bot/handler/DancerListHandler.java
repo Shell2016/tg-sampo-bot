@@ -48,6 +48,7 @@ public class DancerListHandler implements UpdateHandler {
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
+        // TODO: 01.04.2023 Обновление списка при измененной/удаленной коллективке
         editDancerListWithButtons(msgText, user, chatId, messageId);
 
     }

@@ -35,6 +35,11 @@ public class EventCreateHandler implements UpdateHandler {
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
                 String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
+                if (eventName.contains("\n")) {
+                    sendService.sendWithKeyboard(chatId, "Недопустим ввод в несколько строк!\n" +
+                            "Введите название ещё раз", session);
+                    return;
+                }
                 session.setAttribute("eventName", eventName);
                 sendService.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                         "Пример - 25 01 23 20:30", session);

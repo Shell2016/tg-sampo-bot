@@ -7,10 +7,10 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.SendService;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
-import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.registerEventModeButtons;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 
@@ -35,7 +35,7 @@ public class EventRegisterHandler implements UpdateHandler {
         if (!hasRole(session)) {
             sendService.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
         } else {
-            EventGetDto event = parseEvent(msgText);
+            EventGetDto event = BotUtils.parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
                 sendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
                 return;
