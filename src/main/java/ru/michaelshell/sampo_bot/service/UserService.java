@@ -15,6 +15,7 @@ import ru.michaelshell.sampo_bot.mapper.UserCreateEditDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -28,6 +29,10 @@ public class UserService {
     private final UserEventRepository userEventRepository;
     private final UserCreateEditDtoMapper userCreateEditDtoMapper;
     private final UserReadDtoMapper userReadDtoMapper;
+
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
 
     @Transactional
     public UserReadDto createUser(UserCreateEditDto dto) {

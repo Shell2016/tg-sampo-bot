@@ -32,4 +32,13 @@ public class BotUtils {
                 .build();
     }
 
+    public static String getEventInfo(String msgText) {
+        Matcher matcher = Pattern.compile("^(.+\\n.+)").matcher(msgText);
+        String eventInfo = "";
+        if (matcher.find()) {
+            eventInfo = matcher.group();
+        }
+        return eventInfo;
+    }
+
 }

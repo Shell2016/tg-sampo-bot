@@ -84,9 +84,9 @@ public class KeyboardUtils {
         buttonEventEdit.setText("Редактировать");
         buttonEventEdit.setCallbackData("buttonEventEdit");
 
-        InlineKeyboardButton buttonEventNotify = new InlineKeyboardButton();
-        buttonEventNotify.setText("\uD83D\uDCE3 Оповещение \uD83D\uDCE3");
-        buttonEventNotify.setCallbackData("buttonEventNotify");
+        InlineKeyboardButton buttonSendEventInfo = new InlineKeyboardButton();
+        buttonSendEventInfo.setText("\uD83D\uDCE3 Оповещение \uD83D\uDCE3");
+        buttonSendEventInfo.setCallbackData("buttonSendEventInfo");
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonList);
@@ -98,7 +98,7 @@ public class KeyboardUtils {
         row3.add(buttonDelete);
 
         List<InlineKeyboardButton> row4 = new ArrayList<>();
-        row4.add(buttonEventNotify);
+        row4.add(buttonSendEventInfo);
 
         List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
         rowList.add(row1);

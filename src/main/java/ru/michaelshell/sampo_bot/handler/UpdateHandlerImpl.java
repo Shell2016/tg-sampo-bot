@@ -30,6 +30,8 @@ public class UpdateHandlerImpl implements UpdateHandler {
     private final EventEditInfoHandler eventEditInfoHandler;
     private final EventEditTimeHandler eventEditTimeHandler;
     private final EventEditTitleHandler eventEditTitleHandler;
+    private final NotifyAllHandler notifyAllHandler;
+    private final SendEventInfoHandler sendEventInfoHandler;
 
 
     @Override
@@ -53,7 +55,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "/events", "Список коллективок" -> eventListHandler.handleUpdate(update, session);
                 case "Добавить" -> eventCreateHandler.handleUpdate(update, session);
                 case "/profile" -> editProfileHandler.handleUpdate(update, session);
-
+                case "/all" -> notifyAllHandler.handleUpdate(update, session);
             }
         }
 
@@ -76,6 +78,7 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 case "buttonEditEventTitle" -> eventEditTitleHandler.handleCallback(update, session);
                 case "buttonEditEventTime" -> eventEditTimeHandler.handleCallback(update, session);
                 case "buttonEditEventInfo" -> eventEditInfoHandler.handleCallback(update, session);
+                case "buttonSendEventInfo" -> sendEventInfoHandler.handleCallback(update, session);
             }
         }
 
@@ -115,6 +118,10 @@ public class UpdateHandlerImpl implements UpdateHandler {
 
         if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_DATE.name()))) {
             eventEditTimeHandler.handleUpdate(update, session);
+        }
+
+        if (Boolean.TRUE.equals((session.getAttribute(NOTIFY_ALL.name())))) {
+            notifyAllHandler.handleUpdate(update, session);
         }
 
     }

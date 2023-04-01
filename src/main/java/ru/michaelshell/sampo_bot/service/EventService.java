@@ -74,4 +74,9 @@ public class EventService {
                 .map(Event::getId);
     }
 
+    public Optional<EventReadDto> findBy(EventGetDto dto) {
+        return eventRepository.findByNameAndTime(dto.getName(), dto.getTime())
+                .map(eventReadDtoMapper::map);
+    }
+
 }

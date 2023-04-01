@@ -10,6 +10,7 @@ import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,6 +63,14 @@ public class UserServiceIT extends IntegrationTestBase {
             assertSame(dto.getRole(), user.getRole());
         });
 
+    }
+
+    @Test
+    void findAllUserIds() {
+        List<Long> resultList = userService.findAllUserIds();
+
+        assertThat(resultList).hasSize(18);
+        assertThat(resultList.get(0)).isEqualTo(1L);
     }
 
     @Test

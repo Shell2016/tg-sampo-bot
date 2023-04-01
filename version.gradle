@@ -1,7 +1,7 @@
 ext {
     versions = [
             'testcontainers': '1.17.6',
-            'telegrambots': '6.3.0',
-            'tgsession': '6.3.0'
+            'telegrambots': '6.5.0',
+            'tgsession': '6.5.0'
     ]
 }
