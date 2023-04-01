@@ -41,7 +41,7 @@ public class EventDeleteHandler implements UpdateHandler {
             if (eventService.delete(event) == 1) {
                 sendService.edit(chatId, messageId,"Коллективка удалена");
             } else {
-                sendService.sendWithKeyboard(chatId, "Ошибка удаления", session);
+                sendService.edit(chatId, messageId,"Ошибка удаления");
             }
 
         } else {

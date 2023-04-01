@@ -9,6 +9,7 @@ import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
+import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
@@ -32,6 +33,7 @@ public class DancerListHandler implements UpdateHandler {
     private final SendService sendService;
     private final UserEventService userEventService;
     private final UserService userService;
+    private final EventService eventService;
 
     @Override
     public void handleUpdate(Update update, Session session) {
@@ -50,19 +52,25 @@ public class DancerListHandler implements UpdateHandler {
 
         // TODO: 01.04.2023 Обновление списка при измененной/удаленной коллективке
         editDancerListWithButtons(msgText, user, chatId, messageId);
-
     }
 
     public void editDancerListWithButtons(String msgText, User user, Long chatId, Integer messageId) {
 
         String eventInfo = getEventInfo(msgText);
+        EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
+        if (eventService.findEventIdByDto(eventGetDto).isEmpty()) {
+            sendService.edit(chatId, messageId, "Ошибка обновления. Обновите список коллективок.");
+            return;
+        }
+
         String resultList = getDancerList(eventInfo);
 
         if ((msgText + "\n").equals(resultList)) {
             return;
         }
 
-        if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
+
+        if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
             sendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
             sendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
