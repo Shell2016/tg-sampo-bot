@@ -9,8 +9,6 @@ import java.util.Optional;
 
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-    Optional<Event> findById(Long id);
-
     Optional<Event> findByNameAndTime(String name, LocalDateTime time);
 
     int deleteByNameAndTime(String name, LocalDateTime time);

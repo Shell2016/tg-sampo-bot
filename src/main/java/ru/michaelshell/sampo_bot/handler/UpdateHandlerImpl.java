@@ -45,13 +45,17 @@ public class UpdateHandlerImpl implements UpdateHandler {
                 registerHandler.handleUpdate(update, session);
             }
 
+            String messageText = message.getText();
+            if ("/clear".equals(messageText)) {
+                session.stop();
+                return;
+            }
             waitingStatusMessageRouter(update, session);
 
-            String messageText = message.getText();
+
             switch (messageText) {
                 case "/start", "/help" -> startHandler.handleUpdate(update, session);
                 case "/promote" -> promotionHandler.handleUpdate(update, session);
-                case "/clear" -> session.stop();
                 case "/events", "Список коллективок" -> eventListHandler.handleUpdate(update, session);
                 case "Добавить" -> eventCreateHandler.handleUpdate(update, session);
                 case "/profile" -> editProfileHandler.handleUpdate(update, session);

@@ -30,8 +30,10 @@ public class EventEditTitleHandler implements UpdateHandler {
             if (msgText.contains("\n")) {
                 sendService.sendWithKeyboard(chatId, "Недопустим ввод в несколько строк!", session);
             } else {
-                eventService.updateEventTitle(eventId, msgText);
-                sendService.sendWithKeyboard(chatId, "Название обновлено!", session);
+
+                if (eventService.updateEventTitle(eventId, msgText).isPresent()) {
+                    sendService.sendWithKeyboard(chatId, "Название обновлено!", session);
+                }
             }
             session.removeAttribute("eventId");
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_NAME.name());

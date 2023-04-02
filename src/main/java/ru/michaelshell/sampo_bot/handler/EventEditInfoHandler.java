@@ -28,8 +28,9 @@ public class EventEditInfoHandler implements UpdateHandler {
             String msgText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
-            eventService.updateEventInfo(eventId, msgText);
-            sendService.sendWithKeyboard(chatId, "Доп. информация обновлена!", session);
+            if (eventService.updateEventInfo(eventId, msgText).isPresent()) {
+                sendService.sendWithKeyboard(chatId, "Доп. информация обновлена!", session);
+            }
             session.removeAttribute("eventId");
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_INFO.name());
         }

@@ -3,7 +3,6 @@ package ru.michaelshell.sampo_bot.dto;
 import lombok.Builder;
 import lombok.Value;
 import lombok.experimental.FieldNameConstants;
-import org.springframework.format.annotation.DateTimeFormat;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 

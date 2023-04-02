@@ -16,8 +16,6 @@ import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
@@ -55,7 +53,7 @@ public class DancerListHandler implements UpdateHandler {
 
     public void editDancerListWithButtons(String msgText, User user, Long chatId, Integer messageId) {
 
-        String eventInfo = getEventInfo(msgText);
+        String eventInfo = BotUtils.getEventInfo(msgText);
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         if (eventService.findEventIdByDto(eventGetDto).isEmpty()) {
             sendService.edit(chatId, messageId, "Ошибка обновления. Обновите список коллективок.");
@@ -76,14 +74,6 @@ public class DancerListHandler implements UpdateHandler {
         }
     }
 
-    private String getEventInfo(String msgText) {
-        Matcher matcher = Pattern.compile("^(.+\\n.+)").matcher(msgText);
-        String eventInfo = "";
-        if (matcher.find()) {
-            eventInfo = matcher.group();
-        }
-        return eventInfo;
-    }
 
     public String getDancerList(String eventInfo) {
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
@@ -157,7 +147,7 @@ public class DancerListHandler implements UpdateHandler {
 
     public void sendDancerListWithButtons(String msgText, User user, Long chatId) {
 
-        String eventInfo = getEventInfo(msgText);
+        String eventInfo = BotUtils.getEventInfo(msgText);
         String resultList = getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {

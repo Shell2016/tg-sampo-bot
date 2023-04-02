@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import ru.michaelshell.sampo_bot.IntegrationTestBase;
 import ru.michaelshell.sampo_bot.database.entity.Status;
+import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
@@ -67,10 +68,10 @@ public class UserServiceIT extends IntegrationTestBase {
 
     @Test
     void findAllUserIds() {
-        List<Long> resultList = userService.findAllUserIds();
+        List<User> resultList = userService.findAll();
 
         assertThat(resultList).hasSize(18);
-        assertThat(resultList.get(0)).isEqualTo(1L);
+        assertThat(resultList.get(0).getId()).isEqualTo(1L);
     }
 
     @Test

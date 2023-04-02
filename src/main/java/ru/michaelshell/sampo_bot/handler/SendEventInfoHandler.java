@@ -83,7 +83,7 @@ public class SendEventInfoHandler implements UpdateHandler {
                 try {
                     sendService.sendWithKeyboard(user.getId(), eventInfo, eventListButtons);
                 } catch (Exception e) {
-                    log.warn("Cannot send message to user: " + user);
+                    log.warn("Cannot send event to user: " + user);
                 }
             }
         }

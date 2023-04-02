@@ -33,8 +33,9 @@ public class EventEditTimeHandler implements UpdateHandler {
 
             if (TimeParser.isValid(msgText)) {
                 LocalDateTime date = TimeParser.parseForEventCreation(msgText);
-                eventService.updateEventTime(eventId, date);
-                sendService.sendWithKeyboard(chatId, "Время обновлено!", session);
+                if (eventService.updateEventTime(eventId, date).isPresent()) {
+                    sendService.sendWithKeyboard(chatId, "Время обновлено!", session);
+                }
             } else {
                 sendService.sendWithKeyboard(chatId, "Неверный формат даты", session);
             }

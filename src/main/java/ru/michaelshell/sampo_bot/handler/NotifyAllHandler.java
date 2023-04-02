@@ -35,8 +35,7 @@ public class NotifyAllHandler implements UpdateHandler {
                     try {
                         sendService.sendWithKeyboard(user.getId(), msgTxt, session);
                     } catch (Exception e) {
-                        log.warn("cannot send message to user: %s  %s  %s"
-                                .formatted(user.getUserName(), user.getFirstName(), user.getLastName()));
+                        log.warn("cannot send message to user: " + user);
                     }
                 }
                 session.removeAttribute(NOTIFY_ALL.name());
