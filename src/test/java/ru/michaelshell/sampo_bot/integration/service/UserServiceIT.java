@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 
+
 @RequiredArgsConstructor
 public class UserServiceIT extends IntegrationTestBase {
 

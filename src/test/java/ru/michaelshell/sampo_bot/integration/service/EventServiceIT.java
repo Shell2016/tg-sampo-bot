@@ -13,6 +13,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+
 @RequiredArgsConstructor
 public class EventServiceIT extends IntegrationTestBase {
 

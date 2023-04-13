@@ -1,11 +1,14 @@
-package ru.michaelshell.sampo_bot.integration.repository;
+package ru.michaelshell.sampo_bot.database.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import ru.michaelshell.sampo_bot.IntegrationTestBase;
-import ru.michaelshell.sampo_bot.database.repository.UserRepository;
+import ru.michaelshell.sampo_bot.database.entity.User;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -27,5 +30,18 @@ public class UserRepositoryIT extends IntegrationTestBase {
         int resultCount = userRepository.updateUserName(18L, "test18");
 
         assertEquals(1, resultCount);
+
+        @SuppressWarnings("OptionalGetWithoutIsPresent")
+        User updatedUser = userRepository.findById(18L).get();
+
+        assertThat(updatedUser.getUserName()).isEqualTo("test18");
+    }
+
+    @Test
+    void findByUserName() {
+        Optional<User> optionalUser = userRepository.findByUserName("test17");
+
+        assertThat(optionalUser).isPresent();
+        assertThat(optionalUser.get().getId()).isEqualTo(17L);
     }
 }
