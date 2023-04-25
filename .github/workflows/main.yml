@@ -43,4 +43,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: shell2016/sampobot_test:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/sampobot_test:latest
