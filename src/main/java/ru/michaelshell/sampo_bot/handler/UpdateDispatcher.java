@@ -1,6 +1,5 @@
 package ru.michaelshell.sampo_bot.handler;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,30 +15,9 @@ import static java.util.stream.Collectors.toMap;
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
 @Component
-@RequiredArgsConstructor
 public class UpdateDispatcher {
 
     private final Map<Class<? extends UpdateHandler>, UpdateHandler> handlers;
-
-//    private final UpdateHandler startHandler;
-//    private final UpdateHandler registerHandler;
-//    private final UpdateHandler promotionHandler;
-//    private final UpdateHandler eventListHandler;
-//    private final UpdateHandler eventCreateHandler;
-//    private final UpdateHandler eventDeleteHandler;
-//    private final UpdateHandler eventRegisterHandler;
-//    private final UpdateHandler roleSetHandler;
-//    private final UpdateHandler eventSoloRegisterHandler;
-//    private final UpdateHandler eventCoupleRegisterHandler;
-//    private final UpdateHandler dancerListHandler;
-//    private final UpdateHandler deleteEventRegistrationHandler;
-//    private final UpdateHandler editProfileHandler;
-//    private final UpdateHandler eventEditHandler;
-//    private final UpdateHandler eventEditInfoHandler;
-//    private final UpdateHandler eventEditTimeHandler;
-//    private final UpdateHandler eventEditTitleHandler;
-//    private final UpdateHandler notifyAllHandler;
-//    private final UpdateHandler sendEventInfoHandler;
 
     @Autowired
     public UpdateDispatcher(List<UpdateHandler> handlersList) {
