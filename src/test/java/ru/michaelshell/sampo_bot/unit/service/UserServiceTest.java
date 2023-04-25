@@ -1,4 +1,4 @@
-package ru.michaelshell.sampo_bot.service;
+package ru.michaelshell.sampo_bot.unit.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +14,7 @@ import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.mapper.UserCreateEditDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
+import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;

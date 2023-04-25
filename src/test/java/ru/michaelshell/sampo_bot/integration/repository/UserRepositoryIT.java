@@ -1,10 +1,11 @@
-package ru.michaelshell.sampo_bot.database.repository;
+package ru.michaelshell.sampo_bot.integration.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
-import ru.michaelshell.sampo_bot.IntegrationTestBase;
+import ru.michaelshell.sampo_bot.integration.IntegrationTestBase;
 import ru.michaelshell.sampo_bot.database.entity.User;
+import ru.michaelshell.sampo_bot.database.repository.UserRepository;
 
 import java.util.Optional;
 

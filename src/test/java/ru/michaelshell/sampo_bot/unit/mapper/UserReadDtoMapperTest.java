@@ -1,9 +1,10 @@
-package ru.michaelshell.sampo_bot.mapper;
+package ru.michaelshell.sampo_bot.unit.mapper;
 
 import org.junit.jupiter.api.Test;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.database.entity.User;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
+import ru.michaelshell.sampo_bot.mapper.UserReadDtoMapper;
 
 import java.time.LocalDateTime;
 

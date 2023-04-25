@@ -1,4 +1,4 @@
-package ru.michaelshell.sampo_bot;
+package ru.michaelshell.sampo_bot.integration;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.springframework.test.context.DynamicPropertyRegistry;

@@ -3,7 +3,7 @@ package ru.michaelshell.sampo_bot.integration.service;
 
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
-import ru.michaelshell.sampo_bot.IntegrationTestBase;
+import ru.michaelshell.sampo_bot.integration.IntegrationTestBase;
 import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;

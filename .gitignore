@@ -41,3 +41,4 @@ out/
 bot.log
 /.env*
 /versions/
+/db_backup/

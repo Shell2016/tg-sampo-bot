@@ -1,4 +1,4 @@
-package ru.michaelshell.sampo_bot.service;
+package ru.michaelshell.sampo_bot.unit.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
+import ru.michaelshell.sampo_bot.service.SendService;
 
 import static org.mockito.Mockito.verify;
 

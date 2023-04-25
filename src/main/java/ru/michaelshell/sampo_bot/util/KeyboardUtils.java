@@ -13,17 +13,17 @@ import java.util.List;
 @UtilityClass
 public class KeyboardUtils {
 
-    public static final ReplyKeyboardMarkup eventListKeyboard = KeyboardUtils.getEventListKeyboard();
-    public static final ReplyKeyboardMarkup eventListAdminKeyboard = KeyboardUtils.getEventListAdminKeyboard();
-    public static final InlineKeyboardMarkup eventListButtons = KeyboardUtils.getEventListButtons();
-    public static final InlineKeyboardMarkup eventListAdminButtons = KeyboardUtils.getEventListAdminButtons();
-    public static final InlineKeyboardMarkup eventListAdminButtonsDeleteConfirmation = KeyboardUtils.getEventListAdminButtonsDeleteConfirmation();
-    public static final InlineKeyboardMarkup eventInfoButtons = KeyboardUtils.getEventInfoButtons();
-    public static final InlineKeyboardMarkup roleSelectButtons = KeyboardUtils.getRoleSelectButtons();
-    public static final InlineKeyboardMarkup registerEventModeButtons = KeyboardUtils.getRegisterEventModeButtons();
-    public static final InlineKeyboardMarkup eventRegisterButton = KeyboardUtils.getEventRegisterButton();
-    public static final InlineKeyboardMarkup deleteRegistrationButton = KeyboardUtils.getDeleteRegistrationButton();
-    public static final InlineKeyboardMarkup eventEditButtons = KeyboardUtils.getEventEditButtons();
+    public static final ReplyKeyboardMarkup eventListKeyboard = getEventListKeyboard();
+    public static final ReplyKeyboardMarkup eventListAdminKeyboard = getEventListAdminKeyboard();
+    public static final InlineKeyboardMarkup eventListButtons = getEventListButtons();
+    public static final InlineKeyboardMarkup eventListAdminButtons = getEventListAdminButtons();
+    public static final InlineKeyboardMarkup eventListAdminButtonsDeleteConfirmation = getEventListAdminButtonsDeleteConfirmation();
+    public static final InlineKeyboardMarkup eventInfoButtons = getEventInfoButtons();
+    public static final InlineKeyboardMarkup roleSelectButtons = getRoleSelectButtons();
+    public static final InlineKeyboardMarkup registerEventModeButtons = getRegisterEventModeButtons();
+    public static final InlineKeyboardMarkup eventRegisterButton = getEventRegisterButton();
+    public static final InlineKeyboardMarkup deleteRegistrationButton = getDeleteRegistrationButton();
+    public static final InlineKeyboardMarkup eventEditButtons = getEventEditButtons();
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();

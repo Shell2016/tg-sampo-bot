@@ -1,4 +1,4 @@
-package ru.michaelshell.sampo_bot.service;
+package ru.michaelshell.sampo_bot.unit.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +9,7 @@ import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
+import ru.michaelshell.sampo_bot.service.EventService;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
