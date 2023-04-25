@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class EventServiceIT extends IntegrationTestBase {
 
     private static final Long EVENT_ID = 1L;
-    private static final String EVENT_NAME = "RS-Mainn";
+    private static final String EVENT_NAME = "RS-Main";
     private static final String EVENT_TEST_NAME = "testTitle";
 
     private final EventService eventService;
