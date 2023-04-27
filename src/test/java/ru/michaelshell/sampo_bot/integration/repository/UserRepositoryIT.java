@@ -45,4 +45,11 @@ public class UserRepositoryIT extends IntegrationTestBase {
         assertThat(optionalUser).isPresent();
         assertThat(optionalUser.get().getId()).isEqualTo(17L);
     }
+
+    @Test
+    void findByUserNameThatDoesNotExist() {
+        Optional<User> optionalUser = userRepository.findByUserName("test100");
+
+        assertThat(optionalUser).isEmpty();
+    }
 }

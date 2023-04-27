@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.session.TelegramLongPollingSessionBot;
 import ru.michaelshell.sampo_bot.config.BotProperties;
-import ru.michaelshell.sampo_bot.handler.UpdateDispatcher;
+import ru.michaelshell.sampo_bot.dispatcher.UpdateDispatcher;
 
 import java.util.Optional;
 
@@ -38,7 +38,7 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
         if (update.getMessage() != null || update.getCallbackQuery() != null) {
-            updateDispatcher.handleUpdate(update, botSession.orElseThrow());
+            updateDispatcher.doDispatch(update, botSession.orElseThrow());
         }
     }
 

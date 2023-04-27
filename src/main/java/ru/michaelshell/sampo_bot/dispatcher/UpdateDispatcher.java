@@ -1,10 +1,11 @@
-package ru.michaelshell.sampo_bot.handler;
+package ru.michaelshell.sampo_bot.dispatcher;
 
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.handler.*;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class UpdateDispatcher {
                 .collect(toMap(UpdateHandler::getClass, Function.identity()));
     }
 
-    public void handleUpdate(Update update, Session session) {
+    public void doDispatch(Update update, Session session) {
 
         Message message = update.getMessage();
 
@@ -41,7 +42,6 @@ public class UpdateDispatcher {
                 return;
             }
             waitingStatusMessageRouter(update, session);
-
 
             switch (messageText) {
                 case "/start", "/help" -> handlers.get(StartHandler.class).handleUpdate(update, session);

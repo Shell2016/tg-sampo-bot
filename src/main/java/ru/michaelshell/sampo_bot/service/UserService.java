@@ -103,4 +103,5 @@ public class UserService {
     public int updateUserName(Long id, String userName) {
         return userRepository.updateUserName(id, userName);
     }
+
 }
