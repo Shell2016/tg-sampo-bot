@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @RequiredArgsConstructor
-public class UserRepositoryIT extends IntegrationTestBase {
+class UserRepositoryIT extends IntegrationTestBase {
 
 
     private final UserRepository userRepository;
