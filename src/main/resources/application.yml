@@ -12,7 +12,6 @@ logging:
   file:
     name: /home/${USER}/sampobot_logs/bot.log
 
-
 spring:
   main:
     allow-circular-references: true
@@ -27,7 +26,7 @@ spring:
       hibernate:
         hbm2ddl:
           auto: validate
-#    open-in-view: false
+
 
 
 

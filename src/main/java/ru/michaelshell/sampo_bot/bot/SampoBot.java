@@ -1,6 +1,5 @@
 package ru.michaelshell.sampo_bot.bot;
 
-import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,12 +11,15 @@ import ru.michaelshell.sampo_bot.dispatcher.UpdateDispatcher;
 import java.util.Optional;
 
 @Component
-@RequiredArgsConstructor
 public class SampoBot extends TelegramLongPollingSessionBot {
-
 
     private final BotProperties botProperties;
     private UpdateDispatcher updateDispatcher;
+
+    public SampoBot(BotProperties botProperties) {
+        super(botProperties.token());
+        this.botProperties = botProperties;
+    }
 
     @Autowired
     public void setUpdateDispatcher(UpdateDispatcher updateDispatcher) {
@@ -30,16 +32,9 @@ public class SampoBot extends TelegramLongPollingSessionBot {
     }
 
     @Override
-    public String getBotToken() {
-        return botProperties.token();
-    }
-
-
-    @Override
     public void onUpdateReceived(Update update, Optional<Session> botSession) {
         if (update.getMessage() != null || update.getCallbackQuery() != null) {
             updateDispatcher.doDispatch(update, botSession.orElseThrow());
         }
     }
-
 }
