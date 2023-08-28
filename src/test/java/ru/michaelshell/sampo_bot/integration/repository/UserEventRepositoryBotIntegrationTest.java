@@ -13,7 +13,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-class UserEventRepositoryIT extends IntegrationTestBase {
+class UserEventRepositoryBotIntegrationTest extends IntegrationTestBase {
 
     private static final String EVENT_NAME = "RS-Main";
     private static final LocalDateTime EVENT_TIME = LocalDateTime.of(2022, 12, 22, 3, 43);

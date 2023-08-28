@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RequiredArgsConstructor
-class EventServiceIT extends IntegrationTestBase {
+class EventServiceBotIntegrationTest extends IntegrationTestBase {
 
     private static final Long EVENT_ID = 1L;
     private static final String EVENT_NAME = "RS-Main";

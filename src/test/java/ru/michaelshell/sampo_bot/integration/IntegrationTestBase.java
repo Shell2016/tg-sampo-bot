@@ -5,9 +5,9 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.jdbc.Sql;
 import org.testcontainers.containers.PostgreSQLContainer;
-import ru.michaelshell.sampo_bot.annotation.IT;
+import ru.michaelshell.sampo_bot.annotation.BotIntegrationTest;
 
-@IT
+@BotIntegrationTest
 @Sql({
         "classpath:sql/data.sql"
 })
