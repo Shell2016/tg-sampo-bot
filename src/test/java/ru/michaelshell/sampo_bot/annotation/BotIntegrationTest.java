@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 @ActiveProfiles("test")
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Transactional
-public @interface IT {
+public @interface BotIntegrationTest {
 }

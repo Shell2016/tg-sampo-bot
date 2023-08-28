@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 @RequiredArgsConstructor
-class UserServiceIT extends IntegrationTestBase {
+class UserServiceBotIntegrationTest extends IntegrationTestBase {
 
     private static final String PROMOTE_USERNAME = "test9";
     private static final Long PROMOTE_ID = 9L;

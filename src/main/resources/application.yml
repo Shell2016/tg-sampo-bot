@@ -5,7 +5,6 @@ bot:
     id: ${ADMIN_ID:528357712}
     username: ${ADMIN_USERNAME:shell_2017}
 
-
 logging:
   level:
     root: info

@@ -34,10 +34,6 @@ class EventServiceTest {
     private EventService eventService;
 
     @Test
-    void findAll() {
-    }
-
-    @Test
     void updateEventTitle() {
         Event event = getEvent();
 
@@ -57,18 +53,6 @@ class EventServiceTest {
         Optional<EventReadDto> result = eventService.updateEventTitle(5000L, EVENT_TEST_NAME);
 
         assertThat(result).isEmpty();
-    }
-
-    @Test
-    void create() {
-    }
-
-    @Test
-    void delete() {
-    }
-
-    @Test
-    void findEventIdByDto() {
     }
 
     private static Event getEvent() {
