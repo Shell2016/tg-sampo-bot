@@ -7,8 +7,7 @@ public record BotProperties(String username,
                             String token,
                             AdminProperties admin) {
 
-    public record AdminProperties(Long id,
-                                  String username) {
+    public record AdminProperties(String username) {
 
     }
 }

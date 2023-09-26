@@ -12,6 +12,7 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - LOGGING_FILE_NAME=${LOG_DIR}/bot.log
+      - ADMIN_USERNAME=${ADMIN_USERNAME}
     volumes:
       - /home/$USER/sampobot_logs:${LOG_DIR}
     restart: always

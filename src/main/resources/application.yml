@@ -1,9 +1,8 @@
 bot:
-  username: ${BOT_USERNAME:SampoRegistrationBot}
+  username: ${BOT_USERNAME}
   token: ${SAMPOBOT_TOKEN}
   admin:
-    id: ${ADMIN_ID:528357712}
-    username: ${ADMIN_USERNAME:shell_2017}
+    username: ${ADMIN_USERNAME}
 
 logging:
   level:
@@ -15,9 +14,9 @@ spring:
   main:
     allow-circular-references: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: pass
+    url: jdbc:postgresql://localhost:5432/${SAMPOBOT_DB_NAME}
+    username: ${SAMPOBOT_DB_USERNAME}
+    password: ${SAMPOBOT_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
