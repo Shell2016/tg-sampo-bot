@@ -6,8 +6,8 @@ import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.database.entity.User;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
@@ -33,7 +33,7 @@ public class NotifyAllHandler implements UpdateHandler {
                 log.info("Sending message to all users:\n" + msgTxt);
                 for (User user : userService.findAll()) {
                     try {
-                        sendService.sendWithKeyboard(user.getId(), msgTxt, session);
+                        sendService.sendWithKeyboardBottom(user.getId(), msgTxt, session);
                     } catch (Exception e) {
                         log.warn("cannot send message to user: " + user);
                     }
@@ -41,7 +41,7 @@ public class NotifyAllHandler implements UpdateHandler {
                 session.removeAttribute(NOTIFY_ALL.name());
 
             } else {
-                sendService.sendWithKeyboard(chatId, "Введите сообщение для отправки всем пользователям:", session);
+                sendService.sendWithKeyboardBottom(chatId, "Введите сообщение для отправки всем пользователям:", session);
                 session.setAttribute(SessionAttribute.NOTIFY_ALL.name(), true);
             }
         }

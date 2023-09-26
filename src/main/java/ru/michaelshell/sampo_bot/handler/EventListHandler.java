@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -30,10 +30,10 @@ public class EventListHandler implements UpdateHandler {
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
-            sendService.sendWithKeyboard(chatId, "В данный момент нет коллективок", session);
+            sendService.sendWithKeyboardBottom(chatId, "В данный момент нет коллективок", session);
             return;
         }
-        sendService.sendWithKeyboard(chatId, "Актуальный список коллективок", session);
+        sendService.sendWithKeyboardBottom(chatId, "Актуальный список коллективок", session);
 
         events.forEach(event -> {
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -49,9 +49,9 @@ public class EventListHandler implements UpdateHandler {
 
     private void sendEventList(Session session, Long chatId, String eventInfo) {
         if (AuthUtils.isAdmin(session)) {
-            sendService.sendWithKeyboard(chatId, eventInfo, eventListAdminButtons);
+            sendService.sendWithKeyboardInline(chatId, eventInfo, eventListAdminButtons);
         } else {
-            sendService.sendWithKeyboard(chatId, eventInfo, eventListButtons);
+            sendService.sendWithKeyboardInline(chatId, eventInfo, eventListButtons);
         }
     }
 

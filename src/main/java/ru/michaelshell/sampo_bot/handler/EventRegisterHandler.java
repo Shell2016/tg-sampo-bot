@@ -5,8 +5,8 @@ import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -33,11 +33,11 @@ public class EventRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
-            sendService.sendWithKeyboard(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
+            sendService.sendWithKeyboardInline(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
         } else {
             EventGetDto event = BotUtils.parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
-                sendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+                sendService.sendWithKeyboardBottom(chatId, "Не удалось обработать запрос", session);
                 return;
             }
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -45,7 +45,7 @@ public class EventRegisterHandler implements UpdateHandler {
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
-            sendService.editWithKeyboard(chatId, messageId, eventHeader, registerEventModeButtons);
+            sendService.editWithKeyboardInline(chatId, messageId, eventHeader, registerEventModeButtons);
         }
     }
 

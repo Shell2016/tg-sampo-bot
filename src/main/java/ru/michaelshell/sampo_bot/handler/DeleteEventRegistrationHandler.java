@@ -3,11 +3,9 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 

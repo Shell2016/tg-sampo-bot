@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -37,7 +35,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         User user = update.getMessage().getFrom();
 
         if (name.split(" ").length != 2) {
-            sendService.sendWithKeyboard(chatId, "Неверный формат! Нужно два слова, разделенные одним пробелом.", session);
+            sendService.sendWithKeyboardBottom(chatId, "Неверный формат! Нужно два слова, разделенные одним пробелом.", session);
         } else {
 
             String[] s = name.split(" ");
@@ -47,7 +45,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             try {
                 userService.registerOnEvent(eventId, userId, partnerFirstName, partnerLastName);
             } catch (DataIntegrityViolationException e) {
-                sendService.sendWithKeyboard(chatId, "Ошибка записи! Вы уже записаны!", session);
+                sendService.sendWithKeyboardBottom(chatId, "Ошибка записи! Вы уже записаны!", session);
                 return;
             }
 
@@ -56,7 +54,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
 
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
             session.removeAttribute(EVENT_INFO.name());
-            sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+            sendService.sendWithKeyboardBottom(chatId, "Успешная запись!\uD83E\uDD73", session);
             dancerListHandler.sendDancerListWithButtons(eventInfo, user, chatId);
         }
     }
@@ -87,7 +85,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             return;
         }
         session.setAttribute("eventId", eventId);
-        sendService.sendWithKeyboard(chatId, msgText +
+        sendService.sendWithKeyboardBottom(chatId, msgText +
                 "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)", session);
         session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
         session.setAttribute(EVENT_INFO.name(), msgText);

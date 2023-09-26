@@ -5,9 +5,9 @@ import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
@@ -35,7 +35,7 @@ public class EventDeleteHandler implements UpdateHandler {
 
             EventGetDto event = parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
-                sendService.sendWithKeyboard(chatId, "Не удалось обработать запрос", session);
+                sendService.sendWithKeyboardBottom(chatId, "Не удалось обработать запрос", session);
                 return;
             }
             if (eventService.delete(event) == 1) {
@@ -45,7 +45,7 @@ public class EventDeleteHandler implements UpdateHandler {
             }
 
         } else {
-            sendService.editWithKeyboard(chatId, messageId, msgText, KeyboardUtils.eventListAdminButtonsDeleteConfirmation);
+            sendService.editWithKeyboardInline(chatId, messageId, msgText, KeyboardUtils.eventListAdminButtonsDeleteConfirmation);
         }
 
 

@@ -6,8 +6,8 @@ import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.database.entity.Role;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.HAS_ROLE;
@@ -33,7 +33,7 @@ public class RoleSetHandler implements UpdateHandler {
         String fullName = update.getMessage().getText();
         String[] nameArr = fullName.split(" ");
         if (nameArr.length != 2) {
-            sendService.sendWithKeyboard(chatId, "Неверный формат: нужно 2 слова, разделённые пробелом", session);
+            sendService.sendWithKeyboardBottom(chatId, "Неверный формат: нужно 2 слова, разделённые пробелом", session);
         } else {
             String firstName = nameArr[0].replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ").trim();
             String lastName = nameArr[1].replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ").trim();
@@ -41,11 +41,11 @@ public class RoleSetHandler implements UpdateHandler {
             if (userService.setUserRole(role, firstName, lastName, user.getId()).isPresent()) {
                 session.setAttribute(HAS_ROLE.name(), role.name());
                 session.removeAttribute(SET_ROLE_WAITING_FOR_NAME.name());
-                sendService.sendWithKeyboard(chatId, "Теперь можно записываться на коллективки\uD83D\uDC83\uD83D\uDD7A", session);
+                sendService.sendWithKeyboardBottom(chatId, "Теперь можно записываться на коллективки\uD83D\uDC83\uD83D\uDD7A", session);
                 eventListHandler.handleUpdate(update, session);
             } else {
                 session.removeAttribute(SET_ROLE_WAITING_FOR_NAME.name());
-                sendService.sendWithKeyboard(chatId, "Что-то пошло не так", session);
+                sendService.sendWithKeyboardBottom(chatId, "Что-то пошло не так", session);
             }
         }
 
