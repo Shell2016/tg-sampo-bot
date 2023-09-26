@@ -1,4 +1,4 @@
-FROM amazoncorretto:17-alpine-jdk
+FROM eclipse-temurin:17-alpine
 
 ARG JAR_FILE=build/libs/*.jar
 
@@ -8,4 +8,4 @@ COPY ${JAR_FILE} sampobot.jar
 
 ENV TZ Europe/Moscow
 
-ENTRYPOINT ["java", "-jar", "/app/sampobot.jar"]
+ENTRYPOINT ["java", "-jar", "sampobot.jar"]
