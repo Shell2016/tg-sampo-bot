@@ -10,11 +10,3 @@ spring:
         show_sql: true
         hbm2ddl:
           auto: validate
-
-logging:
-  file:
-    name: /home/michaelshell/sampobot_logs/bot_test.log
-
-bot:
-  username: sampotestbot
-  token: 5857216499:AAE1kDEu5b9voRR7L8CUhmVPl608Yhb5OK0

@@ -30,8 +30,7 @@ public class PromotionHandler implements UpdateHandler {
         User user = message.getFrom();
         Long chatId = message.getChatId();
 
-        if (!checkPromotionRights(botProperties.admin().id(), user.getId(),
-                botProperties.admin().username(), user.getUserName())) {
+        if (!checkPromotionRights(botProperties.admin().username(), user.getUserName())) {
             sendService.sendWithKeyboard(chatId, "Нет прав для выполнения команды", session);
             return;
         }
@@ -61,8 +60,8 @@ public class PromotionHandler implements UpdateHandler {
     }
 
 
-    boolean checkPromotionRights(Long adminId, Long idToCheck, String adminUsername, String nameToCheck) {
-        return Objects.equals(idToCheck, adminId) || Objects.equals(adminUsername, nameToCheck);
+    boolean checkPromotionRights(String adminUsername, String nameToCheck) {
+        return Objects.equals(adminUsername, nameToCheck);
     }
 
 
