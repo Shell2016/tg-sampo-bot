@@ -3,12 +3,10 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.BotUtils;
@@ -29,7 +27,7 @@ public class EventEditInfoHandler implements UpdateHandler {
             Long chatId = update.getMessage().getChatId();
 
             if (eventService.updateEventInfo(eventId, msgText).isPresent()) {
-                sendService.sendWithKeyboard(chatId, "Доп. информация обновлена!", session);
+                sendService.sendWithKeyboardBottom(chatId, "Доп. информация обновлена!", session);
             }
             session.removeAttribute("eventId");
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_INFO.name());
@@ -52,7 +50,7 @@ public class EventEditInfoHandler implements UpdateHandler {
         }
         session.setAttribute("eventId", eventId);
 
-        sendService.sendWithKeyboard(chatId, "Введите доп.инфо (можно несколько строк):", session);
+        sendService.sendWithKeyboardBottom(chatId, "Введите доп.инфо (можно несколько строк):", session);
         session.setAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_INFO.name(), true);
 
 

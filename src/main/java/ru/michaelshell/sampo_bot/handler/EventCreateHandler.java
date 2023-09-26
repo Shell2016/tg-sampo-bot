@@ -3,13 +3,11 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -36,12 +34,12 @@ public class EventCreateHandler implements UpdateHandler {
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
                 String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
                 if (eventName.contains("\n")) {
-                    sendService.sendWithKeyboard(chatId, "Недопустим ввод в несколько строк!\n" +
+                    sendService.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!\n" +
                             "Введите название ещё раз", session);
                     return;
                 }
                 session.setAttribute("eventName", eventName);
-                sendService.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
+                sendService.sendWithKeyboardBottom(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                         "Пример - 25 01 23 20:30", session);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_NAME.name());
                 session.setAttribute(EVENT_ADD_WAITING_FOR_DATE.name(), true);
@@ -55,10 +53,10 @@ public class EventCreateHandler implements UpdateHandler {
                     LocalDateTime date = TimeParser.parseForEventCreation(eventDate);
                     session.setAttribute("eventDate", date);
                 } else {
-                    sendService.sendWithKeyboard(chatId, "Неверный формат даты", session);
+                    sendService.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
                     return;
                 }
-                sendService.sendWithKeyboard(chatId, "Нужно краткое описание?", eventInfoButtons);
+                sendService.sendWithKeyboardInline(chatId, "Нужно краткое описание?", eventInfoButtons);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_DATE.name());
                 return;
             }
@@ -72,7 +70,7 @@ public class EventCreateHandler implements UpdateHandler {
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
-            sendService.sendWithKeyboard(chatId, "Введите название/уровень коллективки.\n" +
+            sendService.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
                     "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_NAME.name(), true);
         }
@@ -86,7 +84,7 @@ public class EventCreateHandler implements UpdateHandler {
         String callbackData = callbackQuery.getData();
         Long chatId = callbackQuery.getMessage().getChatId();
         if ("buttonInfoYes".equals(callbackData)) {
-            sendService.sendWithKeyboard(chatId, "Введите краткое описание:", session);
+            sendService.sendWithKeyboardBottom(chatId, "Введите краткое описание:", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_INFO.name(), true);
         } else if ("buttonInfoNo".equals(callbackData)) {
             EventReadDto event = createEvent(callbackQuery.getFrom().getUserName(), session);
@@ -110,9 +108,9 @@ public class EventCreateHandler implements UpdateHandler {
 
     private void onEventSuccessOrFail(Session session, Long chatId, EventReadDto event) {
         if (event != null) {
-            sendService.sendWithKeyboard(chatId, "Коллективка успешно добавлена", session);
+            sendService.sendWithKeyboardBottom(chatId, "Коллективка успешно добавлена", session);
         } else {
-            sendService.sendWithKeyboard(chatId, "Не удалось добавить, что-то пошло не так", session);
+            sendService.sendWithKeyboardBottom(chatId, "Не удалось добавить, что-то пошло не так", session);
         }
     }
 }

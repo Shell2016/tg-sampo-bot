@@ -3,16 +3,12 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
-import ru.michaelshell.sampo_bot.util.AuthUtils;
-import ru.michaelshell.sampo_bot.util.BotUtils;
-import ru.michaelshell.sampo_bot.util.TimeParser;
+import ru.michaelshell.sampo_bot.util.*;
 
 import java.time.LocalDateTime;
 
@@ -34,10 +30,10 @@ public class EventEditTimeHandler implements UpdateHandler {
             if (TimeParser.isValid(msgText)) {
                 LocalDateTime date = TimeParser.parseForEventCreation(msgText);
                 if (eventService.updateEventTime(eventId, date).isPresent()) {
-                    sendService.sendWithKeyboard(chatId, "Время обновлено!", session);
+                    sendService.sendWithKeyboardBottom(chatId, "Время обновлено!", session);
                 }
             } else {
-                sendService.sendWithKeyboard(chatId, "Неверный формат даты", session);
+                sendService.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
             }
             session.removeAttribute("eventId");
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_DATE.name());
@@ -62,7 +58,7 @@ public class EventEditTimeHandler implements UpdateHandler {
         }
         session.setAttribute("eventId", eventId);
 
-        sendService.sendWithKeyboard(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
+        sendService.sendWithKeyboardBottom(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                 "Пример - 25 01 23 20:30", session);
         session.setAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_DATE.name(), true);
     }

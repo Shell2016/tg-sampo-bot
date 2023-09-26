@@ -4,11 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.service.UserService;
 
 import java.util.NoSuchElementException;
@@ -53,7 +51,7 @@ public class EventSoloRegisterHandler implements UpdateHandler {
             sendService.edit(chatId, messageId, "Ошибка записи!!\uD83D\uDE31 Коллективка удалена или изменена!\nОбновите список");
             return;
         }
-        sendService.sendWithKeyboard(chatId, "Успешная запись!\uD83E\uDD73", session);
+        sendService.sendWithKeyboardBottom(chatId, "Успешная запись!\uD83E\uDD73", session);
         dancerListHandler.sendDancerListWithButtons(eventInfo, user, chatId);
     }
 

@@ -3,12 +3,10 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
 import ru.michaelshell.sampo_bot.session.SessionAttribute;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.BotUtils;
@@ -28,11 +26,11 @@ public class EventEditTitleHandler implements UpdateHandler {
             String msgText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
             if (msgText.contains("\n")) {
-                sendService.sendWithKeyboard(chatId, "Недопустим ввод в несколько строк!", session);
+                sendService.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!", session);
             } else {
 
                 if (eventService.updateEventTitle(eventId, msgText).isPresent()) {
-                    sendService.sendWithKeyboard(chatId, "Название обновлено!", session);
+                    sendService.sendWithKeyboardBottom(chatId, "Название обновлено!", session);
                 }
             }
             session.removeAttribute("eventId");
@@ -56,7 +54,7 @@ public class EventEditTitleHandler implements UpdateHandler {
         }
         session.setAttribute("eventId", eventId);
 
-        sendService.sendWithKeyboard(chatId, "Введите название/уровень коллективки.\n" +
+        sendService.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
                 "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
         session.setAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_NAME.name(), true);
     }

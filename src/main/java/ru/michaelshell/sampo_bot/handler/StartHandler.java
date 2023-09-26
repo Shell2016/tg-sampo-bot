@@ -4,22 +4,21 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.service.SendService;
+import ru.michaelshell.sampo_bot.bot.SendService;
 
 @Component
 @RequiredArgsConstructor
 public class StartHandler implements UpdateHandler {
 
     private final SendService sendService;
-
-    private final static String START_MSG = "Привет! Чтобы посмотреть список актуальных колллективок," +
+    private static final String START_MSG = "Привет! Чтобы посмотреть список актуальных колллективок," +
             " нужно тыкнуть на кнопку или ввести команду /events (также доступно через главное меню)";
 
     @Override
     public void handleUpdate(Update update, Session session) {
 
         Long chatId = update.getMessage().getChatId();
-        sendService.sendWithKeyboard(chatId, START_MSG, session);
+        sendService.sendWithKeyboardBottom(chatId, START_MSG, session);
     }
 
     @Override

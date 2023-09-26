@@ -3,23 +3,17 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.api.objects.User;
+import org.telegram.telegrambots.meta.api.objects.*;
+import ru.michaelshell.sampo_bot.bot.SendService;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.EventService;
-import ru.michaelshell.sampo_bot.service.SendService;
-import ru.michaelshell.sampo_bot.service.UserEventService;
-import ru.michaelshell.sampo_bot.service.UserService;
+import ru.michaelshell.sampo_bot.service.*;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.toList;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
@@ -68,9 +62,9 @@ public class DancerListHandler implements UpdateHandler {
 
 
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            sendService.editWithKeyboard(chatId, messageId, resultList, deleteRegistrationButton);
+            sendService.editWithKeyboardInline(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
-            sendService.editWithKeyboard(chatId, messageId, resultList, eventRegisterButton);
+            sendService.editWithKeyboardInline(chatId, messageId, resultList, eventRegisterButton);
         }
     }
 
@@ -102,7 +96,7 @@ public class DancerListHandler implements UpdateHandler {
                     }
                     return couple;
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<String> printDancerList(List<UserEvent> userEvents, Role role) {
@@ -111,7 +105,7 @@ public class DancerListHandler implements UpdateHandler {
                 .filter(userEvent -> userEvent.getUser().getRole() == role)
                 .sorted(comparing(UserEvent::getSignedAt))
                 .map(userEvent -> userEvent.getUser().getLastName() + " " + userEvent.getUser().getFirstName())
-                .collect(toList());
+                .toList();
     }
 
     private String buildResultList(String text, List<String> coupleList, List<String> leaderList, List<String> followerList) {
@@ -151,9 +145,9 @@ public class DancerListHandler implements UpdateHandler {
         String resultList = getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            sendService.sendWithKeyboard(chatId, resultList, deleteRegistrationButton);
+            sendService.sendWithKeyboardInline(chatId, resultList, deleteRegistrationButton);
         } else {
-            sendService.sendWithKeyboard(chatId, resultList, eventRegisterButton);
+            sendService.sendWithKeyboardInline(chatId, resultList, eventRegisterButton);
         }
     }
 
