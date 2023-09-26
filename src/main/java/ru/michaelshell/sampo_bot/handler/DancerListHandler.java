@@ -17,7 +17,6 @@ import static java.util.Comparator.comparing;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.deleteRegistrationButton;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
-
 @Component
 @RequiredArgsConstructor
 public class DancerListHandler implements UpdateHandler {
@@ -150,6 +149,4 @@ public class DancerListHandler implements UpdateHandler {
             sendService.sendWithKeyboardInline(chatId, resultList, eventRegisterButton);
         }
     }
-
-
 }

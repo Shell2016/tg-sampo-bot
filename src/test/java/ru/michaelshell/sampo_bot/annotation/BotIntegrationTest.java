@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles(profiles = {"test", "local"})
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @Transactional
 public @interface BotIntegrationTest {

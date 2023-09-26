@@ -20,7 +20,7 @@ services:
       - db
 
   db:
-    image: postgres:${DB_VERSION}
+    image: postgres:${DB_VERSION}-alpine
     container_name: sampobot_db
     restart: always
     environment:
