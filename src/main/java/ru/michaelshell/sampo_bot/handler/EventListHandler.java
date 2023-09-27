@@ -15,7 +15,6 @@ import java.util.List;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListAdminButtons;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 
-
 @Component
 @RequiredArgsConstructor
 public class EventListHandler implements UpdateHandler {
@@ -46,7 +45,6 @@ public class EventListHandler implements UpdateHandler {
         });
     }
 
-
     private void sendEventList(Session session, Long chatId, String eventInfo) {
         if (AuthUtils.isAdmin(session)) {
             sendService.sendWithKeyboardInline(chatId, eventInfo, eventListAdminButtons);
@@ -54,10 +52,4 @@ public class EventListHandler implements UpdateHandler {
             sendService.sendWithKeyboardInline(chatId, eventInfo, eventListButtons);
         }
     }
-
-    @Override
-    public void handleCallback(Update update, Session session) {
-    }
-
-
 }

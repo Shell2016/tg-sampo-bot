@@ -13,16 +13,11 @@ import java.util.NoSuchElementException;
 
 @Component
 @RequiredArgsConstructor
-public class DeleteEventRegistrationHandler implements UpdateHandler {
+public class DeleteEventRegistrationHandler implements CallbackHandler {
 
     private final SendService sendService;
     private final UserEventService userEventService;
     private final DancerListHandler dancerListHandler;
-
-    @Override
-    public void handleUpdate(Update update, Session session) {
-    }
-
 
     public void handleCallback(Update update, Session session) {
 

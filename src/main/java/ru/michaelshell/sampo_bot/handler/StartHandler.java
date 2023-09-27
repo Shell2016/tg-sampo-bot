@@ -20,10 +20,4 @@ public class StartHandler implements UpdateHandler {
         Long chatId = update.getMessage().getChatId();
         sendService.sendWithKeyboardBottom(chatId, START_MSG, session);
     }
-
-    @Override
-    public void handleCallback(Update update, Session session) {
-    }
-
-
 }

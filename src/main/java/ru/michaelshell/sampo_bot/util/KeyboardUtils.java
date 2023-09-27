@@ -26,9 +26,7 @@ public class KeyboardUtils {
     public static final InlineKeyboardMarkup eventEditButtons = getEventEditButtons();
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        ReplyKeyboardMarkup replyKeyboardMarkup = getReplyKeyboardMarkup();
 
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -40,9 +38,7 @@ public class KeyboardUtils {
     }
 
     private static ReplyKeyboardMarkup getEventListKeyboard() {
-        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
-        replyKeyboardMarkup.setResizeKeyboard(true);
-        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        ReplyKeyboardMarkup replyKeyboardMarkup = getReplyKeyboardMarkup();
 
         List<KeyboardRow> keyboard = new ArrayList<>();
         KeyboardRow row = new KeyboardRow();
@@ -276,6 +272,13 @@ public class KeyboardUtils {
 
         eventEditButtons.setKeyboard(rowList);
         return eventEditButtons;
+    }
+
+    private static ReplyKeyboardMarkup getReplyKeyboardMarkup() {
+        ReplyKeyboardMarkup replyKeyboardMarkup = new ReplyKeyboardMarkup();
+        replyKeyboardMarkup.setResizeKeyboard(true);
+        replyKeyboardMarkup.setOneTimeKeyboard(false);
+        return replyKeyboardMarkup;
     }
 
 }

@@ -12,17 +12,12 @@ import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
-
 @Component
 @RequiredArgsConstructor
-public class EventDeleteHandler implements UpdateHandler {
+public class EventDeleteHandler implements CallbackHandler {
 
     private final SendService sendService;
     private final EventService eventService;
-
-    @Override
-    public void handleUpdate(Update update, Session session) {
-    }
 
     @Override
     public void handleCallback(Update update, Session session) {
@@ -39,17 +34,13 @@ public class EventDeleteHandler implements UpdateHandler {
                 return;
             }
             if (eventService.delete(event) == 1) {
-                sendService.edit(chatId, messageId,"Коллективка удалена");
+                sendService.edit(chatId, messageId, "Коллективка удалена");
             } else {
-                sendService.edit(chatId, messageId,"Ошибка удаления");
+                sendService.edit(chatId, messageId, "Ошибка удаления");
             }
 
         } else {
             sendService.editWithKeyboardInline(chatId, messageId, msgText, KeyboardUtils.eventListAdminButtonsDeleteConfirmation);
         }
-
-
     }
-
-
 }

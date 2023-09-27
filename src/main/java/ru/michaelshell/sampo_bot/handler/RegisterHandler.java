@@ -16,7 +16,7 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterHandler implements UpdateHandler {
+public class RegisterHandler implements UpdateHandler, CallbackHandler {
 
     private final UserService userService;
 
@@ -55,7 +55,6 @@ public class RegisterHandler implements UpdateHandler {
         return userService.createUser(dto);
     }
 
-
     private static void authenticate(Session session, UserReadDto userDto) {
         if (userDto.getRole() != null) {
             session.setAttribute(HAS_ROLE.name(), userDto.getRole().name());
@@ -67,6 +66,4 @@ public class RegisterHandler implements UpdateHandler {
         }
         session.setAttribute(AUTHENTICATED.name(), true);
     }
-
-
 }

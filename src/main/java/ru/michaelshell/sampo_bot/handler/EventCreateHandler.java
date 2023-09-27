@@ -19,7 +19,9 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 @Component
 @RequiredArgsConstructor
-public class EventCreateHandler implements UpdateHandler {
+public class EventCreateHandler implements UpdateHandler, CallbackHandler {
+
+    public static final String EVENT_INFO = "eventInfo";
 
     private final SendService sendService;
     private final EventService eventService;
@@ -63,10 +65,10 @@ public class EventCreateHandler implements UpdateHandler {
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name()))) {
                 String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
-                session.setAttribute("eventInfo", eventInfo);
+                session.setAttribute(EVENT_INFO, eventInfo);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_INFO.name());
                 EventReadDto event = createEvent(message.getFrom().getUserName(), session);
-                session.removeAttribute("eventInfo");
+                session.removeAttribute(EVENT_INFO);
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
@@ -76,8 +78,7 @@ public class EventCreateHandler implements UpdateHandler {
         }
     }
 
-
-
+    @Override
     public void handleCallback(Update update, Session session) {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -93,13 +94,13 @@ public class EventCreateHandler implements UpdateHandler {
     }
 
     private EventReadDto createEvent(String createdBy, Session session) {
-        if (session.getAttribute("eventInfo") == null) {
-            session.setAttribute("eventInfo", "");
+        if (session.getAttribute(EVENT_INFO) == null) {
+            session.setAttribute(EVENT_INFO, "");
         }
         EventCreateDto eventDto = EventCreateDto.builder()
                 .name((String) session.getAttribute("eventName"))
                 .time((LocalDateTime) session.getAttribute("eventDate"))
-                .info((String) session.getAttribute("eventInfo"))
+                .info((String) session.getAttribute(EVENT_INFO))
                 .createdAt(LocalDateTime.now())
                 .createdBy(createdBy)
                 .build();

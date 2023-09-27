@@ -24,11 +24,10 @@ public class NotifyAllHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(Update update, Session session) {
+        Message message = update.getMessage();
+        Long chatId = message.getChatId();
         if (AuthUtils.isAdmin(session)) {
-            Message message = update.getMessage();
-            Long chatId = message.getChatId();
             String msgTxt = message.getText();
-
             if (Boolean.TRUE.equals((session.getAttribute(NOTIFY_ALL.name())))) {
                 log.info("Sending message to all users:\n" + msgTxt);
                 for (User user : userService.findAll()) {
@@ -39,21 +38,12 @@ public class NotifyAllHandler implements UpdateHandler {
                     }
                 }
                 session.removeAttribute(NOTIFY_ALL.name());
-
             } else {
                 sendService.sendWithKeyboardBottom(chatId, "Введите сообщение для отправки всем пользователям:", session);
                 session.setAttribute(SessionAttribute.NOTIFY_ALL.name(), true);
             }
+        } else {
+            sendService.sendWithKeyboardBottom(chatId, "Нет прав для данной операции!", session);
         }
-
-    }
-
-    @Override
-    public void handleCallback(Update update, Session session) {
     }
 }
-
-
-
-
-

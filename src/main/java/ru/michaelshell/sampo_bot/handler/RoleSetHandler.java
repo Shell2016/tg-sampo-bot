@@ -18,7 +18,7 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMO
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class RoleSetHandler implements UpdateHandler {
+public class RoleSetHandler implements UpdateHandler, CallbackHandler {
 
     private Role role;
 
@@ -48,8 +48,6 @@ public class RoleSetHandler implements UpdateHandler {
                 sendService.sendWithKeyboardBottom(chatId, "Что-то пошло не так", session);
             }
         }
-
-
     }
 
     @Override
@@ -66,6 +64,4 @@ public class RoleSetHandler implements UpdateHandler {
         sendService.edit(chatId, messageId, "Введите имя и фамилию (желательно в этом порядке)");
         session.setAttribute(SET_ROLE_WAITING_FOR_NAME.name(), true);
     }
-
-
 }

@@ -18,24 +18,23 @@ import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 @Component
 public class UpdateDispatcher {
 
-    private final Map<Class<? extends UpdateHandler>, UpdateHandler> handlers;
+    private final Map<Class<? extends UpdateHandler>, UpdateHandler> updateHandlers;
+    private final Map<Class<? extends CallbackHandler>, CallbackHandler> callbackHandlers;
 
     @Autowired
-    public UpdateDispatcher(List<UpdateHandler> handlersList) {
-        this.handlers = handlersList.stream()
+    public UpdateDispatcher(List<UpdateHandler> updateHandlerList, List<CallbackHandler> callbackHandlerList) {
+        this.updateHandlers = updateHandlerList.stream()
                 .collect(toMap(UpdateHandler::getClass, Function.identity()));
+        this.callbackHandlers = callbackHandlerList.stream()
+                .collect(toMap(CallbackHandler::getClass, Function.identity()));
     }
 
     public void doDispatch(Update update, Session session) {
-
         Message message = update.getMessage();
-
         if (message != null && message.hasText() && message.isUserMessage()) {
-
             if (!AuthUtils.isAuthenticated(session)) {
                 resolveAndHandleUpdate(RegisterHandler.class, update, session);
             }
-
             String messageText = message.getText();
             if ("/clear".equals(messageText)) {
                 session.stop();
@@ -81,7 +80,6 @@ public class UpdateDispatcher {
                 case "buttonSendEventInfo" -> resolveAndHandleCallback(SendEventInfoHandler.class, update, session);
             }
         }
-
     }
 
     private void waitingStatusMessageRouter(Update update, Session session) {
@@ -122,10 +120,10 @@ public class UpdateDispatcher {
     }
 
     private void resolveAndHandleUpdate(Class<? extends UpdateHandler> clazz, Update update, Session session) {
-        handlers.get(clazz).handleUpdate(update, session);
+        updateHandlers.get(clazz).handleUpdate(update, session);
     }
 
-    private void resolveAndHandleCallback(Class<? extends UpdateHandler> clazz, Update update, Session session) {
-        handlers.get(clazz).handleCallback(update, session);
+    private void resolveAndHandleCallback(Class<? extends CallbackHandler> clazz, Update update, Session session) {
+        callbackHandlers.get(clazz).handleCallback(update, session);
     }
 }

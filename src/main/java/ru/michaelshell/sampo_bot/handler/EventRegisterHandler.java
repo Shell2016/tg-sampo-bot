@@ -16,17 +16,12 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 
 @Component
 @RequiredArgsConstructor
-public class EventRegisterHandler implements UpdateHandler {
+public class EventRegisterHandler implements CallbackHandler {
 
     private final SendService sendService;
 
     @Override
-    public void handleUpdate(Update update, Session session) {
-    }
-
-    @Override
     public void handleCallback(Update update, Session session) {
-
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
@@ -52,6 +47,4 @@ public class EventRegisterHandler implements UpdateHandler {
     private boolean hasRole(Session session) {
         return session.getAttribute(HAS_ROLE.name()) != null;
     }
-
-
 }
