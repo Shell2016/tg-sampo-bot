@@ -13,22 +13,15 @@ import java.util.NoSuchElementException;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
-
 @Component
 @RequiredArgsConstructor
-public class EventSoloRegisterHandler implements UpdateHandler {
+public class EventSoloRegisterHandler implements CallbackHandler {
 
     private final SendService sendService;
     private final UserService userService;
     private final DancerListHandler dancerListHandler;
 
-    @Override
-    public void handleUpdate(Update update, Session session) {
-    }
-
-
     public void handleCallback(Update update, Session session) {
-
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String eventInfo = callbackQuery.getMessage().getText();
@@ -36,12 +29,10 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         EventGetDto eventGetDto = parseEvent(eventInfo);
-
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
             sendService.edit(chatId, messageId, "Ошибка записи!\uD83D\uDE31 Вы уже записаны!");
             return;
         }
-
         try {
             userService.registerOnEvent(eventGetDto, user.getId());
         } catch (DataIntegrityViolationException e) {
@@ -54,8 +45,4 @@ public class EventSoloRegisterHandler implements UpdateHandler {
         sendService.sendWithKeyboardBottom(chatId, "Успешная запись!\uD83E\uDD73", session);
         dancerListHandler.sendDancerListWithButtons(eventInfo, user, chatId);
     }
-
 }
-
-
-

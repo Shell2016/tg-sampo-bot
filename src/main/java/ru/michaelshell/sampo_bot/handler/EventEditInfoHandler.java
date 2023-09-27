@@ -11,25 +11,25 @@ import ru.michaelshell.sampo_bot.session.SessionAttribute;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
-
 @Component
 @RequiredArgsConstructor
-public class EventEditInfoHandler implements UpdateHandler {
+public class EventEditInfoHandler implements UpdateHandler, CallbackHandler {
 
+    public static final String EVENT_ID = "eventId";
     private final SendService sendService;
     private final EventService eventService;
 
     @Override
     public void handleUpdate(Update update, Session session) {
         if (AuthUtils.isAdmin(session)) {
-            Long eventId =(Long) session.getAttribute("eventId");
+            Long eventId = (Long) session.getAttribute(EVENT_ID);
             String msgText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
 
             if (eventService.updateEventInfo(eventId, msgText).isPresent()) {
                 sendService.sendWithKeyboardBottom(chatId, "Доп. информация обновлена!", session);
             }
-            session.removeAttribute("eventId");
+            session.removeAttribute(EVENT_ID);
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_INFO.name());
         }
     }
@@ -48,16 +48,9 @@ public class EventEditInfoHandler implements UpdateHandler {
             sendService.edit(chatId, messageId, "Коллективка с данным названием и временем не найдена");
             return;
         }
-        session.setAttribute("eventId", eventId);
+        session.setAttribute(EVENT_ID, eventId);
 
         sendService.sendWithKeyboardBottom(chatId, "Введите доп.инфо (можно несколько строк):", session);
         session.setAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_INFO.name(), true);
-
-
     }
 }
-
-
-
-
-

@@ -26,7 +26,7 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SendEventInfoHandler implements UpdateHandler {
+public class SendEventInfoHandler implements UpdateHandler, CallbackHandler {
 
     private final SendService sendService;
     private final UserService userService;
@@ -50,18 +50,15 @@ public class SendEventInfoHandler implements UpdateHandler {
                     }
                 }
                 session.removeAttribute(NOTIFY_ALL.name());
-
             } else {
                 sendService.sendWithKeyboardBottom(chatId, "Введите сообщение для отправки всем пользователям:", session);
                 session.setAttribute(SessionAttribute.NOTIFY_ALL.name(), true);
             }
         }
-
     }
 
     @Override
     public void handleCallback(Update update, Session session) {
-
         CallbackQuery callbackQuery = update.getCallbackQuery();
         Message message = callbackQuery.getMessage();
         String msgText = BotUtils.getEventInfo(message.getText());
@@ -77,7 +74,6 @@ public class SendEventInfoHandler implements UpdateHandler {
                     Время: %s
                     %s
                     """.formatted(event.getName(), time, event.getInfo());
-
             log.info("Sending event info to all users: " + event);
             for (User user : userService.findAll()) {
                 try {
@@ -89,8 +85,3 @@ public class SendEventInfoHandler implements UpdateHandler {
         }
     }
 }
-
-
-
-
-

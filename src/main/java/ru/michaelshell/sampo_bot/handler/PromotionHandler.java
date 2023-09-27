@@ -13,7 +13,6 @@ import java.util.Objects;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.PROMOTION_WAITING_FOR_USERNAME;
 
-
 @Component
 @RequiredArgsConstructor
 public class PromotionHandler implements UpdateHandler {
@@ -53,14 +52,7 @@ public class PromotionHandler implements UpdateHandler {
         session.setAttribute(PROMOTION_WAITING_FOR_USERNAME.name(), true);
     }
 
-    @Override
-    public void handleCallback(Update update, Session session) {
-    }
-
-
     boolean checkPromotionRights(String adminUsername, String nameToCheck) {
         return Objects.equals(adminUsername, nameToCheck);
     }
-
-
 }

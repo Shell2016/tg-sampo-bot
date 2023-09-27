@@ -23,10 +23,6 @@ public class EditProfileHandler implements UpdateHandler {
                 "Какую роль предпочитаете в танце?\uD83E\uDDD0\uD83D\uDC83\uD83D\uDD7A",
                 KeyboardUtils.roleSelectButtons);
     }
-
-    @Override
-    public void handleCallback(Update update, Session session) {
-    }
 }
 
 

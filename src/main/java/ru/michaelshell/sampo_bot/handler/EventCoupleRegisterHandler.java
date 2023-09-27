@@ -19,7 +19,9 @@ import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
 
 @Component
 @RequiredArgsConstructor
-public class EventCoupleRegisterHandler implements UpdateHandler {
+public class EventCoupleRegisterHandler implements UpdateHandler, CallbackHandler {
+
+    public static final String EVENT_ID = "eventId";
 
     private final SendService sendService;
     private final EventService eventService;
@@ -41,7 +43,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
             String[] s = name.split(" ");
             String partnerFirstName = s[0].trim();
             String partnerLastName = s[1].trim();
-            Long eventId = (Long) session.getAttribute("eventId");
+            Long eventId = (Long) session.getAttribute(EVENT_ID);
             try {
                 userService.registerOnEvent(eventId, userId, partnerFirstName, partnerLastName);
             } catch (DataIntegrityViolationException e) {
@@ -49,7 +51,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                 return;
             }
 
-            session.removeAttribute("eventId");
+            session.removeAttribute(EVENT_ID);
             session.removeAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name());
 
             String eventInfo = (String) session.getAttribute(EVENT_INFO.name());
@@ -59,7 +61,7 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
         }
     }
 
-
+    @Override
     public void handleCallback(Update update, Session session) {
 
         CallbackQuery callbackQuery = update.getCallbackQuery();
@@ -84,15 +86,10 @@ public class EventCoupleRegisterHandler implements UpdateHandler {
                     "Обновите список");
             return;
         }
-        session.setAttribute("eventId", eventId);
+        session.setAttribute(EVENT_ID, eventId);
         sendService.sendWithKeyboardBottom(chatId, msgText +
                 "\n\nВведите имя и фамилию партнера/партнерши (желательно именно в таком порядке)", session);
         session.setAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name(), true);
         session.setAttribute(EVENT_INFO.name(), msgText);
     }
-
-
 }
-
-
-

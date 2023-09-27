@@ -14,7 +14,9 @@ import ru.michaelshell.sampo_bot.util.BotUtils;
 
 @Component
 @RequiredArgsConstructor
-public class EventEditTitleHandler implements UpdateHandler {
+public class EventEditTitleHandler implements UpdateHandler, CallbackHandler {
+
+    public static final String EVENT_ID = "eventId";
 
     private final SendService sendService;
     private final EventService eventService;
@@ -22,7 +24,7 @@ public class EventEditTitleHandler implements UpdateHandler {
     @Override
     public void handleUpdate(Update update, Session session) {
         if (AuthUtils.isAdmin(session)) {
-            Long eventId =(Long) session.getAttribute("eventId");
+            Long eventId = (Long) session.getAttribute(EVENT_ID);
             String msgText = update.getMessage().getText();
             Long chatId = update.getMessage().getChatId();
             if (msgText.contains("\n")) {
@@ -33,7 +35,7 @@ public class EventEditTitleHandler implements UpdateHandler {
                     sendService.sendWithKeyboardBottom(chatId, "Название обновлено!", session);
                 }
             }
-            session.removeAttribute("eventId");
+            session.removeAttribute(EVENT_ID);
             session.removeAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_NAME.name());
         }
     }
@@ -52,15 +54,10 @@ public class EventEditTitleHandler implements UpdateHandler {
             sendService.edit(chatId, messageId, "Коллективка с данным названием и временем не найдена");
             return;
         }
-        session.setAttribute("eventId", eventId);
+        session.setAttribute(EVENT_ID, eventId);
 
         sendService.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
                 "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
         session.setAttribute(SessionAttribute.EVENT_EDIT_WAITING_FOR_NAME.name(), true);
     }
 }
-
-
-
-
-

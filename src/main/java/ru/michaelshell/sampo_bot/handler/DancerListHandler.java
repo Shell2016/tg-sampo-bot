@@ -19,16 +19,12 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 
 @Component
 @RequiredArgsConstructor
-public class DancerListHandler implements UpdateHandler {
+public class DancerListHandler implements CallbackHandler {
 
     private final SendService sendService;
     private final UserEventService userEventService;
     private final UserService userService;
     private final EventService eventService;
-
-    @Override
-    public void handleUpdate(Update update, Session session) {
-    }
 
     @Override
     public void handleCallback(Update update, Session session) {
