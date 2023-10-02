@@ -1,10 +1,9 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 
@@ -12,13 +11,13 @@ import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 @RequiredArgsConstructor
 public class EditProfileHandler implements UpdateHandler {
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
 
     @Override
-    public void handleUpdate(Update update, Session session) {
-        Long chatId = update.getMessage().getChatId();
+    public void handleUpdate(Request request) {
+        Long chatId = request.update().getMessage().getChatId();
 
-        sendService.sendWithKeyboardInline(
+        responseSender.sendWithKeyboardInline(
                 chatId,
                 "Какую роль предпочитаете в танце?\uD83E\uDDD0\uD83D\uDC83\uD83D\uDD7A",
                 KeyboardUtils.roleSelectButtons);

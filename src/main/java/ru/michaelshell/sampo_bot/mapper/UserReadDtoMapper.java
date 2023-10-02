@@ -9,7 +9,6 @@ public class UserReadDtoMapper implements Mapper<User, UserReadDto> {
 
     @Override
     public UserReadDto map(User user) {
-
         return UserReadDto.builder()
                 .userName(user.getUserName())
                 .firstName(user.getFirstName())

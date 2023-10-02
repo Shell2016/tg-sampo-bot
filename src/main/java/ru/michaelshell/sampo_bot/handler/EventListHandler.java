@@ -3,8 +3,8 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
@@ -19,20 +19,20 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListButtons;
 @RequiredArgsConstructor
 public class EventListHandler implements UpdateHandler {
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
     private final EventService eventService;
 
     @Override
-    public void handleUpdate(Update update, Session session) {
-
-        Long chatId = update.getMessage().getChatId();
+    public void handleUpdate(Request request) {
+        Session session = request.session();
+        Long chatId = request.update().getMessage().getChatId();
 
         List<EventReadDto> events = eventService.findAll();
         if (events.isEmpty()) {
-            sendService.sendWithKeyboardBottom(chatId, "В данный момент нет коллективок", session);
+            responseSender.sendWithKeyboardBottom(chatId, "В данный момент нет коллективок", session);
             return;
         }
-        sendService.sendWithKeyboardBottom(chatId, "Актуальный список коллективок", session);
+        responseSender.sendWithKeyboardBottom(chatId, "Актуальный список коллективок", session);
 
         events.forEach(event -> {
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -47,9 +47,9 @@ public class EventListHandler implements UpdateHandler {
 
     private void sendEventList(Session session, Long chatId, String eventInfo) {
         if (AuthUtils.isAdmin(session)) {
-            sendService.sendWithKeyboardInline(chatId, eventInfo, eventListAdminButtons);
+            responseSender.sendWithKeyboardInline(chatId, eventInfo, eventListAdminButtons);
         } else {
-            sendService.sendWithKeyboardInline(chatId, eventInfo, eventListButtons);
+            responseSender.sendWithKeyboardInline(chatId, eventInfo, eventListButtons);
         }
     }
 }

@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Update;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
@@ -18,21 +18,22 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.roleSelectButtons;
 @RequiredArgsConstructor
 public class EventRegisterHandler implements CallbackHandler {
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
 
     @Override
-    public void handleCallback(Update update, Session session) {
-        CallbackQuery callbackQuery = update.getCallbackQuery();
+    public void handleCallback(Request request) {
+        Session session = request.session();
+        CallbackQuery callbackQuery = request.update().getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!hasRole(session)) {
-            sendService.sendWithKeyboardInline(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
+            responseSender.sendWithKeyboardInline(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
         } else {
             EventGetDto event = BotUtils.parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
-                sendService.sendWithKeyboardBottom(chatId, "Не удалось обработать запрос", session);
+                responseSender.sendWithKeyboardBottom(chatId, "Не удалось обработать запрос", session);
                 return;
             }
             String time = TimeParser.parseFromTimeToString(event.getTime());
@@ -40,7 +41,7 @@ public class EventRegisterHandler implements CallbackHandler {
                     Уровень: %s
                     Время: %s
                     """.formatted(event.getName(), time);
-            sendService.editWithKeyboardInline(chatId, messageId, eventHeader, registerEventModeButtons);
+            responseSender.editWithKeyboardInline(chatId, messageId, eventHeader, registerEventModeButtons);
         }
     }
 

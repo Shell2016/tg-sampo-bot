@@ -9,7 +9,6 @@ public class UserCreateEditDtoMapper implements Mapper<UserCreateEditDto, User> 
 
     @Override
     public User map(UserCreateEditDto dto) {
-
         return User.builder()
                 .id(dto.getId())
                 .userName(dto.getUserName())

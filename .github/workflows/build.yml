@@ -5,6 +5,7 @@ on:
     branches:
       - bugfix/**
       - feature/**
+      - refactor/**
 jobs:
   build:
     name: Build project

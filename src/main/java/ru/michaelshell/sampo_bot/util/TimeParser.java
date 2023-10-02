@@ -16,7 +16,6 @@ public class TimeParser {
     private static final DateTimeFormatter FORMATTER_FOR_EVENT_CREATION = DateTimeFormatter.ofPattern(PATTERN_FOR_EVENT_CREATION);
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(PATTERN, new Locale("ru"));
 
-
     public static LocalDateTime parseForEventCreation(String timeString) {
         return LocalDateTime.parse(timeString, FORMATTER_FOR_EVENT_CREATION);
     }
@@ -28,7 +27,6 @@ public class TimeParser {
     public static String parseFromTimeToString(LocalDateTime time) {
         return time.format(FORMATTER);
     }
-
 
     public static boolean isValid(String timeString) {
         try {
