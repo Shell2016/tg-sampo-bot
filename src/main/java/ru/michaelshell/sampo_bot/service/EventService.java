@@ -6,17 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.database.repository.EventRepository;
-import ru.michaelshell.sampo_bot.dto.EventCreateDto;
-import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.dto.EventReadDto;
+import ru.michaelshell.sampo_bot.dto.*;
 import ru.michaelshell.sampo_bot.mapper.EventCreateDtoMapper;
 import ru.michaelshell.sampo_bot.mapper.EventReadDtoMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +26,7 @@ public class EventService {
     public List<EventReadDto> findAll() {
         return eventRepository.findAll(Sort.by("time")).stream()
                 .map(eventReadDtoMapper::map)
-                .collect(toList());
+                .toList();
     }
 
     @Transactional
@@ -53,7 +49,6 @@ public class EventService {
         optionalEvent.ifPresent(event -> event.setTime(time));
         return optionalEvent.map(eventReadDtoMapper::map);
     }
-
 
     @Transactional
     public EventReadDto create(EventCreateDto dto) {

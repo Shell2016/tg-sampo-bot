@@ -9,7 +9,6 @@ public class EventReadDtoMapper implements Mapper<Event, EventReadDto> {
 
     @Override
     public EventReadDto map(Event event) {
-
         return EventReadDto.builder()
                 .id(event.getId())
                 .name(event.getName())

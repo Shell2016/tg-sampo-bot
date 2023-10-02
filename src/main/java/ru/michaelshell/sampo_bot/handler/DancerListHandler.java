@@ -1,10 +1,11 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.*;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.User;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
@@ -21,17 +22,16 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class DancerListHandler implements CallbackHandler {
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
     private final UserEventService userEventService;
     private final UserService userService;
     private final EventService eventService;
 
     @Override
-    public void handleCallback(Update update, Session session) {
+    public void handleCallback(Request request) {
 
-        CallbackQuery callbackQuery = update.getCallbackQuery();
+        CallbackQuery callbackQuery = request.update().getCallbackQuery();
         String msgText = callbackQuery.getMessage().getText();
-
 
         User user = callbackQuery.getFrom();
         Long chatId = callbackQuery.getMessage().getChatId();
@@ -45,7 +45,7 @@ public class DancerListHandler implements CallbackHandler {
         String eventInfo = BotUtils.getEventInfo(msgText);
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         if (eventService.findEventIdByDto(eventGetDto).isEmpty()) {
-            sendService.edit(chatId, messageId, "Ошибка обновления. Обновите список коллективок.");
+            responseSender.edit(chatId, messageId, "Ошибка обновления. Обновите список коллективок.");
             return;
         }
 
@@ -55,14 +55,12 @@ public class DancerListHandler implements CallbackHandler {
             return;
         }
 
-
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            sendService.editWithKeyboardInline(chatId, messageId, resultList, deleteRegistrationButton);
+            responseSender.editWithKeyboardInline(chatId, messageId, resultList, deleteRegistrationButton);
         } else {
-            sendService.editWithKeyboardInline(chatId, messageId, resultList, eventRegisterButton);
+            responseSender.editWithKeyboardInline(chatId, messageId, resultList, eventRegisterButton);
         }
     }
-
 
     public String getDancerList(String eventInfo) {
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
@@ -73,7 +71,6 @@ public class DancerListHandler implements CallbackHandler {
                 printDancerList(userEvents, Role.LEADER),
                 printDancerList(userEvents, Role.FOLLOWER));
     }
-
 
     private List<String> printCoupleList(List<UserEvent> userEvents) {
         return userEvents.stream()
@@ -140,9 +137,9 @@ public class DancerListHandler implements CallbackHandler {
         String resultList = getDancerList(eventInfo);
 
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            sendService.sendWithKeyboardInline(chatId, resultList, deleteRegistrationButton);
+            responseSender.sendWithKeyboardInline(chatId, resultList, deleteRegistrationButton);
         } else {
-            sendService.sendWithKeyboardInline(chatId, resultList, eventRegisterButton);
+            responseSender.sendWithKeyboardInline(chatId, resultList, eventRegisterButton);
         }
     }
 }

@@ -7,7 +7,6 @@ import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 @Component
 public class EventCreateDtoMapper implements Mapper<EventCreateDto, Event> {
 
-
     @Override
     public Event map(EventCreateDto dto) {
         return Event.builder()

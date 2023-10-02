@@ -1,26 +1,27 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.*;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 @Component
 @RequiredArgsConstructor
 public class EventEditHandler implements CallbackHandler {
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
 
     @Override
-    public void handleCallback(Update update, Session session) {
-        CallbackQuery callbackQuery = update.getCallbackQuery();
+    public void handleCallback(Request request) {
+        CallbackQuery callbackQuery = request.update().getCallbackQuery();
         Message message = callbackQuery.getMessage();
         Integer messageId = message.getMessageId();
         String msgText = message.getText();
         Long chatId = message.getChatId();
 
-        sendService.editWithKeyboardInline(chatId, messageId, msgText, KeyboardUtils.eventEditButtons);
+        responseSender.editWithKeyboardInline(chatId, messageId, msgText, KeyboardUtils.eventEditButtons);
     }
 }

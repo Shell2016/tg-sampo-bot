@@ -11,6 +11,4 @@ public class SampoBotApplication {
     public static void main(String[] args) {
         SpringApplication.run(SampoBotApplication.class, args);
     }
-
-
 }
