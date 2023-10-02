@@ -8,13 +8,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.michaelshell.sampo_bot.bot.SampoBot;
-import ru.michaelshell.sampo_bot.bot.SendServiceImpl;
+import ru.michaelshell.sampo_bot.bot.ResponseSenderImpl;
 
 import static org.mockito.Mockito.verify;
 
 
 @ExtendWith(MockitoExtension.class)
-class SendServiceTest {
+class ResponseSenderTest {
 
     private static final Long TEST_USER_ID = 1L;
     private static final String TEST_MESSAGE = "Test message";
@@ -22,7 +22,7 @@ class SendServiceTest {
     @Mock
     private SampoBot sampoBot;
     @InjectMocks
-    private SendServiceImpl sendServiceImpl;
+    private ResponseSenderImpl sendServiceImpl;
 
 
     @Test

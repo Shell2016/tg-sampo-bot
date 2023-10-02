@@ -3,8 +3,8 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.User;
+import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
@@ -21,15 +21,15 @@ public class RegisterHandler implements UpdateHandler, CallbackHandler {
     private final UserService userService;
 
     @Override
-    public void handleUpdate(Update update, Session session) {
-        User user = update.getMessage().getFrom();
-        createAndAuthenticateUser(session, user);
+    public void handleUpdate(Request request) {
+        User user = request.update().getMessage().getFrom();
+        createAndAuthenticateUser(request.session(), user);
     }
 
     @Override
-    public void handleCallback(Update update, Session session) {
-        User user = update.getCallbackQuery().getFrom();
-        createAndAuthenticateUser(session, user);
+    public void handleCallback(Request request) {
+        User user = request.update().getCallbackQuery().getFrom();
+        createAndAuthenticateUser(request.session(), user);
     }
 
     private void createAndAuthenticateUser(Session session, User user) {

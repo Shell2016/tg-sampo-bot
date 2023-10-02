@@ -3,8 +3,10 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.objects.*;
-import ru.michaelshell.sampo_bot.bot.SendService;
+import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
+import org.telegram.telegrambots.meta.api.objects.Message;
+import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventCreateDto;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
@@ -23,25 +25,26 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
 
     public static final String EVENT_INFO = "eventInfo";
 
-    private final SendService sendService;
+    private final ResponseSender responseSender;
     private final EventService eventService;
 
     @Override
-    public void handleUpdate(Update update, Session session) {
+    public void handleUpdate(Request request) {
+        Session session = request.session();
         if (AuthUtils.isAdmin(session)) {
 
-            Message message = update.getMessage();
+            Message message = request.update().getMessage();
             Long chatId = message.getChatId();
 
             if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
                 String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
                 if (eventName.contains("\n")) {
-                    sendService.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!\n" +
+                    responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!\n" +
                             "Введите название ещё раз", session);
                     return;
                 }
                 session.setAttribute("eventName", eventName);
-                sendService.sendWithKeyboardBottom(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
+                responseSender.sendWithKeyboardBottom(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
                         "Пример - 25 01 23 20:30", session);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_NAME.name());
                 session.setAttribute(EVENT_ADD_WAITING_FOR_DATE.name(), true);
@@ -55,10 +58,10 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
                     LocalDateTime date = TimeParser.parseForEventCreation(eventDate);
                     session.setAttribute("eventDate", date);
                 } else {
-                    sendService.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
+                    responseSender.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
                     return;
                 }
-                sendService.sendWithKeyboardInline(chatId, "Нужно краткое описание?", eventInfoButtons);
+                responseSender.sendWithKeyboardInline(chatId, "Нужно краткое описание?", eventInfoButtons);
                 session.removeAttribute(EVENT_ADD_WAITING_FOR_DATE.name());
                 return;
             }
@@ -72,20 +75,20 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
                 onEventSuccessOrFail(session, chatId, event);
                 return;
             }
-            sendService.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
+            responseSender.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
                     "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_NAME.name(), true);
         }
     }
 
     @Override
-    public void handleCallback(Update update, Session session) {
-
-        CallbackQuery callbackQuery = update.getCallbackQuery();
+    public void handleCallback(Request request) {
+        Session session = request.session();
+        CallbackQuery callbackQuery = request.update().getCallbackQuery();
         String callbackData = callbackQuery.getData();
         Long chatId = callbackQuery.getMessage().getChatId();
         if ("buttonInfoYes".equals(callbackData)) {
-            sendService.sendWithKeyboardBottom(chatId, "Введите краткое описание:", session);
+            responseSender.sendWithKeyboardBottom(chatId, "Введите краткое описание:", session);
             session.setAttribute(EVENT_ADD_WAITING_FOR_INFO.name(), true);
         } else if ("buttonInfoNo".equals(callbackData)) {
             EventReadDto event = createEvent(callbackQuery.getFrom().getUserName(), session);
@@ -109,9 +112,9 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
 
     private void onEventSuccessOrFail(Session session, Long chatId, EventReadDto event) {
         if (event != null) {
-            sendService.sendWithKeyboardBottom(chatId, "Коллективка успешно добавлена", session);
+            responseSender.sendWithKeyboardBottom(chatId, "Коллективка успешно добавлена", session);
         } else {
-            sendService.sendWithKeyboardBottom(chatId, "Не удалось добавить, что-то пошло не так", session);
+            responseSender.sendWithKeyboardBottom(chatId, "Не удалось добавить, что-то пошло не так", session);
         }
     }
 }

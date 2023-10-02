@@ -3,7 +3,7 @@ package ru.michaelshell.sampo_bot.bot;
 import org.apache.shiro.session.Session;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-public interface SendService {
+public interface ResponseSender {
     void send(Long chatId, String message);
     void sendWithKeyboardBottom(Long chatId, String msg, Session session);
     void sendWithKeyboardInline(Long chatId, String msg, InlineKeyboardMarkup inlineKeyboardMarkup);

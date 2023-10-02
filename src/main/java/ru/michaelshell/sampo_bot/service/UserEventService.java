@@ -28,5 +28,4 @@ public class UserEventService {
     public List<UserEvent> findUserEventsByEvent(EventGetDto eventGetDto) {
         return userEventRepository.findAllByNameAndTime(eventGetDto.getName(), eventGetDto.getTime());
     }
-
 }

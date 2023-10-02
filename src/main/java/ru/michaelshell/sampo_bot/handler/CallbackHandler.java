@@ -1,8 +1,7 @@
 package ru.michaelshell.sampo_bot.handler;
 
-import org.apache.shiro.session.Session;
-import org.telegram.telegrambots.meta.api.objects.Update;
+import ru.michaelshell.sampo_bot.bot.Request;
 
 public interface CallbackHandler {
-    void handleCallback(Update update, Session session);
+    void handleCallback(Request request);
 }
