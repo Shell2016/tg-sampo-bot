@@ -1,13 +1,13 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
 import ru.michaelshell.sampo_bot.service.EventService;
+import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.util.KeyboardUtils;
 
 import static ru.michaelshell.sampo_bot.util.BotUtils.parseEvent;
@@ -21,7 +21,7 @@ public class EventDeleteHandler implements CallbackHandler {
 
     @Override
     public void handleCallback(Request request) {
-        Session session = request.session();
+        UserSession session = request.session();
         CallbackQuery callbackQuery = request.update().getCallbackQuery();
         Long chatId = callbackQuery.getMessage().getChatId();
         String msgText = callbackQuery.getMessage().getText();

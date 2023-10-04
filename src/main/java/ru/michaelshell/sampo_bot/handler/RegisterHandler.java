@@ -1,7 +1,6 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.User;
 import ru.michaelshell.sampo_bot.bot.Request;
@@ -9,16 +8,17 @@ import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
 import ru.michaelshell.sampo_bot.service.UserService;
+import ru.michaelshell.sampo_bot.session.UserSession;
+import ru.michaelshell.sampo_bot.session.UserSessionService;
 
 import java.time.LocalDateTime;
-
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 
 @Component
 @RequiredArgsConstructor
 public class RegisterHandler implements UpdateHandler, CallbackHandler {
 
     private final UserService userService;
+    private final UserSessionService sessionService;
 
     @Override
     public void handleUpdate(Request request) {
@@ -32,7 +32,7 @@ public class RegisterHandler implements UpdateHandler, CallbackHandler {
         createAndAuthenticateUser(request.session(), user);
     }
 
-    private void createAndAuthenticateUser(Session session, User user) {
+    private void createAndAuthenticateUser(UserSession session, User user) {
         UserReadDto userDto = userService.findById(user.getId()).orElse(null);
         if (userDto == null) {
             userDto = createUser(user);
@@ -55,15 +55,12 @@ public class RegisterHandler implements UpdateHandler, CallbackHandler {
         return userService.createUser(dto);
     }
 
-    private static void authenticate(Session session, UserReadDto userDto) {
+    private void authenticate(UserSession session, UserReadDto userDto) {
         if (userDto.getRole() != null) {
-            session.setAttribute(HAS_ROLE.name(), userDto.getRole().name());
+            session.setUserRole(userDto.getRole());
         }
-        if (Status.ADMIN.equals(userDto.getStatus())) {
-            session.setAttribute(STATUS.name(), Status.ADMIN.name());
-        } else {
-            session.setAttribute(STATUS.name(), Status.USER.name());
-        }
-        session.setAttribute(AUTHENTICATED.name(), true);
+        session.setUserStatus(userDto.getStatus());
+        session.setAuthenticated(true);
+        sessionService.updateSession(session);
     }
 }
