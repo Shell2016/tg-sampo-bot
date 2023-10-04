@@ -10,25 +10,24 @@ logging:
   file:
     name: /home/${USER}/sampobot_logs/bot.log
 
+session:
+  timeout: 10
+
 spring:
-  main:
-    allow-circular-references: true
   datasource:
     url: jdbc:postgresql://localhost:5432/${SAMPOBOT_DB_NAME}
     username: ${SAMPOBOT_DB_USERNAME}
     password: ${SAMPOBOT_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+  main:
+    allow-circular-references: true
   jpa:
     database: postgresql
     properties:
       hibernate:
         hbm2ddl:
           auto: validate
-
-
-
-
-
-
-
-
+redis:
+  host: ${REDIS_HOST}
+  port: 6379
+  password: ${REDIS_PASSWORD}

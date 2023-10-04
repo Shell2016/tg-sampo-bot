@@ -11,6 +11,8 @@ services:
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
       - LOGGING_FILE_NAME=${LOG_DIR}/bot.log
       - ADMIN_USERNAME=${ADMIN_USERNAME}
     volumes:
@@ -18,6 +20,7 @@ services:
     restart: always
     depends_on:
       - db
+      - redis
 
   db:
     image: postgres:${DB_VERSION}-alpine
@@ -32,7 +35,14 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
 
+  redis:
+    image: redis:latest
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_DATABASES=1
+
 volumes:
   db:
-
-

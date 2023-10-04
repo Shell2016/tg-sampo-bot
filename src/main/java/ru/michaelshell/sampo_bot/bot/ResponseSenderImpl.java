@@ -1,6 +1,5 @@
 package ru.michaelshell.sampo_bot.bot;
 
-import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
@@ -8,6 +7,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventListAdminKeyboard;
@@ -32,7 +32,7 @@ public class ResponseSenderImpl implements ResponseSender {
     }
 
     @Override
-    public void sendWithKeyboardBottom(Long chatId, String msg, Session session) {
+    public void sendWithKeyboardBottom(Long chatId, String msg, UserSession session) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId(chatId);

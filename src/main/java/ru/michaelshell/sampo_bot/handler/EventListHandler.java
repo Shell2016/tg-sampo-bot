@@ -1,12 +1,12 @@
 package ru.michaelshell.sampo_bot.handler;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.shiro.session.Session;
 import org.springframework.stereotype.Component;
 import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventReadDto;
 import ru.michaelshell.sampo_bot.service.EventService;
+import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
@@ -24,7 +24,7 @@ public class EventListHandler implements UpdateHandler {
 
     @Override
     public void handleUpdate(Request request) {
-        Session session = request.session();
+        UserSession session = request.session();
         Long chatId = request.update().getMessage().getChatId();
 
         List<EventReadDto> events = eventService.findAll();
@@ -45,7 +45,7 @@ public class EventListHandler implements UpdateHandler {
         });
     }
 
-    private void sendEventList(Session session, Long chatId, String eventInfo) {
+    private void sendEventList(UserSession session, Long chatId, String eventInfo) {
         if (AuthUtils.isAdmin(session)) {
             responseSender.sendWithKeyboardInline(chatId, eventInfo, eventListAdminButtons);
         } else {

@@ -3,12 +3,11 @@ plugins {
     id 'org.springframework.boot' version '2.7.6'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
     id "io.freefair.lombok" version "6.6.1"
-    id 'jacoco'
 }
 apply from: 'version.gradle'
 
 group = 'ru.michaelshell'
-version = '1.2.1'
+version = '1.3.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -22,7 +21,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "org.telegram:telegrambots-spring-boot-starter:${versions.telegrambots}"
-    implementation "org.telegram:telegrambots-chat-session-bot:${versions.tgsession}"
+    implementation 'org.springframework.data:spring-data-redis'
+    implementation 'redis.clients:jedis'
     implementation 'org.liquibase:liquibase-core'
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -30,12 +30,8 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
-
 }
 
 test {
     useJUnitPlatform()
 }
-
-test.finalizedBy jacocoTestReport
-jacocoTestReport.dependsOn test

@@ -1,19 +1,18 @@
 package ru.michaelshell.sampo_bot.dispatcher;
 
-import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.handler.*;
-import ru.michaelshell.sampo_bot.util.AuthUtils;
+import ru.michaelshell.sampo_bot.session.UserSession;
 
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
+import static ru.michaelshell.sampo_bot.session.State.*;
 
 @Component
 public class RequestDispatcher {
@@ -57,51 +56,53 @@ public class RequestDispatcher {
     }
 
     private void authenticateWithUpdate(Request request) {
-        if (!AuthUtils.isAuthenticated(request.session())) {
+        if (!request.session().isAuthenticated()) {
             resolveAndHandleUpdate(RegisterHandler.class, request);
         }
     }
 
     private void authenticateWithCallback(Request request) {
-        if (!AuthUtils.isAuthenticated(request.session())) {
+        if (!request.session().isAuthenticated()) {
             resolveAndHandleCallback(RegisterHandler.class, request);
         }
     }
 
     private void processSessionStatus(Request request) {
-        Session session = request.session();
-
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_INFO.name())) ||
-                Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_DATE.name())) ||
-                Boolean.TRUE.equals(session.getAttribute(EVENT_ADD_WAITING_FOR_NAME.name()))) {
+        UserSession session = request.session();
+        if (session.getState() == DEFAULT) {
+            return;
+        }
+        if (session.getState() == EVENT_ADD_WAITING_FOR_INFO 
+                || session.getState() == EVENT_ADD_WAITING_FOR_DATE 
+                || session.getState() == EVENT_ADD_WAITING_FOR_NAME) {
             resolveAndHandleUpdate(EventCreateHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(PROMOTION_WAITING_FOR_USERNAME.name()))) {
+        if (session.getState() == PROMOTION_WAITING_FOR_USERNAME) {
             resolveAndHandleUpdate(PromotionHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(SET_ROLE_WAITING_FOR_NAME.name()))) {
+        if (session.getState() == SET_ROLE_WAITING_FOR_NAME) {
             resolveAndHandleUpdate(RoleSetHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(COUPLE_REGISTER_WAITING_FOR_NAME.name()))) {
+        if (session.getState() == COUPLE_REGISTER_WAITING_FOR_NAME) {
             resolveAndHandleUpdate(EventCoupleRegisterHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_NAME.name()))) {
+        if (session.getState() == EVENT_EDIT_WAITING_FOR_NAME) {
             resolveAndHandleUpdate(EventEditTitleHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_INFO.name()))) {
+        if (session.getState() == EVENT_EDIT_WAITING_FOR_INFO) {
             resolveAndHandleUpdate(EventEditInfoHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals(session.getAttribute(EVENT_EDIT_WAITING_FOR_DATE.name()))) {
+        if (session.getState() == EVENT_EDIT_WAITING_FOR_DATE) {
             resolveAndHandleUpdate(EventEditTimeHandler.class, request);
         }
 
-        if (Boolean.TRUE.equals((session.getAttribute(NOTIFY_ALL.name())))) {
+        if (session.getState() == NOTIFY_ALL) {
             resolveAndHandleUpdate(NotifyAllHandler.class, request);
         }
     }
@@ -132,7 +133,7 @@ public class RequestDispatcher {
             case "buttonEditEventTitle" -> resolveAndHandleCallback(EventEditTitleHandler.class, request);
             case "buttonEditEventTime" -> resolveAndHandleCallback(EventEditTimeHandler.class, request);
             case "buttonEditEventInfo" -> resolveAndHandleCallback(EventEditInfoHandler.class, request);
-            case "buttonSendEventInfo" -> resolveAndHandleCallback(SendEventInfoHandler.class, request);
+            case "buttonSendEventInfo" -> resolveAndHandleCallback(SendToAllEventInfoHandler.class, request);
         }
     }
 
