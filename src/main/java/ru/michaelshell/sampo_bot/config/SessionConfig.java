@@ -1,29 +1,26 @@
-package ru.michaelshell.sampo_bot.session;
+package ru.michaelshell.sampo_bot.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import ru.michaelshell.sampo_bot.session.UserSession;
 
 @Configuration
+@RequiredArgsConstructor
 public class SessionConfig {
 
-    @Value(value = "${redis.host}")
-    private String hostName;
-    @Value(value = "${redis.port}")
-    private int port;
-    @Value(value = "${redis.password}")
-    private String password;
+    private final RedisProperties redisProperties;
 
     @Bean
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         RedisStandaloneConfiguration configuration = factory.getStandaloneConfiguration();
-        configuration.setPassword(password);
-        configuration.setPort(port);
-        configuration.setHostName(hostName);
+        configuration.setPassword(redisProperties.password());
+        configuration.setPort(redisProperties.port());
+        configuration.setHostName(redisProperties.host());
         return factory;
     }
 
