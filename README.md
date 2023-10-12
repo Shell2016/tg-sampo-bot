@@ -6,6 +6,7 @@
 - Gradle
 - Spring Boot Data Jpa
 - PostgreSQL
+- Redis
 - Liquibase
 - Docker
 - Testcontainers
