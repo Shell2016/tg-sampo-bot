@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
 import static ru.michaelshell.sampo_bot.session.State.*;
-import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX;
+import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 @Component
@@ -38,7 +38,7 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
             Long chatId = message.getChatId();
 
             if (session.getState() == EVENT_ADD_WAITING_FOR_NAME) {
-                String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
+                String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ");
                 if (eventName.contains("\n")) {
                     responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!\n" +
                             "Введите название ещё раз", session);
@@ -76,7 +76,7 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
             }
 
             if (session.getState() == EVENT_ADD_WAITING_FOR_INFO) {
-                String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX, " ");
+                String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ");
                 session.setAttribute(EVENT_INFO, eventInfo);
                 session.setState(DEFAULT);
                 EventReadDto event = createEvent(message.getFrom().getUserName(), session);

@@ -6,6 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.handler.*;
 import ru.michaelshell.sampo_bot.session.UserSession;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.List;
 import java.util.Map;
@@ -108,10 +109,11 @@ public class RequestDispatcher {
     }
 
     private void processUpdate(Request request, String messageText) {
+        final String addEventsCommand = BotUtils.EVENT_LIST_COMMAND;
         switch (messageText) {
             case "/start", "/help" -> resolveAndHandleUpdate(StartHandler.class, request);
             case "/promote" -> resolveAndHandleUpdate(PromotionHandler.class, request);
-            case "/events", "Список коллективок" -> resolveAndHandleUpdate(EventListHandler.class, request);
+            case "/events", addEventsCommand -> resolveAndHandleUpdate(EventListHandler.class, request);
             case "Добавить" -> resolveAndHandleUpdate(EventCreateHandler.class, request);
             case "/profile" -> resolveAndHandleUpdate(EditProfileHandler.class, request);
             case "/all" -> resolveAndHandleUpdate(NotifyAllHandler.class, request);

@@ -10,7 +10,8 @@ import java.util.regex.Pattern;
 @UtilityClass
 public class BotUtils {
 
-    public static final String TG_NOT_SUPPORTED_CHRS_REMOVE_REGEX = "_|\\*|`";
+    public static final String TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX = "_|\\*|`";
+    public static final String EVENT_LIST_COMMAND = "Список коллективок";
 
     public static EventGetDto parseEvent(String msgText) {
 
