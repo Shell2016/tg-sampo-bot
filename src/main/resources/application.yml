@@ -31,3 +31,12 @@ redis:
   host: ${REDIS_HOST}
   port: 6379
   password: ${REDIS_PASSWORD}
+google:
+  credentials:
+    client-id:
+    client-email:
+    private-key:
+    private-key-id:
+  spreadsheets:
+    spreadsheet-id: 1gIMpUfuo0zTB4uRQbefj5uj1n5p6SLt8YofzHFsutuo
+    dump-cron: 0 * * * * ?

@@ -17,7 +17,13 @@ public interface UserEventRepository extends JpaRepository<UserEvent, Long> {
             "where e.name = :eventName and e.time = :eventTime")
     List<UserEvent> findAllByNameAndTime(String eventName, LocalDateTime eventTime);
 
+    @Query(value = """
+            SELECT ue from UserEvent ue
+            join ue.event e
+            join fetch ue.user u
+            where e.id = :id
+            """)
+    List<UserEvent> findAllByEventId(long id);
+
     Optional<UserEvent> findByUserIdAndEventNameAndEventTime(Long userId, String eventName, LocalDateTime eventTime);
-
-
 }

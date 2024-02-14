@@ -117,6 +117,7 @@ public class RequestDispatcher {
             case "Добавить" -> resolveAndHandleUpdate(EventCreateHandler.class, request);
             case "/profile" -> resolveAndHandleUpdate(EditProfileHandler.class, request);
             case "/all" -> resolveAndHandleUpdate(NotifyAllHandler.class, request);
+            case "/dump" -> resolveAndHandleUpdate(DumpEventsHandler.class, request);
         }
     }
 

@@ -27,7 +27,7 @@ public class EventListHandler implements UpdateHandler {
         UserSession session = request.session();
         Long chatId = request.update().getMessage().getChatId();
 
-        List<EventReadDto> events = eventService.findAll();
+        List<EventReadDto> events = eventService.findAllSortedByTime();
         if (events.isEmpty()) {
             responseSender.sendWithKeyboardBottom(chatId, "В данный момент нет коллективок", session);
             return;

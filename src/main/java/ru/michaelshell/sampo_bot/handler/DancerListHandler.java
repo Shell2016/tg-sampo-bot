@@ -9,7 +9,9 @@ import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.service.*;
+import ru.michaelshell.sampo_bot.service.EventService;
+import ru.michaelshell.sampo_bot.service.UserEventService;
+import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import java.util.List;
@@ -67,6 +69,22 @@ public class DancerListHandler implements CallbackHandler {
         List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
 
         return buildResultList(eventInfo,
+                printCoupleList(userEvents),
+                printDancerList(userEvents, Role.LEADER),
+                printDancerList(userEvents, Role.FOLLOWER));
+    }
+
+    /**
+     * Список записанных участников на евент для дампа.
+     *
+     * @param eventId id event
+     * @param title заголовок
+     * @return список участников
+     */
+    public String getDancerList(long eventId, String title) {
+        List<UserEvent> userEvents = userEventService.findAllByEventId(eventId);
+
+        return buildResultList(title,
                 printCoupleList(userEvents),
                 printDancerList(userEvents, Role.LEADER),
                 printDancerList(userEvents, Role.FOLLOWER));
