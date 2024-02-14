@@ -23,10 +23,14 @@ public class EventService {
     private final EventReadDtoMapper eventReadDtoMapper;
     private final EventCreateDtoMapper eventCreateDtoMapper;
 
-    public List<EventReadDto> findAll() {
+    public List<EventReadDto> findAllSortedByTime() {
         return eventRepository.findAll(Sort.by("time")).stream()
                 .map(eventReadDtoMapper::map)
                 .toList();
+    }
+
+    public List<Event> findAllEvents() {
+        return eventRepository.findAll();
     }
 
     @Transactional

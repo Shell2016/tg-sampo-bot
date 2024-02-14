@@ -99,7 +99,7 @@ class EventServiceBotIntegrationTest extends IntegrationTestBase {
 
     @Test
     void findAll() {
-        List<EventReadDto> result = eventService.findAll();
+        List<EventReadDto> result = eventService.findAllSortedByTime();
 
         assertThat(result).hasSize(3);
     }
