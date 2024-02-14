@@ -39,4 +39,4 @@ google:
     private-key-id:
   spreadsheets:
     spreadsheet-id: 1gIMpUfuo0zTB4uRQbefj5uj1n5p6SLt8YofzHFsutuo
-    dump-cron: 0 * * * * ?
+    dump-cron: 0 0 * * * ?

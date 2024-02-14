@@ -21,6 +21,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "org.telegram:telegrambots-spring-boot-starter:${versions.telegrambots}"
+    implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation 'com.google.apis:google-api-services-sheets:v4-rev20230815-2.0.0'
     implementation 'com.google.auth:google-auth-library-oauth2-http:1.20.0'
     implementation 'org.springframework.data:spring-data-redis'
