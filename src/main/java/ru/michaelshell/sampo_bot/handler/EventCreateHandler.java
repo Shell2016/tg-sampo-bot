@@ -64,10 +64,7 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
                     LocalDateTime date = TimeParser.parseForEventCreation(eventDate);
                     session.setAttribute(EVENT_DATE, date);
                 } else {
-                    responseSender.sendWithKeyboardBottom(
-                            chatId,
-                            "Неверный формат даты",
-                            session);
+                    responseSender.sendWithKeyboardBottom(chatId,"Неверный формат даты",session);
                     return;
                 }
                 responseSender.sendWithKeyboardInline(

@@ -34,16 +34,15 @@ public class EventEditTitleHandler implements UpdateHandler, CallbackHandler {
             String msgText = BotUtils.removeUnsupportedChars(request.update().getMessage().getText());
             if (msgText.contains("\n")) {
                 responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!", session);
-            } else {
-
-                if (eventService.updateEventTitle(eventId, msgText).isPresent()) {
-                    responseSender.sendWithKeyboardBottom(chatId, "Название обновлено!", session);
-                }
+                return;
             }
-            session.removeAttribute(EVENT_ID);
-            session.setDefaultState();
-            sessionService.updateSession(session);
+            if (eventService.updateEventTitle(eventId, msgText).isPresent()) {
+                responseSender.sendWithKeyboardBottom(chatId, "Название обновлено!", session);
+            }
         }
+        session.removeAttribute(EVENT_ID);
+        session.setDefaultState();
+        sessionService.updateSession(session);
     }
 
     @Override
