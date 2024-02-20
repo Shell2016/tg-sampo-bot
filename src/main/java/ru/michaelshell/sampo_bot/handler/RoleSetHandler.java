@@ -13,7 +13,6 @@ import ru.michaelshell.sampo_bot.session.UserSessionService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import static ru.michaelshell.sampo_bot.session.State.SET_ROLE_WAITING_FOR_NAME;
-import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX;
 
 @Slf4j
 @Component
@@ -41,8 +40,8 @@ public class RoleSetHandler implements UpdateHandler, CallbackHandler {
         if (nameArr.length != 2) {
             responseSender.sendWithKeyboardBottom(chatId, "Неверный формат: нужно 2 слова, разделённые пробелом", session);
         } else {
-            String firstName = nameArr[0].replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ").trim();
-            String lastName = nameArr[1].replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ").trim();
+            String firstName = BotUtils.removeUnsupportedChars(nameArr[0]);
+            String lastName = BotUtils.removeUnsupportedChars(nameArr[1]);
 
             if (userService.setUserRole(role, firstName, lastName, user.getId()).isPresent()) {
                 session.setUserRole(role);
