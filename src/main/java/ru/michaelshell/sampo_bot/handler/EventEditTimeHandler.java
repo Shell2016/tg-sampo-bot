@@ -40,6 +40,7 @@ public class EventEditTimeHandler implements UpdateHandler, CallbackHandler {
                 }
             } else {
                 responseSender.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
+                return;
             }
             session.removeAttribute(EVENT_ID);
             session.setDefaultState();
