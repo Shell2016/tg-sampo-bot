@@ -29,8 +29,8 @@ public class EventEditInfoHandler implements UpdateHandler, CallbackHandler {
         UserSession session = request.session();
         if (AuthUtils.isAdmin(session)) {
             Long eventId = (Long) session.getAttribute(EVENT_ID);
-            String msgText = request.update().getMessage().getText();
             Long chatId = request.update().getMessage().getChatId();
+            String msgText = BotUtils.removeUnsupportedChars(request.update().getMessage().getText());
 
             if (eventService.updateEventInfo(eventId, msgText).isPresent()) {
                 responseSender.sendWithKeyboardBottom(chatId, "Доп. информация обновлена!", session);

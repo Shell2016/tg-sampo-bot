@@ -12,13 +12,18 @@ import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.session.UserSessionService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
 import java.time.LocalDateTime;
 
-import static ru.michaelshell.sampo_bot.session.SessionAttribute.*;
-import static ru.michaelshell.sampo_bot.session.State.*;
-import static ru.michaelshell.sampo_bot.util.BotUtils.TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_DATE;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_INFO;
+import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_NAME;
+import static ru.michaelshell.sampo_bot.session.State.DEFAULT;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_DATE;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_INFO;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_NAME;
 import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventInfoButtons;
 
 @Component
@@ -38,7 +43,7 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
             Long chatId = message.getChatId();
 
             if (session.getState() == EVENT_ADD_WAITING_FOR_NAME) {
-                String eventName = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ");
+                String eventName = BotUtils.removeUnsupportedChars(message.getText());
                 if (eventName.contains("\n")) {
                     responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!\n" +
                             "Введите название ещё раз", session);
@@ -76,7 +81,7 @@ public class EventCreateHandler implements UpdateHandler, CallbackHandler {
             }
 
             if (session.getState() == EVENT_ADD_WAITING_FOR_INFO) {
-                String eventInfo = message.getText().trim().replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ");
+                String eventInfo = BotUtils.removeUnsupportedChars(message.getText());
                 session.setAttribute(EVENT_INFO, eventInfo);
                 session.setState(DEFAULT);
                 EventReadDto event = createEvent(message.getFrom().getUserName(), session);

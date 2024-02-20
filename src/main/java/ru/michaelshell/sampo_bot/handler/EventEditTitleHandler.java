@@ -10,6 +10,7 @@ import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.session.UserSessionService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
+import ru.michaelshell.sampo_bot.util.BotUtils;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_ID;
 import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_NAME;
@@ -29,8 +30,8 @@ public class EventEditTitleHandler implements UpdateHandler, CallbackHandler {
         UserSession session = request.session();
         if (AuthUtils.isAdmin(session)) {
             Long eventId = (Long) session.getAttribute(EVENT_ID);
-            String msgText = request.update().getMessage().getText();
             Long chatId = request.update().getMessage().getChatId();
+            String msgText = BotUtils.removeUnsupportedChars(request.update().getMessage().getText());
             if (msgText.contains("\n")) {
                 responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!", session);
             } else {
