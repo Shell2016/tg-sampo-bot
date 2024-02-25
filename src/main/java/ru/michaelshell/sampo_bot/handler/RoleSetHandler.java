@@ -47,7 +47,7 @@ public class RoleSetHandler implements UpdateHandler, CallbackHandler {
                 session.setUserRole(role);
                 session.setDefaultState();
                 sessionService.updateSession(session);
-                responseSender.sendWithKeyboardBottom(chatId, "Теперь можно записываться на коллективки\uD83D\uDC83\uD83D\uDD7A", session);
+                responseSender.sendWithKeyboardBottom(chatId, "Успешная регистрация в системе! Теперь можно записываться на коллективки\uD83D\uDC83\uD83D\uDD7A", session);
                 eventListHandler.handleUpdate(request);
             } else {
                 session.setDefaultState();
@@ -68,7 +68,7 @@ public class RoleSetHandler implements UpdateHandler, CallbackHandler {
         } else if ("buttonFollower".equals(data)) {
             role = Role.FOLLOWER;
         }
-        responseSender.edit(chatId, messageId, "Введите имя и фамилию (желательно в этом порядке)");
+        responseSender.edit(chatId, messageId, "Введите ваши имя и фамилию:");
         UserSession session = request.session();
         session.setState(SET_ROLE_WAITING_FOR_NAME);
         sessionService.updateSession(session);

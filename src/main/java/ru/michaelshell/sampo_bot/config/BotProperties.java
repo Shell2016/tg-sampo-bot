@@ -8,6 +8,5 @@ public record BotProperties(String username,
                             AdminProperties admin) {
 
     public record AdminProperties(String username) {
-
     }
 }

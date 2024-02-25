@@ -11,7 +11,7 @@ public class StartHandler implements UpdateHandler {
 
     private final ResponseSender responseSender;
     private static final String START_MSG = "Привет! Чтобы посмотреть список актуальных колллективок," +
-            " нужно тыкнуть на кнопку или ввести команду /events (также доступно через главное меню)";
+            " нажмите на кнопку внизу или введите команду /events (также доступно через главное меню)";
 
     @Override
     public void handleUpdate(Request request) {

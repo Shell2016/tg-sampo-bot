@@ -33,7 +33,7 @@ public class RequestDispatcher {
         Message message = request.update().getMessage();
         if (message != null && message.hasText() && message.isUserMessage()) {
             String messageText = message.getText();
-            if (clearSession(request, messageText)) {
+            if (isSessionCleared(request, messageText)) {
                 return;
             }
             authenticateWithUpdate(request);
@@ -48,7 +48,7 @@ public class RequestDispatcher {
         }
     }
 
-    private boolean clearSession(Request request, String messageText) {
+    private boolean isSessionCleared(Request request, String messageText) {
         if ("/clear".equals(messageText)) {
             resolveAndHandleUpdate(ClearSessionHandler.class, request);
             return true;
@@ -111,9 +111,9 @@ public class RequestDispatcher {
     private void processUpdate(Request request, String messageText) {
         final String addEventsCommand = BotUtils.EVENT_LIST_COMMAND;
         switch (messageText) {
-            case "/start", "/help" -> resolveAndHandleUpdate(StartHandler.class, request);
+            case "/help" -> resolveAndHandleUpdate(StartHandler.class, request);
             case "/promote" -> resolveAndHandleUpdate(PromotionHandler.class, request);
-            case "/events", addEventsCommand -> resolveAndHandleUpdate(EventListHandler.class, request);
+            case "/start", "/events", addEventsCommand -> resolveAndHandleUpdate(EventListHandler.class, request);
             case "Добавить" -> resolveAndHandleUpdate(EventCreateHandler.class, request);
             case "/profile" -> resolveAndHandleUpdate(EditProfileHandler.class, request);
             case "/all" -> resolveAndHandleUpdate(NotifyAllHandler.class, request);

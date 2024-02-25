@@ -28,7 +28,8 @@ public class EventRegisterHandler implements CallbackHandler {
         Integer messageId = callbackQuery.getMessage().getMessageId();
 
         if (!session.hasRole()) {
-            responseSender.sendWithKeyboardInline(chatId, "Для продолжения нужно пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
+            responseSender.sendWithKeyboardInline(chatId, "Чтобы иметь возможность записываться на коллективки," +
+                    " нужно один раз пройти небольшую регистрацию\uD83E\uDDD0", roleSelectButtons);
         } else {
             EventGetDto event = BotUtils.parseEvent(msgText);
             if (event.getName() == null || event.getTime() == null) {
