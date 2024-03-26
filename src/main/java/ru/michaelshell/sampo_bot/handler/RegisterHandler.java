@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterHandler implements UpdateHandler, CallbackHandler {
+public class RegisterHandler implements UpdateHandler, CallbackHandler, InlineQueryHandler {
 
     private final UserService userService;
     private final UserSessionService sessionService;
@@ -29,6 +29,12 @@ public class RegisterHandler implements UpdateHandler, CallbackHandler {
     @Override
     public void handleCallback(Request request) {
         User user = request.update().getCallbackQuery().getFrom();
+        createAndAuthenticateUser(request.session(), user);
+    }
+
+    @Override
+    public void handleInlineQuery(Request request) {
+        User user = request.update().getInlineQuery().getFrom();
         createAndAuthenticateUser(request.session(), user);
     }
 

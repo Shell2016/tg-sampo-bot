@@ -29,7 +29,7 @@ public class SampoBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.getMessage() != null || update.getCallbackQuery() != null) {
+        if (update.getMessage() != null || update.getCallbackQuery() != null || update.hasInlineQuery()) {
             requestDispatcher.dispatchRequest(new Request(update, sessionService.getSession(update)));
         }
     }

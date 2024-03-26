@@ -4,7 +4,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.michaelshell.sampo_bot.bot.Request;
-import ru.michaelshell.sampo_bot.handler.*;
+import ru.michaelshell.sampo_bot.handler.CallbackHandler;
+import ru.michaelshell.sampo_bot.handler.ClearSessionHandler;
+import ru.michaelshell.sampo_bot.handler.DancerListHandler;
+import ru.michaelshell.sampo_bot.handler.DeleteEventRegistrationHandler;
+import ru.michaelshell.sampo_bot.handler.DumpEventsHandler;
+import ru.michaelshell.sampo_bot.handler.EditProfileHandler;
+import ru.michaelshell.sampo_bot.handler.EventCoupleRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.EventCreateHandler;
+import ru.michaelshell.sampo_bot.handler.EventDeleteHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditInfoHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditTimeHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditTitleHandler;
+import ru.michaelshell.sampo_bot.handler.EventListHandler;
+import ru.michaelshell.sampo_bot.handler.EventRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.EventSoloRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.InlineQueryHandler;
+import ru.michaelshell.sampo_bot.handler.NotifyAllHandler;
+import ru.michaelshell.sampo_bot.handler.PromotionHandler;
+import ru.michaelshell.sampo_bot.handler.RegisterHandler;
+import ru.michaelshell.sampo_bot.handler.RoleSetHandler;
+import ru.michaelshell.sampo_bot.handler.SendToAllEventInfoHandler;
+import ru.michaelshell.sampo_bot.handler.StartHandler;
+import ru.michaelshell.sampo_bot.handler.UpdateHandler;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
@@ -13,20 +36,35 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.michaelshell.sampo_bot.session.State.*;
+import static ru.michaelshell.sampo_bot.session.State.COUPLE_REGISTER_WAITING_FOR_NAME;
+import static ru.michaelshell.sampo_bot.session.State.DEFAULT;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_DATE;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_INFO;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_ADD_WAITING_FOR_NAME;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_DATE;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_INFO;
+import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_NAME;
+import static ru.michaelshell.sampo_bot.session.State.NOTIFY_ALL;
+import static ru.michaelshell.sampo_bot.session.State.PROMOTION_WAITING_FOR_USERNAME;
+import static ru.michaelshell.sampo_bot.session.State.SET_ROLE_WAITING_FOR_NAME;
 
 @Component
 public class RequestDispatcher {
 
     private final Map<Class<? extends UpdateHandler>, UpdateHandler> updateHandlers;
     private final Map<Class<? extends CallbackHandler>, CallbackHandler> callbackHandlers;
+    private final Map<Class<? extends InlineQueryHandler>, InlineQueryHandler> inlineQueryHandlers;
 
     @Autowired
-    public RequestDispatcher(List<UpdateHandler> updateHandlerList, List<CallbackHandler> callbackHandlerList) {
+    public RequestDispatcher(List<UpdateHandler> updateHandlerList,
+                             List<CallbackHandler> callbackHandlerList,
+                             List<InlineQueryHandler> inlineQueryHandlerList) {
         this.updateHandlers = updateHandlerList.stream()
                 .collect(toMap(UpdateHandler::getClass, Function.identity()));
         this.callbackHandlers = callbackHandlerList.stream()
                 .collect(toMap(CallbackHandler::getClass, Function.identity()));
+        this.inlineQueryHandlers = inlineQueryHandlerList.stream()
+                .collect(toMap(InlineQueryHandler::getClass, Function.identity()));
     }
 
     public void dispatchRequest(Request request) {
@@ -45,6 +83,12 @@ public class RequestDispatcher {
             String callbackData = request.update().getCallbackQuery().getData();
             authenticateWithCallback(request);
             processCallback(request, callbackData);
+        }
+
+        if (request.update().hasInlineQuery()) {
+            String query = request.update().getInlineQuery().getQuery();
+            authenticateWithInlineQuery(request);
+            // TODO: 26.03.2024  
         }
     }
 
@@ -65,6 +109,12 @@ public class RequestDispatcher {
     private void authenticateWithCallback(Request request) {
         if (!request.session().isAuthenticated()) {
             resolveAndHandleCallback(RegisterHandler.class, request);
+        }
+    }
+
+    private void authenticateWithInlineQuery(Request request) {
+        if (!request.session().isAuthenticated()) {
+            resolveAndHandleInlineQuery(RegisterHandler.class, request);
         }
     }
 
@@ -140,11 +190,20 @@ public class RequestDispatcher {
         }
     }
 
+    private void processInlineQuery(Request request, String query) {
+        // TODO: 26.03.2024
+
+    }
+
     private void resolveAndHandleUpdate(Class<? extends UpdateHandler> clazz, Request request) {
         updateHandlers.get(clazz).handleUpdate(request);
     }
 
     private void resolveAndHandleCallback(Class<? extends CallbackHandler> clazz, Request request) {
         callbackHandlers.get(clazz).handleCallback(request);
+    }
+
+    private void resolveAndHandleInlineQuery(Class<? extends InlineQueryHandler> clazz, Request request) {
+        inlineQueryHandlers.get(clazz).handleInlineQuery(request);
     }
 }

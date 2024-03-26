@@ -26,8 +26,10 @@ public class UserSessionService {
         long chatId;
         if (update.getMessage() != null) {
             chatId = update.getMessage().getChatId();
-        } else {
+        } else if (update.getCallbackQuery() != null) {
             chatId = update.getCallbackQuery().getMessage().getChatId();
+        } else {
+            chatId = update.getInlineQuery().getFrom().getId();
         }
         session = operations.get(chatId);
         if (session == null) {
