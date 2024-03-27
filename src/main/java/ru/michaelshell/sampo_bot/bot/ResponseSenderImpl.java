@@ -2,6 +2,7 @@ package ru.michaelshell.sampo_bot.bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.methods.ParseMode;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -89,6 +90,15 @@ public class ResponseSenderImpl implements ResponseSender {
                 .build();
         try {
             sampoBot.execute(editMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void sendInlineQueryAnswer(AnswerInlineQuery answer) {
+        try {
+            sampoBot.execute(answer);
         } catch (TelegramApiException e) {
             throw new RuntimeException(e);
         }

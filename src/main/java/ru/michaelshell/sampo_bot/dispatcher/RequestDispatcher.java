@@ -34,6 +34,8 @@ import ru.michaelshell.sampo_bot.util.BotUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.util.stream.Collectors.toMap;
 import static ru.michaelshell.sampo_bot.session.State.COUPLE_REGISTER_WAITING_FOR_NAME;
@@ -50,6 +52,8 @@ import static ru.michaelshell.sampo_bot.session.State.SET_ROLE_WAITING_FOR_NAME;
 
 @Component
 public class RequestDispatcher {
+
+    private static final String REGEX_EVENT_ID = "id:(\\d+)";
 
     private final Map<Class<? extends UpdateHandler>, UpdateHandler> updateHandlers;
     private final Map<Class<? extends CallbackHandler>, CallbackHandler> callbackHandlers;
@@ -79,6 +83,10 @@ public class RequestDispatcher {
             processUpdate(request, messageText);
         }
 
+        if (message != null && message.hasText() && !message.isUserMessage()) {
+            processUpdateFromChat(request);
+        }
+
         if (request.update().hasCallbackQuery()) {
             String callbackData = request.update().getCallbackQuery().getData();
             authenticateWithCallback(request);
@@ -88,8 +96,9 @@ public class RequestDispatcher {
         if (request.update().hasInlineQuery()) {
             String query = request.update().getInlineQuery().getQuery();
             authenticateWithInlineQuery(request);
-            // TODO: 26.03.2024  
+            processInlineQuery(request, query);
         }
+
     }
 
     private boolean isSessionCleared(Request request, String messageText) {
@@ -191,8 +200,19 @@ public class RequestDispatcher {
     }
 
     private void processInlineQuery(Request request, String query) {
-        // TODO: 26.03.2024
+        switch (query) {
+            case "events" -> resolveAndHandleInlineQuery(EventListHandler.class, request);
+        }
+    }
 
+    private void processUpdateFromChat(Request request) {
+        // TODO: 27.03.2024 refactor
+        Message message = request.update().getMessage();
+        Matcher matcher = Pattern.compile(REGEX_EVENT_ID).matcher(message.getText());
+        if (matcher.find()) {
+            String eventId = matcher.group(1);
+            System.out.println(eventId);
+        }
     }
 
     private void resolveAndHandleUpdate(Class<? extends UpdateHandler> clazz, Request request) {

@@ -1,5 +1,6 @@
 package ru.michaelshell.sampo_bot.bot;
 
+import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import ru.michaelshell.sampo_bot.session.UserSession;
 
@@ -9,4 +10,5 @@ public interface ResponseSender {
     void sendWithKeyboardInline(Long chatId, String msg, InlineKeyboardMarkup inlineKeyboardMarkup);
     void edit(Long chatId, Integer messageId, String msg);
     void editWithKeyboardInline(Long chatId, Integer messageId, String msg, InlineKeyboardMarkup inlineButtons);
+    void sendInlineQueryAnswer(AnswerInlineQuery answer);
 }
