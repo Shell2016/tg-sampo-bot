@@ -157,7 +157,7 @@ class UserServiceTest {
 
         assertThat(userEvent.getUser()).isEqualTo(user);
         assertThat(userEvent.getEvent()).isEqualTo(event);
-        assertThat(userEvent.getPartnerFullname()).isEqualTo("Ivanova Lena");
+        assertThat(userEvent.getPartnerFullname()).isEqualTo("Lena Ivanova");
         verify(userEventRepository).save(userEvent);
     }
 

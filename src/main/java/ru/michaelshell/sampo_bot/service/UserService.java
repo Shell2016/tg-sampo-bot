@@ -84,7 +84,7 @@ public class UserService {
         Event event = eventRepository.findById(eventId).orElseThrow();
         User user = userRepository.findById(userId).orElseThrow();
         UserEvent userEvent = UserEvent.builder()
-                .partnerFullname(partnerLastName + " " + partnerFirstName)
+                .partnerFullname(partnerFirstName + " " + partnerLastName)
                 .signedAt(LocalDateTime.now())
                 .build();
         userEvent.setUser(user);
