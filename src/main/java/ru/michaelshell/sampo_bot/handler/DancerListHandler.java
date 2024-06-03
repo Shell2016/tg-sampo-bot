@@ -98,11 +98,11 @@ public class DancerListHandler implements CallbackHandler {
                     ru.michaelshell.sampo_bot.database.entity.User user = userEvent.getUser();
                     String couple;
                     if (user.getRole() == Role.LEADER) {
-                        couple = user.getLastName() + " " + user.getFirstName() + "  -  " +
+                        couple = user.getFirstName() + " " + user.getLastName() + "  -  " +
                                 userEvent.getPartnerFullname();
                     } else {
                         couple = userEvent.getPartnerFullname() + "  -  " +
-                                user.getLastName() + " " + user.getFirstName();
+                                user.getFirstName() + " " + user.getLastName();
                     }
                     return couple;
                 })
@@ -114,7 +114,7 @@ public class DancerListHandler implements CallbackHandler {
                 .filter(userEvent -> userEvent.getPartnerFullname() == null)
                 .filter(userEvent -> userEvent.getUser().getRole() == role)
                 .sorted(comparing(UserEvent::getSignedAt))
-                .map(userEvent -> userEvent.getUser().getLastName() + " " + userEvent.getUser().getFirstName())
+                .map(userEvent -> userEvent.getUser().getFirstName() + " " + userEvent.getUser().getLastName())
                 .toList();
     }
 
