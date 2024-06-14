@@ -5,7 +5,9 @@ services:
   sampobot:
     image: shell2016/sampobot
     container_name: sampobot
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       - SAMPOBOT_TOKEN=${TOKEN}
       - SPRING_DATASOURCE_URL=${DB_URL}
