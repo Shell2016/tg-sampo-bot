@@ -2,6 +2,8 @@ ext {
     versions = [
             'testcontainers': '1.17.6',
             'telegrambots': '6.5.0',
-            'tgsession': '6.5.0'
+            'tgsession': '6.5.0',
+            'googlesheets': 'v4-rev20230815-2.0.0',
+            'googleoauth2': '1.20.0'
     ]
 }
