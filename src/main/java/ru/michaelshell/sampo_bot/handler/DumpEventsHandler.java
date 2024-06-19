@@ -28,7 +28,12 @@ public class DumpEventsHandler implements UpdateHandler {
         Long chatId = message.getChatId();
         String dumpUrl = GOOGLE_SPREADSHEETS_BASE_URL + googleProperties.getSpreadsheets().getSpreadsheetId();
         if (AuthUtils.isAdmin(session)) {
-            eventDumpService.dumpEvents();
+            try {
+                eventDumpService.dumpEvents();
+            } catch (RuntimeException e) {
+                responseSender.sendWithKeyboardBottom(chatId, "Error: Не удалось выгрузить данные в гугл-таблицу! " + e.getMessage(), session);
+                return;
+            }
             responseSender.sendWithKeyboardBottom(
                     chatId,
                     "Произведена успешная выгрузка в таблицу: " + dumpUrl,

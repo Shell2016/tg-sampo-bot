@@ -4,7 +4,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.michaelshell.sampo_bot.bot.Request;
-import ru.michaelshell.sampo_bot.handler.*;
+import ru.michaelshell.sampo_bot.handler.CallbackHandler;
+import ru.michaelshell.sampo_bot.handler.ClearSessionHandler;
+import ru.michaelshell.sampo_bot.handler.DancerListHandler;
+import ru.michaelshell.sampo_bot.handler.DeleteEventRegistrationHandler;
+import ru.michaelshell.sampo_bot.handler.DumpEventsHandler;
+import ru.michaelshell.sampo_bot.handler.EditProfileHandler;
+import ru.michaelshell.sampo_bot.handler.EventCoupleRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.EventCreateHandler;
+import ru.michaelshell.sampo_bot.handler.EventDeleteHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditInfoHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditTimeHandler;
+import ru.michaelshell.sampo_bot.handler.EventEditTitleHandler;
+import ru.michaelshell.sampo_bot.handler.EventListHandler;
+import ru.michaelshell.sampo_bot.handler.EventRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.EventSoloRegisterHandler;
+import ru.michaelshell.sampo_bot.handler.NotifyAllHandler;
+import ru.michaelshell.sampo_bot.handler.PromotionHandler;
+import ru.michaelshell.sampo_bot.handler.RegisterHandler;
+import ru.michaelshell.sampo_bot.handler.RoleSetHandler;
+import ru.michaelshell.sampo_bot.handler.SendToAllEventInfoHandler;
+import ru.michaelshell.sampo_bot.handler.StartHandler;
+import ru.michaelshell.sampo_bot.handler.UpdateHandler;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
@@ -13,7 +35,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 import static java.util.stream.Collectors.toMap;
-import static ru.michaelshell.sampo_bot.session.State.*;
 
 @Component
 public class RequestDispatcher {
@@ -70,41 +91,18 @@ public class RequestDispatcher {
 
     private void processSessionStatus(Request request) {
         UserSession session = request.session();
-        if (session.getState() == DEFAULT) {
-            return;
-        }
-        if (session.getState() == EVENT_ADD_WAITING_FOR_INFO 
-                || session.getState() == EVENT_ADD_WAITING_FOR_DATE 
-                || session.getState() == EVENT_ADD_WAITING_FOR_NAME) {
-            resolveAndHandleUpdate(EventCreateHandler.class, request);
-        }
-
-        if (session.getState() == PROMOTION_WAITING_FOR_USERNAME) {
-            resolveAndHandleUpdate(PromotionHandler.class, request);
-        }
-
-        if (session.getState() == SET_ROLE_WAITING_FOR_NAME) {
-            resolveAndHandleUpdate(RoleSetHandler.class, request);
-        }
-
-        if (session.getState() == COUPLE_REGISTER_WAITING_FOR_NAME) {
-            resolveAndHandleUpdate(EventCoupleRegisterHandler.class, request);
-        }
-
-        if (session.getState() == EVENT_EDIT_WAITING_FOR_NAME) {
-            resolveAndHandleUpdate(EventEditTitleHandler.class, request);
-        }
-
-        if (session.getState() == EVENT_EDIT_WAITING_FOR_INFO) {
-            resolveAndHandleUpdate(EventEditInfoHandler.class, request);
-        }
-
-        if (session.getState() == EVENT_EDIT_WAITING_FOR_DATE) {
-            resolveAndHandleUpdate(EventEditTimeHandler.class, request);
-        }
-
-        if (session.getState() == NOTIFY_ALL) {
-            resolveAndHandleUpdate(NotifyAllHandler.class, request);
+        switch (session.getState()) {
+            case DEFAULT -> {}
+            case EVENT_ADD_WAITING_FOR_INFO,
+                 EVENT_ADD_WAITING_FOR_DATE,
+                 EVENT_ADD_WAITING_FOR_NAME -> resolveAndHandleUpdate(EventCreateHandler.class, request);
+            case PROMOTION_WAITING_FOR_USERNAME -> resolveAndHandleUpdate(PromotionHandler.class, request);
+            case SET_ROLE_WAITING_FOR_NAME -> resolveAndHandleUpdate(RoleSetHandler.class, request);
+            case COUPLE_REGISTER_WAITING_FOR_NAME -> resolveAndHandleUpdate(EventCoupleRegisterHandler.class, request);
+            case EVENT_EDIT_WAITING_FOR_NAME -> resolveAndHandleUpdate(EventEditTitleHandler.class, request);
+            case EVENT_EDIT_WAITING_FOR_INFO -> resolveAndHandleUpdate(EventEditInfoHandler.class, request);
+            case EVENT_EDIT_WAITING_FOR_DATE -> resolveAndHandleUpdate(EventEditTimeHandler.class, request);
+            case NOTIFY_ALL -> resolveAndHandleUpdate(NotifyAllHandler.class, request);
         }
     }
 

@@ -6,8 +6,6 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import ru.michaelshell.sampo_bot.bot.Request;
 import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
-import ru.michaelshell.sampo_bot.exception.GoogleSheetsClientException;
-import ru.michaelshell.sampo_bot.exception.SheetsProcessingException;
 import ru.michaelshell.sampo_bot.service.EventDumpService;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.session.UserSession;
@@ -33,7 +31,7 @@ public class EventDeleteHandler implements CallbackHandler {
         if ("buttonEventDeleteConfirmation".equals(callbackQuery.getData())) {
             try {
                 eventDumpService.dumpEvents();
-            } catch (GoogleSheetsClientException | SheetsProcessingException e) {
+            } catch (RuntimeException e) {
                 responseSender.sendWithKeyboardBottom(chatId, "Error: Не удалось выгрузить данные в гугл-таблицу! " + e.getMessage(), session);
             }
             EventGetDto event = parseEvent(msgText);
