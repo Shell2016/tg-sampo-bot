@@ -2,10 +2,12 @@ package ru.michaelshell.sampo_bot.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.michaelshell.sampo_bot.database.entity.Event;
 import ru.michaelshell.sampo_bot.handler.DancerListHandler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Сервис для выгрузки коллективок в гугл-таблицы.
@@ -19,7 +21,11 @@ public class EventDumpService {
     private final DancerListHandler dancerListHandler;
 
     public void dumpEvents() {
-        eventService.findAllEvents().forEach(event -> {
+        List<Event> events = eventService.findAllEvents();
+        if (events.isEmpty()) {
+            throw new NoSuchElementException("There are no events to dump");
+        }
+        events.forEach(event -> {
             String sheetTitle = event.getName() + " " + event.getTime().toString();
             String infoForDump = dancerListHandler.getDancerList(event.getId(), sheetTitle);
             List<List<Object>> values = new ArrayList<>();
