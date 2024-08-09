@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.michaelshell.sampo_bot.bot.SampoBot;
-import ru.michaelshell.sampo_bot.bot.ResponseSenderImpl;
+import ru.michaelshell.sampo_bot.model.SampoBot;
+import ru.michaelshell.sampo_bot.model.ResponseSenderImpl;
 
 import static org.mockito.Mockito.verify;
 

@@ -4,49 +4,61 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.michaelshell.sampo_bot.bot.Request;
-import ru.michaelshell.sampo_bot.bot.ResponseSender;
+import ru.michaelshell.sampo_bot.model.Request;
+import ru.michaelshell.sampo_bot.model.Response;
+import ru.michaelshell.sampo_bot.model.ResponseType;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.session.UserSessionService;
 import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
+import java.util.Collections;
+import java.util.List;
+
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_ID;
 import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_NAME;
-
 
 @Component
 @RequiredArgsConstructor
 public class EventEditTitleHandler implements UpdateHandler, CallbackHandler {
 
-    private final ResponseSender responseSender;
     private final EventService eventService;
     private final EventEditInfoHandler eventEditInfoHandler;
     private final UserSessionService sessionService;
 
     @Override
-    public void handleUpdate(Request request) {
+    public List<Response> handleUpdate(Request request) {
         UserSession session = request.session();
         if (AuthUtils.isAdmin(session)) {
             Long eventId = (Long) session.getAttribute(EVENT_ID);
             Long chatId = request.update().getMessage().getChatId();
             String msgText = BotUtils.removeUnsupportedChars(request.update().getMessage().getText());
+            session.removeAttribute(EVENT_ID);
+            session.setDefaultState();
+            sessionService.updateSession(session);
             if (msgText.contains("\n")) {
-                responseSender.sendWithKeyboardBottom(chatId, "Недопустим ввод в несколько строк!", session);
-                return;
+                return List.of(Response.builder()
+                        .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                        .keyboard(AuthUtils.getBottomKeyboard(session))
+                        .chatId(chatId)
+                        .message("Недопустим ввод в несколько строк!")
+                        .build());
             }
             if (eventService.updateEventTitle(eventId, msgText).isPresent()) {
-                responseSender.sendWithKeyboardBottom(chatId, "Название обновлено!", session);
+                return List.of(Response.builder()
+                        .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                        .keyboard(AuthUtils.getBottomKeyboard(session))
+                        .chatId(chatId)
+                        .message("Название обновлено!")
+                        .build());
             }
         }
-        session.removeAttribute(EVENT_ID);
-        session.setDefaultState();
-        sessionService.updateSession(session);
+        return Collections.emptyList();
     }
 
     @Override
-    public void handleCallback(Request request) {
+    public List<Response> handleCallback(Request request) {
         UserSession session = request.session();
         CallbackQuery callbackQuery = request.update().getCallbackQuery();
         Message message = callbackQuery.getMessage();
@@ -56,13 +68,24 @@ public class EventEditTitleHandler implements UpdateHandler, CallbackHandler {
 
         Long eventId = eventEditInfoHandler.getEventId(msgText);
         if (eventId == null) {
-            responseSender.edit(chatId, messageId, "Коллективка с данным названием и временем не найдена");
+            return List.of(Response.builder()
+                    .type(ResponseType.EDIT_TEXT_MESSAGE)
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .message("Коллективка с данным названием и временем не найдена")
+                    .build());
+
         } else {
             session.setAttribute(EVENT_ID, eventId);
-            responseSender.sendWithKeyboardBottom(chatId, "Введите название/уровень коллективки.\n" +
-                    "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)", session);
             session.setState(EVENT_EDIT_WAITING_FOR_NAME);
             sessionService.updateSession(session);
+            return List.of(Response.builder()
+                    .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(AuthUtils.getBottomKeyboard(session))
+                    .chatId(chatId)
+                    .message("Введите название/уровень коллективки.\n" +
+                            "Максимум 128 символов, всё на одной строке (без Ctrl-Enter)")
+                    .build());
         }
     }
 }

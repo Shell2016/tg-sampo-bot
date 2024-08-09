@@ -3,7 +3,7 @@ package ru.michaelshell.sampo_bot.handler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.model.Request;
 import ru.michaelshell.sampo_bot.database.entity.Status;
 import ru.michaelshell.sampo_bot.dto.UserCreateEditDto;
 import ru.michaelshell.sampo_bot.dto.UserReadDto;
@@ -15,19 +15,17 @@ import java.time.LocalDateTime;
 
 @Component
 @RequiredArgsConstructor
-public class RegisterHandler implements UpdateHandler, CallbackHandler {
+public class AuthenticationService {
 
     private final UserService userService;
     private final UserSessionService sessionService;
 
-    @Override
-    public void handleUpdate(Request request) {
+    public void authenticateWithUpdate(Request request) {
         User user = request.update().getMessage().getFrom();
         createAndAuthenticateUser(request.session(), user);
     }
 
-    @Override
-    public void handleCallback(Request request) {
+    public void authenticateWithCallback(Request request) {
         User user = request.update().getCallbackQuery().getFrom();
         createAndAuthenticateUser(request.session(), user);
     }

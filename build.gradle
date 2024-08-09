@@ -19,6 +19,7 @@ repositories {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation "org.telegram:telegrambots-spring-boot-starter:${versions.telegrambots}"
     implementation 'org.springframework.boot:spring-boot-starter-quartz'

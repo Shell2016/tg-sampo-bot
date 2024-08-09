@@ -4,16 +4,18 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.User;
-import ru.michaelshell.sampo_bot.bot.Request;
-import ru.michaelshell.sampo_bot.bot.ResponseSender;
 import ru.michaelshell.sampo_bot.database.entity.Role;
 import ru.michaelshell.sampo_bot.database.entity.UserEvent;
 import ru.michaelshell.sampo_bot.dto.EventGetDto;
+import ru.michaelshell.sampo_bot.model.Request;
+import ru.michaelshell.sampo_bot.model.Response;
+import ru.michaelshell.sampo_bot.model.ResponseType;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.service.UserEventService;
 import ru.michaelshell.sampo_bot.service.UserService;
 import ru.michaelshell.sampo_bot.util.BotUtils;
 
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Comparator.comparing;
@@ -24,50 +26,57 @@ import static ru.michaelshell.sampo_bot.util.KeyboardUtils.eventRegisterButton;
 @RequiredArgsConstructor
 public class DancerListHandler implements CallbackHandler {
 
-    private final ResponseSender responseSender;
     private final UserEventService userEventService;
     private final UserService userService;
     private final EventService eventService;
 
     @Override
-    public void handleCallback(Request request) {
-
+    public List<Response> handleCallback(Request request) {
         CallbackQuery callbackQuery = request.update().getCallbackQuery();
         String msgText = callbackQuery.getMessage().getText();
-
         User user = callbackQuery.getFrom();
         Long chatId = callbackQuery.getMessage().getChatId();
         Integer messageId = callbackQuery.getMessage().getMessageId();
-
-        editDancerListWithButtons(msgText, user, chatId, messageId);
+        return getDancerListWithButtonsForEdit(msgText, user, chatId, messageId);
     }
 
-    public void editDancerListWithButtons(String msgText, User user, Long chatId, Integer messageId) {
-
+    public List<Response> getDancerListWithButtonsForEdit(String msgText, User user, Long chatId, Integer messageId) {
         String eventInfo = BotUtils.getEventInfo(msgText);
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         if (eventService.findEventIdByDto(eventGetDto).isEmpty()) {
-            responseSender.edit(chatId, messageId, "Ошибка обновления. Обновите список коллективок.");
-            return;
+            return List.of(Response.builder()
+                    .type(ResponseType.EDIT_TEXT_MESSAGE)
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .message("Ошибка обновления. Обновите список коллективок.")
+                    .build());
         }
-
         String resultList = getDancerList(eventInfo);
-
         if ((msgText + "\n").equals(resultList)) {
-            return;
+            return Collections.emptyList();
         }
-
         if (userService.isAlreadyRegistered(eventGetDto, user.getId())) {
-            responseSender.editWithKeyboardInline(chatId, messageId, resultList, deleteRegistrationButton);
+            return List.of(Response.builder()
+                    .type(ResponseType.EDIT_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(deleteRegistrationButton)
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .message(resultList)
+                    .build());
         } else {
-            responseSender.editWithKeyboardInline(chatId, messageId, resultList, eventRegisterButton);
+            return List.of(Response.builder()
+                    .type(ResponseType.EDIT_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(eventRegisterButton)
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .message(resultList)
+                    .build());
         }
     }
 
     public String getDancerList(String eventInfo) {
         EventGetDto eventGetDto = BotUtils.parseEvent(eventInfo);
         List<UserEvent> userEvents = userEventService.findUserEventsByEvent(eventGetDto);
-
         return buildResultList(eventInfo,
                 printCoupleList(userEvents),
                 printDancerList(userEvents, Role.LEADER),
@@ -78,7 +87,7 @@ public class DancerListHandler implements CallbackHandler {
      * Список записанных участников на евент для дампа.
      *
      * @param eventId id event
-     * @param title заголовок
+     * @param title   заголовок
      * @return список участников
      */
     public String getDancerList(long eventId, String title) {
@@ -149,15 +158,23 @@ public class DancerListHandler implements CallbackHandler {
         return text + "\n\n" + couples + leaders + followers + waitingList;
     }
 
-    public void sendDancerListWithButtons(String msgText, User user, Long chatId) {
-
+    public List<Response> getDancerListWithButtons(String msgText, User user, Long chatId) {
         String eventInfo = BotUtils.getEventInfo(msgText);
         String resultList = getDancerList(eventInfo);
-
         if (userService.isAlreadyRegistered(BotUtils.parseEvent(eventInfo), user.getId())) {
-            responseSender.sendWithKeyboardInline(chatId, resultList, deleteRegistrationButton);
+            return List.of(Response.builder()
+                    .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(deleteRegistrationButton)
+                    .chatId(chatId)
+                    .message(resultList)
+                    .build());
         } else {
-            responseSender.sendWithKeyboardInline(chatId, resultList, eventRegisterButton);
+            return List.of(Response.builder()
+                    .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(eventRegisterButton)
+                    .chatId(chatId)
+                    .message(resultList)
+                    .build());
         }
     }
 }

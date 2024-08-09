@@ -1,7 +1,10 @@
 package ru.michaelshell.sampo_bot.handler;
 
-import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.model.Request;
+import ru.michaelshell.sampo_bot.model.Response;
+
+import java.util.List;
 
 public interface CallbackHandler {
-    void handleCallback(Request request);
+    List<Response> handleCallback(Request request);
 }

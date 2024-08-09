@@ -1,11 +1,9 @@
 package ru.michaelshell.sampo_bot.dispatcher;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.michaelshell.sampo_bot.bot.Request;
+import ru.michaelshell.sampo_bot.handler.AuthenticationService;
 import ru.michaelshell.sampo_bot.handler.CallbackHandler;
-import ru.michaelshell.sampo_bot.handler.ClearSessionHandler;
 import ru.michaelshell.sampo_bot.handler.DancerListHandler;
 import ru.michaelshell.sampo_bot.handler.DeleteEventRegistrationHandler;
 import ru.michaelshell.sampo_bot.handler.DumpEventsHandler;
@@ -22,14 +20,16 @@ import ru.michaelshell.sampo_bot.handler.EventRegisterHandler;
 import ru.michaelshell.sampo_bot.handler.EventSoloRegisterHandler;
 import ru.michaelshell.sampo_bot.handler.NotifyAllHandler;
 import ru.michaelshell.sampo_bot.handler.PromotionHandler;
-import ru.michaelshell.sampo_bot.handler.RegisterHandler;
 import ru.michaelshell.sampo_bot.handler.RoleSetHandler;
 import ru.michaelshell.sampo_bot.handler.SendToAllEventInfoHandler;
 import ru.michaelshell.sampo_bot.handler.StartHandler;
 import ru.michaelshell.sampo_bot.handler.UpdateHandler;
+import ru.michaelshell.sampo_bot.model.Request;
+import ru.michaelshell.sampo_bot.model.Response;
 import ru.michaelshell.sampo_bot.session.UserSession;
-import ru.michaelshell.sampo_bot.util.BotUtils;
+import ru.michaelshell.sampo_bot.session.UserSessionService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -39,60 +39,63 @@ import static java.util.stream.Collectors.toMap;
 @Component
 public class RequestDispatcher {
 
+    private final AuthenticationService authenticationService;
+    private final UserSessionService userSessionService;
     private final Map<Class<? extends UpdateHandler>, UpdateHandler> updateHandlers;
     private final Map<Class<? extends CallbackHandler>, CallbackHandler> callbackHandlers;
 
-    @Autowired
-    public RequestDispatcher(List<UpdateHandler> updateHandlerList, List<CallbackHandler> callbackHandlerList) {
+    public RequestDispatcher(List<UpdateHandler> updateHandlerList,
+                             List<CallbackHandler> callbackHandlerList,
+                             AuthenticationService authenticationService,
+                             UserSessionService userSessionService) {
         this.updateHandlers = updateHandlerList.stream()
                 .collect(toMap(UpdateHandler::getClass, Function.identity()));
         this.callbackHandlers = callbackHandlerList.stream()
                 .collect(toMap(CallbackHandler::getClass, Function.identity()));
+        this.authenticationService = authenticationService;
+        this.userSessionService = userSessionService;
     }
 
-    public void dispatchRequest(Request request) {
+    public List<Response> dispatchRequest(Request request) {
         Message message = request.update().getMessage();
         if (message != null && message.hasText() && message.isUserMessage()) {
             String messageText = message.getText();
             if (isSessionCleared(request, messageText)) {
-                return;
+                return Collections.emptyList();
             }
             authenticateWithUpdate(request);
-            processSessionStatus(request);
-            processUpdate(request, messageText);
+            return processUpdate(request);
         }
-
         if (request.update().hasCallbackQuery()) {
             String callbackData = request.update().getCallbackQuery().getData();
             authenticateWithCallback(request);
-            processCallback(request, callbackData);
+            return processCallback(request, callbackData);
         }
+        return Collections.emptyList();
     }
 
     private boolean isSessionCleared(Request request, String messageText) {
         if ("/clear".equals(messageText)) {
-            resolveAndHandleUpdate(ClearSessionHandler.class, request);
-            return true;
+            return userSessionService.clearSession(request.session());
         }
         return false;
     }
 
     private void authenticateWithUpdate(Request request) {
         if (!request.session().isAuthenticated()) {
-            resolveAndHandleUpdate(RegisterHandler.class, request);
+            authenticationService.authenticateWithUpdate(request);
         }
     }
 
     private void authenticateWithCallback(Request request) {
         if (!request.session().isAuthenticated()) {
-            resolveAndHandleCallback(RegisterHandler.class, request);
+            authenticationService.authenticateWithCallback(request);
         }
     }
 
-    private void processSessionStatus(Request request) {
+    private List<Response> processUpdate(Request request) {
         UserSession session = request.session();
-        switch (session.getState()) {
-            case DEFAULT -> {}
+        return switch (session.getState()) {
             case EVENT_ADD_WAITING_FOR_INFO,
                  EVENT_ADD_WAITING_FOR_DATE,
                  EVENT_ADD_WAITING_FOR_NAME -> resolveAndHandleUpdate(EventCreateHandler.class, request);
@@ -103,24 +106,26 @@ public class RequestDispatcher {
             case EVENT_EDIT_WAITING_FOR_INFO -> resolveAndHandleUpdate(EventEditInfoHandler.class, request);
             case EVENT_EDIT_WAITING_FOR_DATE -> resolveAndHandleUpdate(EventEditTimeHandler.class, request);
             case NOTIFY_ALL -> resolveAndHandleUpdate(NotifyAllHandler.class, request);
-        }
+            case DEFAULT -> processUpdateDefaultState(request);
+        };
     }
 
-    private void processUpdate(Request request, String messageText) {
-        final String addEventsCommand = BotUtils.EVENT_LIST_COMMAND;
-        switch (messageText) {
+    private List<Response> processUpdateDefaultState(Request request) {
+        String messageText = request.update().getMessage().getText();
+        return switch (messageText) {
             case "/help" -> resolveAndHandleUpdate(StartHandler.class, request);
             case "/promote" -> resolveAndHandleUpdate(PromotionHandler.class, request);
-            case "/start", "/events", addEventsCommand -> resolveAndHandleUpdate(EventListHandler.class, request);
+            case "/start", "/events", "Список коллективок" -> resolveAndHandleUpdate(EventListHandler.class, request);
             case "Добавить" -> resolveAndHandleUpdate(EventCreateHandler.class, request);
             case "/profile" -> resolveAndHandleUpdate(EditProfileHandler.class, request);
             case "/all" -> resolveAndHandleUpdate(NotifyAllHandler.class, request);
             case "/dump" -> resolveAndHandleUpdate(DumpEventsHandler.class, request);
-        }
+            default -> Collections.emptyList();
+        };
     }
 
-    private void processCallback(Request request, String callbackData) {
-        switch (callbackData) {
+    private List<Response> processCallback(Request request, String callbackData) {
+        return switch (callbackData) {
             case "buttonInfoYes", "buttonInfoNo" -> resolveAndHandleCallback(EventCreateHandler.class, request);
             case "buttonEventDelete", "buttonEventDeleteConfirmation" ->
                     resolveAndHandleCallback(EventDeleteHandler.class, request);
@@ -135,14 +140,15 @@ public class RequestDispatcher {
             case "buttonEditEventTime" -> resolveAndHandleCallback(EventEditTimeHandler.class, request);
             case "buttonEditEventInfo" -> resolveAndHandleCallback(EventEditInfoHandler.class, request);
             case "buttonSendEventInfo" -> resolveAndHandleCallback(SendToAllEventInfoHandler.class, request);
-        }
+            default -> Collections.emptyList();
+        };
     }
 
-    private void resolveAndHandleUpdate(Class<? extends UpdateHandler> clazz, Request request) {
-        updateHandlers.get(clazz).handleUpdate(request);
+    private List<Response> resolveAndHandleUpdate(Class<? extends UpdateHandler> clazz, Request request) {
+        return updateHandlers.get(clazz).handleUpdate(request);
     }
 
-    private void resolveAndHandleCallback(Class<? extends CallbackHandler> clazz, Request request) {
-        callbackHandlers.get(clazz).handleCallback(request);
+    private List<Response> resolveAndHandleCallback(Class<? extends CallbackHandler> clazz, Request request) {
+        return callbackHandlers.get(clazz).handleCallback(request);
     }
 }

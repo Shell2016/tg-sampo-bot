@@ -45,7 +45,7 @@ public class UserSessionService {
         operations.set(session.getId(), session, sessionExpirationTimeInMinutes, TimeUnit.MINUTES);
     }
 
-    public void clearSession(UserSession session) {
-        redisTemplate.delete(session.getId());
+    public boolean clearSession(UserSession session) {
+        return Boolean.TRUE.equals(redisTemplate.delete(session.getId()));
     }
 }

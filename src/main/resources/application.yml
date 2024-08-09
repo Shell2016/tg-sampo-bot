@@ -1,14 +1,13 @@
+server:
+  port: 8082
 bot:
-  username: ${BOT_USERNAME}
-  token: ${SAMPOBOT_TOKEN}
-  admin:
-    username: ${ADMIN_USERNAME}
+  admin: ${ADMIN_USERNAME}
 
 logging:
   level:
     root: info
   file:
-    name: /home/${USER}/sampobot_logs/bot.log
+    name: /home/${USER}/sampobotservice_logs/botservice.log
 
 session:
   timeout: 10
@@ -19,8 +18,8 @@ spring:
     username: ${SAMPOBOT_DB_USERNAME}
     password: ${SAMPOBOT_DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
-  main:
-    allow-circular-references: true
+#  main:
+#    allow-circular-references: true
   jpa:
     database: postgresql
     properties:
