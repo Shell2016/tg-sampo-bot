@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
-import ru.michaelshell.sampo_bot.bot.Request;
-import ru.michaelshell.sampo_bot.bot.ResponseSender;
+import ru.michaelshell.sampo_bot.model.Request;
+import ru.michaelshell.sampo_bot.model.Response;
+import ru.michaelshell.sampo_bot.model.ResponseType;
 import ru.michaelshell.sampo_bot.service.EventService;
 import ru.michaelshell.sampo_bot.session.UserSession;
 import ru.michaelshell.sampo_bot.session.UserSessionService;
@@ -13,6 +14,8 @@ import ru.michaelshell.sampo_bot.util.AuthUtils;
 import ru.michaelshell.sampo_bot.util.TimeParser;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 import static ru.michaelshell.sampo_bot.session.SessionAttribute.EVENT_ID;
 import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_DATE;
@@ -21,35 +24,44 @@ import static ru.michaelshell.sampo_bot.session.State.EVENT_EDIT_WAITING_FOR_DAT
 @RequiredArgsConstructor
 public class EventEditTimeHandler implements UpdateHandler, CallbackHandler {
 
-    private final ResponseSender responseSender;
     private final EventService eventService;
     private final EventEditInfoHandler eventEditInfoHandler;
     private final UserSessionService sessionService;
 
     @Override
-    public void handleUpdate(Request request) {
+    public List<Response> handleUpdate(Request request) {
         UserSession session = request.session();
         if (AuthUtils.isAdmin(session)) {
             Long eventId = (Long) session.getAttribute(EVENT_ID);
             String msgText = request.update().getMessage().getText();
             Long chatId = request.update().getMessage().getChatId();
-            if (TimeParser.isValid(msgText)) {
-                LocalDateTime date = TimeParser.parseForEventCreation(msgText);
-                if (eventService.updateEventTime(eventId, date).isPresent()) {
-                    responseSender.sendWithKeyboardBottom(chatId, "Время обновлено!", session);
-                }
-            } else {
-                responseSender.sendWithKeyboardBottom(chatId, "Неверный формат даты", session);
-                return;
-            }
             session.removeAttribute(EVENT_ID);
             session.setDefaultState();
             sessionService.updateSession(session);
+            if (TimeParser.isValid(msgText)) {
+                LocalDateTime date = TimeParser.parseForEventCreation(msgText);
+                if (eventService.updateEventTime(eventId, date).isPresent()) {
+                    return List.of(Response.builder()
+                            .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                            .keyboard(AuthUtils.getBottomKeyboard(session))
+                            .chatId(chatId)
+                            .message("Время обновлено!")
+                            .build());
+                }
+            } else {
+                return List.of(Response.builder()
+                        .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                        .keyboard(AuthUtils.getBottomKeyboard(session))
+                        .chatId(chatId)
+                        .message("Неверный формат даты")
+                        .build());
+            }
         }
+        return Collections.emptyList();
     }
 
     @Override
-    public void handleCallback(Request request) {
+    public List<Response> handleCallback(Request request) {
         UserSession session = request.session();
         CallbackQuery callbackQuery = request.update().getCallbackQuery();
         Message message = callbackQuery.getMessage();
@@ -59,13 +71,22 @@ public class EventEditTimeHandler implements UpdateHandler, CallbackHandler {
 
         Long eventId = eventEditInfoHandler.getEventId(msgText);
         if (eventId == null) {
-            responseSender.edit(chatId, messageId, "Коллективка с данным названием и временем не найдена");
+            return List.of(Response.builder()
+                    .type(ResponseType.EDIT_TEXT_MESSAGE)
+                    .chatId(chatId)
+                    .messageId(messageId)
+                    .message("Коллективка с данным названием и временем не найдена")
+                    .build());
         } else {
             session.setAttribute(EVENT_ID, eventId);
-            responseSender.sendWithKeyboardBottom(chatId, "Введите дату и время проведения в формате 'dd MM yy HH:mm'\n" +
-                    "Пример - 25 01 23 20:30", session);
             session.setState(EVENT_EDIT_WAITING_FOR_DATE);
             sessionService.updateSession(session);
+            return List.of(Response.builder()
+                    .type(ResponseType.SEND_TEXT_MESSAGE_WITH_KEYBOARD)
+                    .keyboard(AuthUtils.getBottomKeyboard(session))
+                    .chatId(chatId)
+                    .message("Введите дату и время проведения в формате 'dd MM yy HH:mm'\n")
+                    .build());
         }
     }
 }

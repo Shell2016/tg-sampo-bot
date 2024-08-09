@@ -1,0 +1,9 @@
+package ru.michaelshell.sampo_bot.model;
+
+public enum ResponseType {
+    SEND_TEXT_MESSAGE,
+    EDIT_TEXT_MESSAGE,
+    SEND_TEXT_MESSAGE_WITH_KEYBOARD,
+    SEND_TEXT_MESSAGE_WITH_KEYBOARD_ASYNC,
+    EDIT_TEXT_MESSAGE_WITH_KEYBOARD
+}

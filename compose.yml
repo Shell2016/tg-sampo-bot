@@ -2,20 +2,19 @@ version: "3.8"
 
 services:
 
-  sampobot:
-    image: shell2016/sampobot
-    container_name: sampobot
+  sampobotservice:
+    image: shell2016/sampobotservice
+    container_name: sampobotservice
     build:
       context: .
       dockerfile: Dockerfile
     environment:
-      - SAMPOBOT_TOKEN=${TOKEN}
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - LOGGING_FILE_NAME=${LOG_DIR}/bot.log
+      - LOGGING_FILE_NAME=${LOG_DIR}/botservice.log
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - GOOGLE_CREDENTIALS_CLIENT_ID=${GOOGLE_CREDENTIALS_CLIENT_ID}
       - GOOGLE_CREDENTIALS_CLIENT_EMAIL=${GOOGLE_CREDENTIALS_CLIENT_EMAIL}
@@ -23,14 +22,14 @@ services:
       - GOOGLE_CREDENTIALS_PRIVATE_KEY=${GOOGLE_CREDENTIALS_PRIVATE_KEY}
       - GOOGLE_SPREADSHEETS_SPREADSHEET_ID=${GOOGLE_SPREADSHEETS_SPREADSHEET_ID}
     volumes:
-      - /home/$USER/sampobot_logs:${LOG_DIR}
+      - /home/$USER/sampobotservice_logs:${LOG_DIR}
     restart: always
     depends_on:
       - db
       - redis
 
   db:
-    image: postgres:${DB_VERSION}-alpine
+    image: postgres:15.3-alpine
     container_name: sampobot_db
     restart: always
     environment:

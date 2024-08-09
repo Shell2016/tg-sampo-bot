@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 public class BotUtils {
 
     public static final String TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX = "[_*`]";
-    public static final String EVENT_LIST_COMMAND = "Список коллективок";
 
     public static String removeUnsupportedChars(String text) {
         return text.trim().replaceAll(TG_NOT_SUPPORTED_CHARS_REMOVE_REGEX, " ").trim();
