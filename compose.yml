@@ -5,16 +5,12 @@ services:
   sampobotservice:
     image: shell2016/sampobotservice
     container_name: sampobotservice
-    build:
-      context: .
-      dockerfile: Dockerfile
     environment:
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=${REDIS_HOST}
       - REDIS_PASSWORD=${REDIS_PASSWORD}
-      - LOGGING_FILE_NAME=${LOG_DIR}/botservice.log
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - GOOGLE_CREDENTIALS_CLIENT_ID=${GOOGLE_CREDENTIALS_CLIENT_ID}
       - GOOGLE_CREDENTIALS_CLIENT_EMAIL=${GOOGLE_CREDENTIALS_CLIENT_EMAIL}
@@ -22,11 +18,27 @@ services:
       - GOOGLE_CREDENTIALS_PRIVATE_KEY=${GOOGLE_CREDENTIALS_PRIVATE_KEY}
       - GOOGLE_SPREADSHEETS_SPREADSHEET_ID=${GOOGLE_SPREADSHEETS_SPREADSHEET_ID}
     volumes:
-      - /home/$USER/sampobotservice_logs:${LOG_DIR}
+      - /app/logs:/app/logs
     restart: always
     depends_on:
       - db
       - redis
+    networks:
+      - bot-network
+      - db-network
+      - redis-network
+
+  telegrambot:
+    image: shell2016/telegrambot
+    container_name: telegrambot
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      FEIGN_URL: ${FEIGN_URL}
+    volumes:
+      - /app/logs:/app/logs
+    restart: always
+    networks:
+      - bot-network
 
   db:
     image: postgres:15.3-alpine
@@ -39,7 +51,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - db:/var/lib/postgresql/data
+      - db-vol:/var/lib/postgresql/data
+    networks:
+      - db-network
 
   redis:
     image: redis:7.2.4
@@ -49,6 +63,14 @@ services:
       - "6379:6379"
     environment:
       - REDIS_DATABASES=1
+    networks:
+      - redis-network
 
 volumes:
-  db:
+  db-vol:
+
+networks:
+  bot-network:
+  db-network:
+  redis-network:
+

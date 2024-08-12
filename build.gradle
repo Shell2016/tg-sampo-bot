@@ -1,3 +1,5 @@
+import org.springframework.boot.gradle.tasks.bundling.BootBuildImage
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.6'
@@ -7,7 +9,7 @@ plugins {
 apply from: 'version.gradle'
 
 group = 'ru.michaelshell'
-version = '1.3.1'
+version = '1.4.0'
 sourceCompatibility = '17'
 
 configurations {
@@ -36,6 +38,34 @@ dependencies {
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"
 }
 
-test {
+tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.register("bootBuildImageWithVersionTag", BootBuildImage) {
+    archiveFile.set(tasks.named("bootJar").get().archiveFile)
+    imageName = "shell2016/sampobotservice:${version}"
+    publish = true
+    docker {
+        publishRegistry {
+            username = System.getenv("DOCKER_USERNAME")
+            password = System.getenv("DOCKER_PASSWORD")
+        }
+    }
+}
+
+tasks.register("bootBuildImageWithLatestTag", BootBuildImage) {
+    archiveFile.set(tasks.named("bootJar").get().archiveFile)
+    imageName = "shell2016/sampobotservice:latest"
+    publish = true
+    docker {
+        publishRegistry {
+            username = System.getenv("DOCKER_USERNAME")
+            password = System.getenv("DOCKER_PASSWORD")
+        }
+    }
+}
+
+tasks.register("bootBuildAndPushImages") {
+    dependsOn "bootBuildImageWithVersionTag", "bootBuildImageWithLatestTag"
 }
