@@ -3,7 +3,7 @@ version: "3.8"
 services:
 
   sampobotservice:
-    image: shell2016/sampobotservice
+    image: shell2016/sampobotservice:latest
     container_name: sampobotservice
     environment:
       - SPRING_DATASOURCE_URL=${DB_URL}
@@ -29,7 +29,7 @@ services:
       - redis-network
 
   telegrambot:
-    image: shell2016/telegrambot
+    image: shell2016/telegrambot:latest
     container_name: telegrambot
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
@@ -37,6 +37,8 @@ services:
     volumes:
       - /app/logs:/app/logs
     restart: always
+    depends_on:
+      - sampobotservice
     networks:
       - bot-network
 
