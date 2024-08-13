@@ -7,7 +7,6 @@ import ru.michaelshell.sampo_bot.handler.DancerListHandler;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * Сервис для выгрузки коллективок в гугл-таблицы.
@@ -23,7 +22,7 @@ public class EventDumpService {
     public void dumpEvents() {
         List<Event> events = eventService.findAllEvents();
         if (events.isEmpty()) {
-            throw new NoSuchElementException("There are no events to dump");
+            return;
         }
         events.forEach(event -> {
             String sheetTitle = event.getName() + " " + event.getTime().toString();

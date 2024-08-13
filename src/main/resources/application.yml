@@ -6,8 +6,6 @@ bot:
 logging:
   level:
     root: info
-  file:
-    name: app/logs/botservice.log
 
 session:
   timeout: 10
