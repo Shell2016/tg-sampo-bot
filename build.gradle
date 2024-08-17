@@ -9,7 +9,7 @@ plugins {
 apply from: 'version.gradle'
 
 group = 'ru.michaelshell'
-version = '1.4.1'
+version = '1.4.2'
 sourceCompatibility = '17'
 
 configurations {
@@ -30,9 +30,11 @@ dependencies {
     implementation 'org.springframework.data:spring-data-redis'
     implementation 'redis.clients:jedis'
     implementation 'org.liquibase:liquibase-core'
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+    implementation 'com.github.loki4j:loki-logback-appender:1.5.2'
 
     runtimeOnly 'org.postgresql:postgresql'
+
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation "org.testcontainers:postgresql:${versions.testcontainers}"

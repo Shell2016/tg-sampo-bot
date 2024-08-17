@@ -3,14 +3,12 @@ server:
 bot:
   admin: ${ADMIN_USERNAME}
 
-logging:
-  level:
-    root: info
-
-session:
-  timeout: 10
-
+#logging:
+#  level:
+#    root: info
 spring:
+  application:
+    name: sampobotservice
   datasource:
     url: jdbc:postgresql://localhost:5432/${SAMPOBOT_DB_NAME}
     username: ${SAMPOBOT_DB_USERNAME}
@@ -22,6 +20,8 @@ spring:
       hibernate:
         hbm2ddl:
           auto: validate
+session:
+  timeout: 10
 redis:
   host: ${REDIS_HOST}
   port: 6379
@@ -35,3 +35,6 @@ google:
   spreadsheets:
     spreadsheet-id:
     dump-cron: 0 0 * * * ?
+logs:
+  loki:
+    base-url: http://localhost:3100

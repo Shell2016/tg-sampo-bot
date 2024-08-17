@@ -6,6 +6,7 @@ services:
     image: shell2016/sampobotservice:latest
     container_name: sampobotservice
     environment:
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE}
       - SPRING_DATASOURCE_URL=${DB_URL}
       - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
@@ -17,8 +18,9 @@ services:
       - GOOGLE_CREDENTIALS_PRIVATE_KEY_ID=${GOOGLE_CREDENTIALS_PRIVATE_KEY_ID}
       - GOOGLE_CREDENTIALS_PRIVATE_KEY=${GOOGLE_CREDENTIALS_PRIVATE_KEY}
       - GOOGLE_SPREADSHEETS_SPREADSHEET_ID=${GOOGLE_SPREADSHEETS_SPREADSHEET_ID}
+      - LOGS_LOKI_BASE_URL=${LOGS_LOKI_BASE_URL}
     restart: always
-    pull_policy: always
+    pull_policy: missing
     depends_on:
       - db
       - redis
@@ -34,7 +36,7 @@ services:
       BOT_TOKEN: ${BOT_TOKEN}
       FEIGN_URL: ${FEIGN_URL}
     restart: always
-    pull_policy: always
+    pull_policy: missing
     depends_on:
       - sampobotservice
     networks:
@@ -59,10 +61,35 @@ services:
     image: redis:7.2.4
     restart: always
     command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
     environment:
       - REDIS_DATABASES=1
     networks:
       - redis-network
+
+  loki:
+    image: grafana/loki:2.9.2
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    restart: unless-stopped
+    networks:
+      - bot-network
+
+  grafana:
+    image: grafana/grafana:11.1.4
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_AUTH_ANONYMOUS_ENABLED=false
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
+    volumes:
+      - ./config/grafana:/etc/grafana/provisioning/datasources
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    networks:
+      - bot-network
 
 volumes:
   db-vol:
