@@ -9,7 +9,7 @@ plugins {
 apply from: 'version.gradle'
 
 group = 'ru.michaelshell'
-version = '1.4.2'
+version = '1.4.3'
 sourceCompatibility = '17'
 
 configurations {
@@ -23,6 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation "org.telegram:telegrambots-spring-boot-starter:${versions.telegrambots}"
     implementation 'org.springframework.boot:spring-boot-starter-quartz'
     implementation "com.google.apis:google-api-services-sheets:${versions.googlesheets}"
@@ -33,6 +34,7 @@ dependencies {
     implementation 'com.github.loki4j:loki-logback-appender:1.5.2'
 
     runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 

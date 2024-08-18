@@ -38,3 +38,8 @@ google:
 logs:
   loki:
     base-url: http://localhost:3100
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus

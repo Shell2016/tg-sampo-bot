@@ -1,5 +1,3 @@
-version: "3.8"
-
 services:
 
   sampobotservice:
@@ -35,6 +33,8 @@ services:
     environment:
       BOT_TOKEN: ${BOT_TOKEN}
       FEIGN_URL: ${FEIGN_URL}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILE}
+      LOGS_LOKI_BASE_URL: ${LOGS_LOKI_BASE_URL}
     restart: always
     pull_policy: missing
     depends_on:
@@ -73,6 +73,8 @@ services:
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
+#    volumes:
+#      - ~/app/logs:/loki
     restart: unless-stopped
     networks:
       - bot-network
@@ -91,8 +93,19 @@ services:
     networks:
       - bot-network
 
+  prometheus:
+    image: prom/prometheus:v2.53.2
+    ports:
+      - "9090:9090"
+    volumes:
+      - prometheus-data:/prometheus
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - bot-network
+
 volumes:
   db-vol:
+  prometheus-data:
 
 networks:
   bot-network:
