@@ -1,0 +1,19 @@
+global:
+  scrape_interval: 10s
+  scrape_timeout: 10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]
+  - job_name: sampobotservice
+    scheme: http
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["sampobotservice:8082"]
+  - job_name: telegrambot
+    scheme: http
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["telegrambot:8081"]
