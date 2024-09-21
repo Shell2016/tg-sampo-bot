@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 
 @Slf4j
-public class TestHelper {
+class TestHelper {
 
     @Test
     void testDateParse() {

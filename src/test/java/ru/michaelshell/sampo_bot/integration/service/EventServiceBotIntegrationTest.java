@@ -43,7 +43,7 @@ class EventServiceBotIntegrationTest extends IntegrationTestBase {
         Event updatedEvent = eventRepository.findById(EVENT_ID).get();
         String result = updatedEvent.getName();
 
-        assertThat(EVENT_TEST_NAME).isEqualTo(result);
+        assertThat(result).isEqualTo(EVENT_TEST_NAME);
     }
 
     @Test

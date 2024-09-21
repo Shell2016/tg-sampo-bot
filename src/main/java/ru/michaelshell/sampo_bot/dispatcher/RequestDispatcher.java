@@ -75,10 +75,7 @@ public class RequestDispatcher {
     }
 
     private boolean isSessionCleared(Request request, String messageText) {
-        if ("/clear".equals(messageText)) {
-            return userSessionService.clearSession(request.session());
-        }
-        return false;
+        return "/clear".equals(messageText) && userSessionService.clearSession(request.session());
     }
 
     private void authenticateWithUpdate(Request request) {

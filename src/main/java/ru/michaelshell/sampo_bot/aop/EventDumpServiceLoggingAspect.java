@@ -17,6 +17,6 @@ public class EventDumpServiceLoggingAspect {
 
     @AfterReturning("dumpEvents()")
     public void eventDumpLogging() {
-        log.info("Successfully dumped to google spreadsheets");
+        log.debug("Successfully dumped to google spreadsheets");
     }
 }

@@ -21,6 +21,7 @@ public class SessionConfig {
     JedisConnectionFactory jedisConnectionFactory() {
         JedisConnectionFactory factory = new JedisConnectionFactory();
         RedisStandaloneConfiguration configuration = factory.getStandaloneConfiguration();
+        assert configuration != null;
         configuration.setPassword(password);
         configuration.setPort(port);
         configuration.setHostName(hostName);

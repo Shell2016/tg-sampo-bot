@@ -24,6 +24,8 @@ public class KeyboardUtils {
     public static final InlineKeyboardMarkup eventRegisterButton = getEventRegisterButton();
     public static final InlineKeyboardMarkup deleteRegistrationButton = getDeleteRegistrationButton();
     public static final InlineKeyboardMarkup eventEditButtons = getEventEditButtons();
+    private static final String BUTTON_SHOW_DANCERS_LIST = "buttonShowDancersList";
+    private static final String LISTS = "Списки";
 
     private static ReplyKeyboardMarkup getEventListAdminKeyboard() {
         ReplyKeyboardMarkup replyKeyboardMarkup = getReplyKeyboardMarkup();
@@ -52,8 +54,8 @@ public class KeyboardUtils {
         InlineKeyboardMarkup eventListButtons = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonList = new InlineKeyboardButton();
-        buttonList.setText("Списки");
-        buttonList.setCallbackData("buttonShowDancersList");
+        buttonList.setText(LISTS);
+        buttonList.setCallbackData(BUTTON_SHOW_DANCERS_LIST);
 
         List<InlineKeyboardButton> row1 = new ArrayList<>();
         row1.add(buttonList);
@@ -69,8 +71,8 @@ public class KeyboardUtils {
         InlineKeyboardMarkup eventListAdminButtons = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonList = new InlineKeyboardButton();
-        buttonList.setText("Списки");
-        buttonList.setCallbackData("buttonShowDancersList");
+        buttonList.setText(LISTS);
+        buttonList.setCallbackData(BUTTON_SHOW_DANCERS_LIST);
 
         InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
         buttonDelete.setText("Удалить");
@@ -110,8 +112,8 @@ public class KeyboardUtils {
         InlineKeyboardMarkup eventListAdminButtons = new InlineKeyboardMarkup();
 
         InlineKeyboardButton buttonList = new InlineKeyboardButton();
-        buttonList.setText("Списки");
-        buttonList.setCallbackData("buttonShowDancersList");
+        buttonList.setText(LISTS);
+        buttonList.setCallbackData(BUTTON_SHOW_DANCERS_LIST);
 
         InlineKeyboardButton buttonDelete = new InlineKeyboardButton();
         buttonDelete.setText("❗️️ПОДТВЕРЖДЕНИЕ УДАЛЕНИЯ❗️️");
